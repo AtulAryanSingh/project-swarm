@@ -4,6 +4,16 @@
 This repository contains the theoretical architecture and interactive simulations for a decentralized, chaos-driven computational ecosystem. It was designed as a physics-based, resilient alternative to traditional, centralized orbital manufacturing (e.g., the Terafab model). 
 
 Instead of shielding fragile silicon from the harsh environment of space, **Project Swarm** utilizes programmable Piezo-phononic metamaterials to actively harvest energy and data from extreme entropy (solar radiation, plasma impacts). The system learns exclusively through its own physical destruction and adaptation.
+## What this is
+- A **functional simulation** of a decentralized edge-computing data pipeline.
+- A system that ingests noisy time-series input, performs live signal/data transforms, and emits structured outputs.
+- An exploration of resilience and emergent behavior under chaotic conditions.
+
+## What this is not
+- Not a production ETL platform (yet).
+- Not claiming physically accurate metamaterial hardware behavior.
+- Not a generic dashboard-only frontend; core value is in pipeline logic + topology simulation.
+  
 ## Technical Specifications: The Software Reality
 While Project Swarm is built on theoretical physics, the repository itself is a **functional software simulation** of a decentralized data pipeline. It demonstrates how to handle, filter, and transform extremely noisy data streams in real-time.
 
