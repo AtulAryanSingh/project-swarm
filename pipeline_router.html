@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stream Router</title>
+    <style>
+        body { background-color: #0d1117; color: white; font-family: sans-serif; text-align: center; }
+        canvas { background-color: #000; border-radius: 8px; box-shadow: 0 0 20px rgba(0,255,255,0.2); }
+    </style>
+</head>
+<body>
+    <h2>Module 2: Sphere Stream Router Pipeline</h2>
+    <p>Red = Raw Energy (Routing Top) | Blue = Telemetry Data (Routing Bottom)</p>
+    <canvas id="pipeline" width="800" height="400"></canvas>
+
+    <script>
+        const canvas = document.getElementById("pipeline");
+        const ctx = canvas.getContext("2d");
+        let particles = [];
+
+        function spawnParticle() {
+            const isEnergy = Math.random() > 0.5;
+            particles.push({
+                x: 0, 
+                y: 200 + (Math.random() - 0.5) * 50,
+                targetY: isEnergy ? 50 : 350,       
+                color: isEnergy ? "#ff3366" : "#00e5ff",
+                speed: 3 + Math.random() * 2
+            });
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.2)";
+            ctx.beginPath(); ctx.arc(400, 200, 80, 0, Math.PI * 2); ctx.stroke();
+            
+            ctx.fillStyle = "rgba(255, 51, 102, 0.2)"; ctx.fillRect(700, 10, 80, 80); 
+            ctx.fillStyle = "rgba(0, 229, 255, 0.2)"; ctx.fillRect(700, 310, 80, 80); 
+
+            particles.forEach((p, index) => {
+                p.x += p.speed;
+                if (p.x > 400) { p.y += (p.targetY - p.y) * 0.05; }
+                
+                ctx.fillStyle = p.color;
+                ctx.beginPath(); ctx.arc(p.x, p.y, 4, 0, Math.PI * 2); ctx.fill();
+
+                if (p.x > 800) particles.splice(index, 1);
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        setInterval(spawnParticle, 50); 
+        animate();
+    </script>
+</body>
+</html>

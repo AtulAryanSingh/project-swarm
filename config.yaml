@@ -1,0 +1,27 @@
+# ==========================================
+# PROJECT SWARM: MASTER CONFIGURATION
+# ==========================================
+# This file controls the physics and logic parameters 
+# for the entire decentralized pipeline.
+
+swarm_parameters:
+  total_sensor_nodes: 1000000        # Theoretical number of smart rocks
+  baseline_solar_wind_speed: 400     # km/s
+  ambient_entropy_level: 0.8         # Baseline universe chaos (0.0 to 1.0)
+
+stream_router:
+  ingestion_buffer_size: 5000        # Max simultaneous beams processed
+  fft_sample_rate: 500               # Hz
+  energy_routing_threshold: 20       # Frequencies below this (Hz) route to Battery
+  data_routing_threshold: 100        # Frequencies below this (Hz) route to ML Core
+  resonance_shunt_trigger: 10000     # Power amplitude required to trigger evasion
+
+memory_engine:
+  reconstruction_particles: 400      # Resolution of the memory scatter
+  transform_duration_ms: 3000        # Time taken to reconstruct geometry
+  geometry_complexity: "high"        # Math curve density
+
+phononic_forge:
+  dust_capture_rate: 30              # Particles per second
+  resonance_activation_power: 50     # % power required to crystallize matter
+  cooling_lattice_snap: 15           # Grid alignment speed

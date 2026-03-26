@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Memory Reconstruction</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body { background-color: #0d1117; color: white; font-family: sans-serif; text-align: center; }
+        #cosmos-container { width: 800px; height: 400px; margin: 0 auto; background: #161b22; position: relative; border-radius: 8px;}
+        button { margin: 20px; padding: 12px 24px; background: #00e5ff; border: none; font-weight: bold; cursor: pointer; border-radius: 4px;}
+        button:hover { background: #ff3366; color: white;}
+    </style>
+</head>
+<body>
+    <h2>Module 3: Inverse Scattering Memory Engine</h2>
+    <button onclick="runReconstruction()">Execute Radon Transform</button>
+    <div id="cosmos-container"><svg id="d3-canvas" width="100%" height="100%"></svg></div>
+
+    <script>
+        const svg = d3.select("#d3-canvas"), width = 800, height = 400;
+        const numParticles = 400;
+
+        let particles = Array.from({length: numParticles}, (d, i) => {
+            let tx = (i / numParticles) * width;
+            let ty = height / 2 + Math.sin(tx * 0.03) * 80 + Math.cos(tx * 0.05) * 40; 
+            return {
+                currentX: Math.random() * width, currentY: Math.random() * height,
+                targetX: tx, targetY: ty
+            };
+        });
+
+        const dots = svg.selectAll("circle").data(particles).enter().append("circle")
+            .attr("cx", d => d.currentX).attr("cy", d => d.currentY)
+            .attr("r", 3).attr("fill", "#ff3366").attr("opacity", 0.7);
+
+        function runReconstruction() {
+            dots.transition().duration(3000).ease(d3.easeCubicInOut)
+                .attr("cx", d => d.targetX).attr("cy", d => d.targetY)
+                .attr("fill", "#00e5ff").attr("r", 4);
+        }
+    </script>
+</body>
+</html>

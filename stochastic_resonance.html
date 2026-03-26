@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stochastic Resonance</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body { background-color: #0d1117; color: white; font-family: sans-serif; text-align: center; }
+        svg { background-color: #161b22; border-radius: 8px; margin-top: 20px; }
+        input[type=range] { width: 300px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h2>Module 1: Stochastic Resonance (Finding Signal in Chaos)</h2>
+    <label for="noiseSlider">Universe Chaos (Noise Level): <span id="noiseVal">0</span></label><br>
+    <input type="range" id="noiseSlider" min="0" max="2" step="0.1" value="0">
+    <br>
+    <svg id="chart" width="800" height="400"></svg>
+
+    <script>
+        const svg = d3.select("#chart"), width = 800, height = 400;
+        const numPoints = 200;
+        const threshold = height * 0.2; 
+
+        svg.append("line").attr("x1", 0).attr("y1", threshold).attr("x2", width).attr("y2", threshold)
+           .attr("stroke", "white").attr("stroke-dasharray", "5,5").attr("stroke-width", 2);
+
+        let baseData = d3.range(numPoints).map(i => ({
+            x: (i / numPoints) * width,
+            y: height/2 + Math.sin(i * 0.1) * 50 
+        }));
+
+        const lineGen = d3.line().x(d => d.x).y(d => d.y).curve(d3.curveMonotoneX);
+
+        svg.append("path").datum(baseData).attr("fill", "none").attr("stroke", "#00e5ff")
+           .attr("stroke-width", 2).attr("opacity", 0.5).attr("d", lineGen);
+
+        let noisyPath = svg.append("path").datum(baseData).attr("fill", "none")
+                           .attr("stroke", "#ff3366").attr("stroke-width", 2);
+
+        d3.select("#noiseSlider").on("input", function() {
+            let noiseLevel = +this.value;
+            d3.select("#noiseVal").text(noiseLevel);
+            
+            let noisyData = baseData.map(d => ({
+                x: d.x,
+                y: d.y + (Math.random() - 0.5) * 100 * noiseLevel
+            }));
+            
+            noisyPath.datum(noisyData).attr("d", lineGen);
+        });
+    </script>
+</body>
+</html>
