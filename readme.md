@@ -22,6 +22,20 @@ While Project Swarm is built on theoretical physics, the repository itself is a 
   * *Output:* Segregated frequency-domain arrays and serialized JSON payloads containing computed 2D/3D coordinate matrices.
 * **Decentralization Topology:** The "Swarm" represents a massive **Edge Computing** network. In this V1.0 simulation, the decentralized nodes are emulated via vectorized matrix operations in Python. The central "Sphere" acts as an ingestion buffer (analogous to a message broker like Apache Kafka), catching concurrent asynchronous data streams and routing them to localized worker functions based on frequency thresholds.
 
+## Visual Walkthrough
+
+### 1) Concept + Architecture
+![Concept + Architecture](assets/screenshots/01-hero-architecture.png)
+*Concept layer + concrete software architecture in one view.*
+
+### 2) Ingestion Router Live
+![Ingestion Router](assets/screenshots/02-ingestion-router.png)
+*Live routing of noisy streams into separated signal/data channels.*
+
+### 3) Memory / Reconstruction Output
+![Memory Engine](assets/screenshots/03-memory-engine.png)
+*Transformed output and reconstructed structured payloads.*
+
 ## Repository Structure
 ```text
 project-swarm/
