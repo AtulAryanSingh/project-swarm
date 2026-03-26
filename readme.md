@@ -8,12 +8,13 @@ Instead of shielding fragile silicon from the harsh environment of space, **Proj
 ## Repository Structure
 ```text
 project-swarm/
+├── index.html                        <-- THE NEW STORY HUB
 ├── config.yaml
 ├── README.md
 ├── python_backend/
 │   ├── 01_fft_stream_router.py
 │   └── 02_memory_engine_bridge.py
-└── visualizations/
+└── visualizations/                   <-- Linked directly from index.html
     ├── 01_stochastic_resonance.html
     ├── 02_pipeline_router.html
     ├── 03_inverse_scattering.html
