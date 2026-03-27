@@ -25,15 +25,16 @@ While Project Swarm is built on theoretical physics, the repository itself is a 
 ## Visual Walkthrough
 
 ### 1) Concept + Architecture
-![Concept + Architecture](assets/screenshots/01-hero-architecture.png)
+![Concept + Architecture](assets/screenshots/https://github.com/AtulAryanSingh/project-swarm/blob/main/Screenshot%202026-03-26%20at%2022.30.31.png
+)
 *Concept layer + concrete software architecture in one view.*
 
 ### 2) Ingestion Router Live
-![Ingestion Router](assets/screenshots/02-ingestion-router.png)
+![Ingestion Router](assets/screenshots/https://github.com/AtulAryanSingh/project-swarm/blob/main/Screenshot%202026-03-26%20at%2023.04.52.png)
 *Live routing of noisy streams into separated signal/data channels.*
 
 ### 3) Memory / Reconstruction Output
-![Memory Engine](assets/screenshots/03-memory-engine.png)
+![Memory Engine](assets/screenshots/https://github.com/AtulAryanSingh/project-swarm/blob/main/Screenshot%202026-03-26%20at%2023.05.36.png)
 *Transformed output and reconstructed structured payloads.*
 
 ## Repository Structure
