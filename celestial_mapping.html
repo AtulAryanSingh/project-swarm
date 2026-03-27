@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Swarm: Celestial Mapping</title>
+    <style>
+        body {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .dashboard {
+            background-color: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            width: 900px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        /* Top Metrics Bar */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 25px;
+            border-bottom: 1px solid #30363d;
+            background-color: #0d1117;
+        }
+        .title { font-weight: bold; font-size: 1.1rem; color: #ffffff; display: flex; align-items: center;}
+        .metrics { display: flex; gap: 20px; }
+        .metric { display: flex; flex-direction: column; }
+        .metric-label { font-size: 0.65rem; color: #8b949e; text-transform: uppercase; letter-spacing: 1px;}
+        .metric-value { font-size: 0.9rem; font-weight: bold; color: #e6edf3; }
+        .metric-value.critical { color: #ff3366; }
+        
+        /* Canvas Area */
+        .canvas-container {
+            position: relative;
+            background-color: #090a0f;
+            height: 400px;
+            width: 100%;
+        }
+        canvas { display: block; width: 100%; height: 100%; }
+        
+        /* Floating Labels */
+        .floating-label {
+            position: absolute;
+            border: 1px solid #58a6ff;
+            background: rgba(13, 17, 23, 0.8);
+            color: #58a6ff;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            pointer-events: none;
+            box-shadow: 0 0 10px rgba(88, 166, 255, 0.2);
+            transition: all 0.5s ease;
+        }
+        #label-sphere { bottom: 20px; left: 35%; }
+        #label-earth { display: none; bottom: 50px; right: 40px; border-color: #2ea043; color: #2ea043;}
+
+        /* Bottom Controls */
+        .controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 25px;
+            background-color: #161b22;
+            border-top: 1px solid #30363d;
+        }
+        .control-group { display: flex; align-items: center; gap: 15px; }
+        select {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            border: 1px solid #30363d;
+            padding: 8px 12px;
+            border-radius: 6px;
+            outline: none;
+        }
+        input[type=range] { width: 150px; cursor: pointer; }
+        
+        /* Toggle Switch */
+        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #30363d; transition: .4s; border-radius: 24px;
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px;
+            background-color: white; transition: .4s; border-radius: 50%;
+        }
+        input:checked + .slider { background-color: #58a6ff; }
+        input:checked + .slider:before { transform: translateX(20px); }
+    </style>
+</head>
+<body>
+
+<div class="dashboard">
+    <div class="top-bar">
+        <div class="title">Project Swarm: Celestial Mapping</div>
+        <div class="metrics">
+            <div class="metric"><span class="metric-label">Swarm Compute</span><span class="metric-value">752.0 Pbps</span></div>
+            <div class="metric"><span class="metric-label">Relay Latency</span><span class="metric-value">13.52 ms</span></div>
+            <div class="metric"><span class="metric-label">Entropy Rank</span><span class="metric-value critical">Critical</span></div>
+            <div class="metric"><span class="metric-label">Earth Signal</span><span class="metric-value">Legacy</span></div>
+        </div>
+    </div>
+
+    <div class="canvas-container">
+        <canvas id="celestialMap" width="900" height="400"></canvas>
+        <div id="label-sphere" class="floating-label">DISTANT SPHERE (DATA/POWER ROUTER)</div>
+        <div id="label-earth" class="floating-label">EARTH (LEGACY NODE)</div>
+    </div>
+
+    <div class="controls">
+        <div class="control-group">
+            <span style="font-size: 0.9rem;">View Mode</span>
+            <select id="viewMode">
+                <option value="inner">Inner System (The Forge)</option>
+                <option value="outer">Outer System (Scale View)</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <span style="font-size: 0.9rem;">Swarm Entropy</span>
+            <input type="range" id="entropySlider" min="0" max="2" step="0.1" value="0.8">
+            <span id="entropyVal" style="font-family: monospace;">0.8</span>
+        </div>
+        <div class="control-group">
+            <span style="font-size: 0.9rem;">Data Streams</span>
+            <label class="switch">
+                <input type="checkbox" id="streamToggle" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById("celestialMap");
+    const ctx = canvas.getContext("2d");
+    
+    // UI Elements
+    const viewMode = document.getElementById("viewMode");
+    const entropySlider = document.getElementById("entropySlider");
+    const entropyVal = document.getElementById("entropyVal");
+    const streamToggle = document.getElementById("streamToggle");
+    const labelSphere = document.getElementById("label-sphere");
+    const labelEarth = document.getElementById("label-earth");
+
+    // Physics & State
+    let particles = [];
+    const numParticles = 400;
+    let centerX = canvas.width / 2;
+    let centerY = canvas.height / 2;
+
+    // Initialize Swarm Particles
+    for (let i = 0; i < numParticles; i++) {
+        particles.push({
+            angle: Math.random() * Math.PI * 2,
+            distance: 120 + Math.random() * 200, // Distance from sun
+            speed: 0.002 + Math.random() * 0.005,
+            size: 1 + Math.random() * 1.5
+        });
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        let mode = viewMode.value;
+        let entropy = parseFloat(entropySlider.value);
+        entropyVal.innerText = entropy.toFixed(1);
+        let showStreams = streamToggle.checked;
+
+        // View Mode Scales
+        let scale = mode === "inner" ? 1 : 0.3;
+        let sunRadius = mode === "inner" ? 80 : 24;
+
+        // 1. Draw The Sun (Glowing Center)
+        let gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, sunRadius * 2);
+        gradient.addColorStop(0, "rgba(255, 255, 255, 1)");
+        gradient.addColorStop(0.2, "rgba(255, 200, 100, 0.8)");
+        gradient.addColorStop(0.5, "rgba(255, 51, 102, 0.5)");
+        gradient.addColorStop(1, "rgba(255, 51, 102, 0)");
+        
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, sunRadius * 2, 0, Math.PI * 2);
+        ctx.fill();
+
+        // 2. Draw Distant Sphere (The Router)
+        let sphereDist = mode === "inner" ? 350 : 105;
+        let sphereX = centerX;
+        let sphereY = centerY + sphereDist;
+        
+        ctx.strokeStyle = "rgba(88, 166, 255, 0.5)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, sphereDist, 0, Math.PI * 2); // Orbit line
+        ctx.stroke();
+
+        ctx.fillStyle = "#58a6ff";
+        ctx.beginPath();
+        ctx.arc(sphereX, sphereY, mode === "inner" ? 6 : 3, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Update Labels based on mode
+        if(mode === "inner") {
+            labelSphere.style.bottom = "20px";
+            labelEarth.style.display = "none";
+        } else {
+            labelSphere.style.bottom = "120px";
+            labelEarth.style.display = "block";
+            // Draw Earth
+            ctx.fillStyle = "#2ea043";
+            ctx.beginPath();
+            ctx.arc(centerX + 350, centerY, 4, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // 3. Draw The Swarm & Data Streams
+        particles.forEach((p, index) => {
+            p.angle += p.speed;
+            
+            // Jitter based on Entropy Slider
+            let jitterX = (Math.random() - 0.5) * 10 * entropy;
+            let jitterY = (Math.random() - 0.5) * 10 * entropy;
+            
+            let x = centerX + Math.cos(p.angle) * (p.distance * scale) + jitterX;
+            let y = centerY + Math.sin(p.angle) * (p.distance * scale) + jitterY;
+
+            // Draw Data Streams (connecting random particles to the sphere)
+            if (showStreams && index % 15 === 0) {
+                ctx.strokeStyle = "rgba(88, 166, 255, 0.1)";
+                ctx.beginPath();
+                ctx.moveTo(x, y);
+                ctx.lineTo(sphereX, sphereY);
+                ctx.stroke();
+            }
+
+            // Draw Particle
+            ctx.fillStyle = "rgba(255, 51, 102, 0.8)";
+            ctx.beginPath();
+            ctx.arc(x, y, p.size * scale, 0, Math.PI * 2);
+            ctx.fill();
+        });
+
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+</script>
+
+</body>
+</html>
