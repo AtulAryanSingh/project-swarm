@@ -25,16 +25,20 @@ While Project Swarm is built on theoretical physics, the repository itself is a 
 ## Visual Walkthrough
 
 ### 1) Concept + Architecture
-![Concept + Architecture](assets/screenshots/https://github.com/AtulAryanSingh/project-swarm/blob/main/Screenshot%202026-03-26%20at%2022.30.31.png
+![Concept + Architecture](assets/screenshots/<img width="1440" height="900" alt="Screenshot 2026-03-26 at 22 30 31" src="https://github.com/user-attachments/assets/975ccb97-bc8e-4fe2-a327-434d3b548f38" />
+
 )
 *Concept layer + concrete software architecture in one view.*
 
 ### 2) Ingestion Router Live
-![Ingestion Router](assets/screenshots/https://github.com/AtulAryanSingh/project-swarm/blob/main/Screenshot%202026-03-26%20at%2023.04.52.png)
+![Ingestion Router](assets/screenshots/<img width="1440" height="900" alt="Screenshot 2026-03-26 at 23 04 52" src="https://github.com/user-attachments/assets/628770e1-020d-4526-93ef-7b71f1fded48" />
+)
 *Live routing of noisy streams into separated signal/data channels.*
 
 ### 3) Memory / Reconstruction Output
-![Memory Engine](assets/screenshots/https://github.com/AtulAryanSingh/project-swarm/blob/main/Screenshot%202026-03-26%20at%2023.05.36.png)
+t
+![Memory Engine](assets/screenshots/<img width="1440" height="900" alt="Screenshot 2026-03-26 at 23 05 36" src="https://github.com/user-attachments/assets/b0b54329-c164-419d-b21d-636a773a9e80" />
+)
 *Transformed output and reconstructed structured payloads.*
 
 ## Repository Structure
