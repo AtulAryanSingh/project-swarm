@@ -3,76 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Swarm | SINGULARITY ENGINE COMMAND TERMINAL</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <title>Project Swarm | 4D TRANSCENDENT COMMAND TERMINAL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* CSS reset to prevent scrolling and handle fonts */
-        body { margin: 0; padding: 0; overflow: hidden; background-color: #000; font-family: 'Share Tech Mono', monospace; color: #fff; }
+        body { margin: 0; padding: 0; overflow: hidden; background-color: #000; font-family: 'Rajdhani', sans-serif; color: #fff; user-select: none; }
         #webgl-canvas { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; }
         
-        /* Monolithic Glass HUD (Heads Up Display) Overlay */
+        /* Glassmorphism HUD */
         #hud-layer {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10;
-            pointer-events: none; /* Let clicks pass through to the 3D scene */
-            display: flex; flex-direction: column; justify-content: space-between;
-            padding: 40px; box-sizing: border-box;
-            background: radial-gradient(circle at center, transparent 60%, rgba(0,0,0,0.8) 100%);
+            pointer-events: none; display: flex; flex-direction: column; justify-content: space-between;
+            padding: 30px 50px; box-sizing: border-box;
+            background: radial-gradient(circle at center, transparent 40%, rgba(0,5,15,0.7) 100%);
         }
 
-        /* Top Bar Content */
-        .top-bar { display: flex; justify-content: space-between; align-items: center; width: 100%;}
-        .title-block h1 {
-            font-family: 'Orbitron', sans-serif; font-size: 3rem; margin: 0 0 5px 0; letter-spacing: 6px;
-            color: #fff; text-shadow: 0 0 20px #ffaa00;
+        /* Top Navigation */
+        .top-nav { display: flex; justify-content: space-between; align-items: flex-start; width: 100%; }
+        
+        .brand h1 {
+            font-family: 'Orbitron', sans-serif; font-size: 2.8rem; margin: 0 0 5px 0; letter-spacing: 8px;
+            background: linear-gradient(90deg, #fff, #00f3ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(0, 243, 255, 0.4);
         }
-        .title-block p { font-size: 1.2rem; color: #ffaa00; margin: 0; letter-spacing: 3px; }
+        .brand p { font-size: 1.1rem; color: #00f3ff; margin: 0; letter-spacing: 4px; text-transform: uppercase; opacity: 0.8; }
 
-        /* The Dashboard buttons (re-enable pointer events for interaction) */
-        .dashboard-controls { pointer-events: auto; display: flex; gap: 15px; }
-        .cyber-btn {
-            display: inline-block; padding: 10px 20px; background: transparent; color: #ffaa00;
-            text-decoration: none; border: 1px solid #ffaa00; font-family: 'Orbitron', sans-serif;
-            font-weight: 700; font-size: 1rem; letter-spacing: 2px; text-transform: uppercase;
-            cursor: pointer; transition: all 0.2s ease;
+        .sys-controls { pointer-events: auto; display: flex; gap: 20px; }
+        .btn-glass {
+            padding: 12px 25px; background: rgba(0, 243, 255, 0.05); border: 1px solid rgba(0, 243, 255, 0.3);
+            color: #00f3ff; font-family: 'Orbitron', sans-serif; font-weight: 700; letter-spacing: 2px;
+            text-transform: uppercase; text-decoration: none; border-radius: 4px; backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); cursor: pointer;
         }
-        .cyber-btn:hover { background: #ffaa00; color: #000; box-shadow: 0 0 20px #ffaa00; }
-        .cyber-btn-cyan { color: #00f3ff; border-color: #00f3ff; }
-        .cyber-btn-cyan:hover { background: #00f3ff; color: #000; box-shadow: 0 0 20px #00f3ff; }
+        .btn-glass:hover { background: rgba(0, 243, 255, 0.2); border-color: #00f3ff; box-shadow: 0 0 20px rgba(0,243,255,0.4); transform: translateY(-2px); }
+        .btn-glass-pink { color: #ff0055; border-color: rgba(255, 0, 85, 0.3); background: rgba(255, 0, 85, 0.05); }
+        .btn-glass-pink:hover { background: rgba(255, 0, 85, 0.2); border-color: #ff0055; box-shadow: 0 0 20px rgba(255,0,85,0.4); }
 
-        /* Complex Terminal Panels (Middle Left/Right) */
-        .side-panels { pointer-events: auto; display: flex; flex-direction: column; gap: 20px; width: 400px; position: absolute; top: 120px; right: 40px; }
-        .holo-panel {
-            background: rgba(3, 10, 20, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(0, 240, 255, 0.1);
-            padding: 25px; transition: 0.3s;
+        /* The targeting reticle */
+        .reticle {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 60px; height: 60px; pointer-events: none; opacity: 0.3; transition: 0.3s;
         }
-        .holo-panel h2 { font-family: 'Orbitron', sans-serif; font-size: 1.3rem; color: #fff; border-bottom: 1px solid rgba(0, 240, 255, 0.2); padding-bottom: 10px; margin-top: 0; }
-        .holo-panel p, .holo-panel li { color: #94a3b8; font-size: 1.1rem; line-height: 1.6; }
-        .holo-panel strong { color: #fff; text-shadow: 0 0 5px rgba(255,255,255,0.5); }
-        .holo-panel:hover { border-color: rgba(0, 240, 255, 0.3); }
+        .reticle::before, .reticle::after { content: ''; position: absolute; border: 1px solid #00f3ff; width: 20px; height: 20px; }
+        .reticle::before { top: 0; left: 0; border-right: none; border-bottom: none; }
+        .reticle::after { bottom: 0; right: 0; border-left: none; border-top: none; }
 
-        /* Bottom Left: The Target Info reads stage card data when a planet is selected */
-        #target-info {
-            background: rgba(10, 5, 0, 0.85); border-left: 3px solid #00f3ff; padding: 25px;
-            width: 400px; backdrop-filter: blur(10px); opacity: 0; transform: translateY(20px); transition: all 0.3s ease;
-            position: absolute; bottom: 40px; left: 40px; pointer-events: auto;
+        /* Dynamic Info Panel */
+        #data-panel {
+            position: absolute; bottom: 50px; left: 50px; width: 450px;
+            background: rgba(2, 6, 12, 0.6); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.1); border-top: 2px solid #00f3ff;
+            padding: 30px; transform: translateX(-50px); opacity: 0; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: auto; border-radius: 0 0 8px 8px; box-shadow: 0 20px 40px rgba(0,0,0,0.8);
         }
-        #target-info.active { opacity: 1; transform: translateY(0); }
-        #target-info h2 { font-family: 'Orbitron', sans-serif; color: #00f3ff; margin: 0 0 10px 0; font-size: 1.5rem; border-bottom: 1px solid rgba(0, 243, 255, 0.3); padding-bottom: 10px; }
-        #target-info p { color: #d0d0d0; font-size: 1.1rem; line-height: 1.5; margin: 0 0 15px 0; }
-        .status-text { color: #ffaa00; font-family: monospace; font-size: 0.95rem; letter-spacing: 1px; animation: blink 1.5s infinite; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        #data-panel.active { transform: translateX(0); opacity: 1; }
+        #data-panel h2 { font-family: 'Orbitron', sans-serif; color: #fff; margin: 0 0 5px 0; font-size: 1.6rem; letter-spacing: 2px; }
+        #data-panel .subtitle { color: #00f3ff; font-weight: 700; font-size: 1rem; letter-spacing: 1px; margin-bottom: 15px; text-transform: uppercase; }
+        #data-panel p { color: #a0aec0; font-size: 1.15rem; line-height: 1.6; margin: 0 0 20px 0; }
+        .system-msg { color: #ffaa00; font-family: monospace; font-size: 0.9rem; animation: pulse 2s infinite; }
+        
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-        /* Center Crosshair */
-        .crosshair { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 50px; height: 50px; border: 1px solid rgba(255, 170, 0, 0.2); border-radius: 50%; pointer-events: none; }
-        .crosshair::before, .crosshair::after { content: ''; position: absolute; background: rgba(255, 170, 0, 0.5); }
-        .crosshair::before { top: 50%; left: -15px; right: -15px; height: 1px; }
-        .crosshair::after { left: 50%; top: -15px; bottom: -15px; width: 1px; }
-
-        /* The Decryption/Reveal effect for the subtitle */
-        #reveal-block { visibility: hidden; position: absolute; bottom: 10px; left: 40%; font-size: 0.8rem; letter-spacing: 5px; color: rgba(255,255,255,0.3); font-family: monospace;}
-
+        /* Instructions */
+        .controls-hint { position: absolute; bottom: 30px; right: 50px; text-align: right; color: rgba(255,255,255,0.3); font-family: monospace; font-size: 0.85rem; line-height: 1.8; }
     </style>
 </head>
 <body>
@@ -80,283 +72,279 @@
     <div id="webgl-canvas"></div>
 
     <div id="hud-layer">
-        
-        <div class="top-bar">
-            <div class="title-block">
+        <div class="top-nav">
+            <div class="brand">
                 <h1>PROJECT SWARM</h1>
-                <p>TYPE II SINGULARITY ENGINE ONLINE</p>
+                <p>4D TRANSCENDENT ARCHITECTURE</p>
             </div>
-            <div class="dashboard-controls">
-                <a href="celestial_mapping.html" class="cyber-btn">SYSTEM TELEMETRY</a>
-                <a href="economics_mapping.html" class="cyber-btn cyber-btn-cyan">VON NEUMANN FORGE</a>
-            </div>
-        </div>
-
-        <div class="crosshair"></div>
-
-        <div class="side-panels">
-            <div class="holo-panel">
-                <h2>SYSTEM_ARCHITECTURE</h2>
-                <p>Functional simulation of an Edge Computing data pipeline.</p>
-                <ul style="list-style-type: square; padding-left: 20px; color: #00f3ff;">
-                    <li><span style="color: #94a3b8;"><strong>STATUS:</strong> Simulation active. LIVE processing math (FFT, Radon transforms).</span></li>
-                    <li><span style="color: #94a3b8;"><strong>I/O:</strong> Ingests noisy time-series arrays &rarr; serialized JSON coordinate payloads.</span></li>
-                    <li><span style="color: #94a3b8;"><strong>DECENTRALIZATION:</strong> emulates distributed asynchronous edge nodes.</span></li>
-                </ul>
-            </div>
-            <div class="holo-panel">
-                <h2>CORE_PHILOSOPHY: ENTROPY_AS_ENGINE</h2>
-                <p>Traditional engineering builds fortresses against the universe. Projects like Musk's **Terafab** aim to brute-force orbital manufacturing with fragile silicon chips hidden behind shields.</p>
-                <p>We align with chaos. We proposes launching a massive web of raw, programmable **Piezo-phononic Smart Rocks** into a highly radioactive solar orbit. Rather than avoiding destruction, they *require* it. When an anomaly crushes a node, it generates raw energy and acoustic data. Universe's entropy becomes our computational engine.</p>
-            </div>
-            <div style="color: rgba(255,255,255,0.4); font-size: 0.8rem; margin-top: 10px; text-align: right; font-family: monospace;">
-                [ DRAG ORBIT TO ROTATE ]<br>[ SCROLL TO ZOOM ]<br>[ SELECT PLANET TO INITIATE ]
+            <div class="sys-controls">
+                <a href="celestial_mapping.html" class="btn-glass">SYSTEM_MAP</a>
+                <a href="economics_mapping.html" class="btn-glass btn-glass-pink">THE_FORGE</a>
             </div>
         </div>
 
-        <div id="target-info">
-            <h2 id="target-title">TARGET LOCKED</h2>
-            <p id="target-desc">Awaiting telemetry...</p>
-            <div class="status-text">> INITIATE DESCENT SEQUENCE</div>
+        <div class="reticle" id="center-reticle"></div>
+
+        <div id="data-panel">
+            <h2 id="dp-title">MODULE</h2>
+            <div class="subtitle" id="dp-sub">CLASSIFICATION</div>
+            <p id="dp-desc">Telemetry data.</p>
+            <div class="system-msg">> CLICK NODE TO INITIALIZE SECURE LINK</div>
         </div>
-        
-        <div id="reveal-block">> NEURAL LINK ESTABLISHED</div>
+
+        <div class="controls-hint">
+            [ DRAG TO ROTATE 4D SPACE ]<br>
+            [ SCROLL TO ZOOM ]<br>
+            [ SELECT ORBITAL NODE ]
+        </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
     <script>
-        // --- TEXT REVEAL EFFECT ---
-        setTimeout(() => { document.getElementById('reveal-block').style.visibility = 'visible'; }, 1000);
-
-        // --- 1. PROCEDURAL TEXTURE GENERATOR (Creates photorealistic planets) ---
-        function generatePlanetTexture(type) {
+        // =========================================================================
+        // 1. ADVANCED PROCEDURAL FRACTAL TEXTURE GENERATOR (The "4D" Realism Engine)
+        // =========================================================================
+        function generateHighDefTexture(type) {
             const canvas = document.createElement('canvas');
             canvas.width = 1024; canvas.height = 512;
             const ctx = canvas.getContext('2d');
 
-            if (type === 'volcanic') {
-                ctx.fillStyle = '#2a1508'; ctx.fillRect(0, 0, 1024, 512);
-                for(let i=0; i<8000; i++) {
-                    ctx.fillStyle = Math.random() > 0.9 ? '#ff3300' : '#110a05'; 
-                    ctx.globalAlpha = Math.random() * 0.8;
-                    ctx.beginPath(); ctx.arc(Math.random()*1024, Math.random()*512, Math.random()*8, 0, Math.PI*2); ctx.fill();
+            // Noise helper function for organic terrain
+            function noise(x, y) { return Math.sin(x * 0.05) * Math.cos(y * 0.05) * Math.sin((x+y)*0.02); }
+
+            if (type === 'sun') {
+                const grad = ctx.createRadialGradient(512, 256, 0, 512, 256, 512);
+                grad.addColorStop(0, '#ffffff'); grad.addColorStop(0.2, '#ffea00');
+                grad.addColorStop(0.6, '#ff5500'); grad.addColorStop(1, '#880000');
+                ctx.fillStyle = grad; ctx.fillRect(0, 0, 1024, 512);
+                ctx.globalCompositeOperation = 'overlay';
+                for(let i=0; i<1000; i++) {
+                    ctx.fillStyle = Math.random() > 0.5 ? 'rgba(255,255,255,0.1)' : 'rgba(255,0,0,0.1)';
+                    ctx.beginPath(); ctx.arc(Math.random()*1024, Math.random()*512, Math.random()*20, 0, Math.PI*2); ctx.fill();
                 }
-            } else if (type === 'gas_giant') {
-                const gradient = ctx.createLinearGradient(0, 0, 0, 512);
-                gradient.addColorStop(0, '#c2b280'); gradient.addColorStop(0.3, '#8b6b4a'); 
-                gradient.addColorStop(0.6, '#e0cda9'); gradient.addColorStop(1, '#5c4033');
-                ctx.fillStyle = gradient; ctx.fillRect(0, 0, 1024, 512);
-                for(let i=0; i<300; i++) {
-                    ctx.fillStyle = Math.random() > 0.5 ? '#ffffff' : '#3e2723';
-                    ctx.globalAlpha = Math.random() * 0.15;
-                    ctx.fillRect(0, Math.random()*512, 1024, Math.random()*20); 
+            } 
+            else if (type === 'gas') {
+                // Jupiter-like bands with turbulence
+                for(let y=0; y<512; y++) {
+                    let v = Math.sin(y * 0.03) + Math.sin(y * 0.1) * 0.5;
+                    let r = 150 + v * 50 + Math.random()*20;
+                    let g = 100 + v * 40 + Math.random()*20;
+                    let b = 50 + v * 20;
+                    ctx.fillStyle = `rgb(${r},${g},${b})`;
+                    ctx.fillRect(0, y, 1024, 1);
                 }
-            } else if (type === 'oceanic') {
-                ctx.fillStyle = '#001f3f'; ctx.fillRect(0, 0, 1024, 512); 
-                for(let i=0; i<5000; i++) {
-                    ctx.fillStyle = '#ffffff'; ctx.globalAlpha = Math.random() * 0.4; // Storm clouds
-                    ctx.beginPath(); ctx.arc(Math.random()*1024, Math.random()*512, Math.random()*15, 0, Math.PI*2); ctx.fill();
+                // Giant Storm (Red Spot)
+                const grad = ctx.createRadialGradient(400, 300, 0, 400, 300, 60);
+                grad.addColorStop(0, 'rgba(200, 50, 0, 0.8)'); grad.addColorStop(1, 'rgba(200, 50, 0, 0)');
+                ctx.fillStyle = grad; ctx.fillRect(0,0,1024,512);
+            }
+            else if (type === 'ocean') {
+                // Deep blue water
+                ctx.fillStyle = '#002244'; ctx.fillRect(0, 0, 1024, 512);
+                // Green/Brown Continents using sine waves
+                ctx.fillStyle = '#115522';
+                for(let x=0; x<1024; x+=4) {
+                    for(let y=0; y<512; y+=4) {
+                        let n = noise(x, y) + noise(x*2, y*2)*0.5;
+                        if(n > 0.3) {
+                            ctx.fillStyle = n > 0.6 ? '#665533' : '#115522'; // Mountains vs grass
+                            ctx.fillRect(x, y, 4, 4);
+                        }
+                    }
                 }
-            } else if (type === 'industrial_forge') {
-                ctx.fillStyle = '#222222'; ctx.fillRect(0, 0, 1024, 512);
-                for(let i=0; i<10000; i++) {
-                    ctx.fillStyle = Math.random() > 0.5 ? '#ffffaa' : '#333333'; // Hot forge points vs dark metal
-                    ctx.globalAlpha = Math.random() * 0.3;
-                    ctx.beginPath(); ctx.arc(Math.random()*1024, Math.random()*512, Math.random()*3, 0, Math.PI*2); ctx.fill();
+            }
+            else if (type === 'clouds') {
+                // Transparent cloud layer for Earth-like planet
+                ctx.clearRect(0,0,1024,512);
+                ctx.fillStyle = 'rgba(255,255,255,0.8)';
+                for(let i=0; i<2000; i++) {
+                    let x = Math.random()*1024, y = Math.random()*512;
+                    let n = noise(x, y);
+                    if(n > 0) {
+                        ctx.beginPath(); ctx.arc(x, y, Math.random()*15, 0, Math.PI*2); ctx.fill();
+                    }
                 }
+            }
+            else if (type === 'volcanic') {
+                ctx.fillStyle = '#1a0a05'; ctx.fillRect(0, 0, 1024, 512); // Obsidian rock
+                ctx.strokeStyle = '#ff3300'; ctx.lineWidth = 2;
+                for(let i=0; i<50; i++) {
+                    ctx.beginPath(); ctx.moveTo(Math.random()*1024, Math.random()*512);
+                    for(let j=0; j<10; j++) { ctx.lineTo(Math.random()*1024, Math.random()*512); }
+                    ctx.stroke(); // Glowing lava cracks
+                }
+            }
+            else if (type === 'forge') {
+                ctx.fillStyle = '#22252a'; ctx.fillRect(0, 0, 1024, 512); // Dark metal
+                ctx.strokeStyle = '#00f3ff'; ctx.lineWidth = 1;
+                // Cyberpunk glowing grid lines
+                for(let x=0; x<1024; x+=32) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,512); ctx.stroke(); }
+                for(let y=0; y<512; y+=32) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(1024,y); ctx.stroke(); }
             }
             return new THREE.CanvasTexture(canvas);
         }
 
-        // --- 2. SCENE SETUP ---
+        // =========================================================================
+        // 2. SCENE, CAMERA, RENDERING SETUP
+        // =========================================================================
         const container = document.getElementById('webgl-canvas');
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 2000);
-        camera.position.set(0, 60, 140);
+        // Deep space cosmic fog
+        scene.fog = new THREE.FogExp2(0x020510, 0.002);
 
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+        const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 5000);
+        camera.position.set(0, 150, 300);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: "high-performance" });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Optimize for high-res screens
         container.appendChild(renderer.domElement);
 
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true; controls.dampingFactor = 0.05; controls.maxDistance = 400; controls.minDistance = 30;
+        controls.enableDamping = true; controls.dampingFactor = 0.05; 
+        controls.maxDistance = 800; controls.minDistance = 60;
 
-        // --- 3. LIGHTING (The intense light of the singularity accretion disk) ---
-        scene.add(new THREE.AmbientLight(0x111111));
-        // Golden Orange Point Light (The Distant Sphere energy router)
-        const diskLight = new THREE.PointLight(0xffaa00, 3, 500);
-        scene.add(diskLight);
-        // White Hot Core Point Light (The Singularity)
-        const coreLight = new THREE.PointLight(0xffffff, 1, 100);
-        scene.add(coreLight);
+        // =========================================================================
+        // 3. ILLUMINATION (The Cosmic Light)
+        // =========================================================================
+        scene.add(new THREE.AmbientLight(0x0a1015, 1.5)); // Dark blue starlight
+        const sunLight = new THREE.PointLight(0xffeedd, 4, 1500); // Massive central star illumination
+        scene.add(sunLight);
 
-        // --- 4. CONSTRUCT THE SYSTEM ---
-        
-        // 1. Central Core (The Black Hole / Singularity Event Horizon)
-        const eventHorizonGeo = new THREE.SphereGeometry(12, 64, 64);
-        const eventHorizonMat = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Pitch Black
-        const blackHole = new THREE.Mesh(eventHorizonGeo, eventHorizonMat);
-        scene.add(blackHole);
-
-        // 2. Colossal Central Structure (The Distant Sphere Energy Router artificial core)
-        const sphereGeo = new THREE.SphereGeometry(14, 64, 64);
-        const sphereMat = new THREE.MeshStandardMaterial({ 
-            color: 0x111111, 
-            wireframe: true, 
-            emissive: 0x00f3ff, 
-            emissiveIntensity: 0.1 
-        });
-        const sphereStructure = new THREE.Mesh(sphereGeo, sphereMat);
-        scene.add(sphereStructure);
-
-        // Background Starfield
+        // =========================================================================
+        // 4. THE 4D COSMIC BACKGROUND (Nebula & Starfield)
+        // =========================================================================
+        // Sharp Stars
         const starGeo = new THREE.BufferGeometry();
-        const starPos = new Float32Array(5000 * 3);
-        for(let i=0; i<15000; i++) { starPos[i] = (Math.random() - 0.5) * 1000; }
+        const starPos = new Float32Array(15000 * 3);
+        for(let i=0; i<45000; i++) { starPos[i] = (Math.random() - 0.5) * 2000; }
         starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
-        const starMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.5, transparent: true, opacity: 0.8 });
+        const starMat = new THREE.PointsMaterial({ color: 0xffffff, size: 1.5, transparent: true, opacity: 0.9 });
         scene.add(new THREE.Points(starGeo, starMat));
 
-        // 3. The Singularity Accretion Disk (`image_10.png`-color particles)
-        const diskCount = 8000;
-        const diskGeo = new THREE.BufferGeometry();
-        const diskPos = new Float32Array(diskCount * 3);
-        const diskColors = new Float32Array(diskCount * 3);
-        
-        const colorInner = new THREE.Color(0xffffff); // White hot core
-        const colorMid = new THREE.Color(0xffaa00);   // Golden orange plasma
-        const colorOuter = new THREE.Color(0xff3300); // Deep red edges
+        // Deep Nebula Dust (Additive blending for glowing clouds)
+        const dustGeo = new THREE.BufferGeometry();
+        const dustPos = new Float32Array(2000 * 3);
+        for(let i=0; i<6000; i++) { dustPos[i] = (Math.random() - 0.5) * 1500; }
+        dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPos, 3));
+        const dustMat = new THREE.PointsMaterial({ color: 0x0055ff, size: 40, transparent: true, opacity: 0.03, blending: THREE.AdditiveBlending, depthWrite: false });
+        scene.add(new THREE.Points(dustGeo, dustMat));
 
-        for(let i=0; i < diskCount; i++) {
-            // Highly dense near the center
-            const radius = 16 + Math.pow(Math.random(), 2) * 50; 
-            const angle = Math.random() * Math.PI * 2;
-            const yOffset = (Math.random() - 0.5) * (radius * 0.05); // Subtle warp
+        // =========================================================================
+        // 5. THE DISTANT SPHERE (The Central Star)
+        // =========================================================================
+        const sunGeo = new THREE.SphereGeometry(25, 64, 64);
+        const sunTex = generateHighDefTexture('sun');
+        const sunMaterial = new THREE.MeshBasicMaterial({ map: sunTex });
+        const theSun = new THREE.Mesh(sunGeo, sunMaterial);
+        scene.add(theSun);
 
-            diskPos[i*3] = Math.cos(angle) * radius;
-            diskPos[i*3+1] = yOffset;
-            diskPos[i*3+2] = Math.sin(angle) * radius;
+        // Solar Corona Glow
+        const coronaGeo = new THREE.SphereGeometry(28, 64, 64);
+        const coronaMat = new THREE.MeshBasicMaterial({ color: 0xffaa00, transparent: true, opacity: 0.3, blending: THREE.AdditiveBlending });
+        const corona = new THREE.Mesh(coronaGeo, coronaMat);
+        scene.add(corona);
 
-            // Gradient: white hot to deep red
-            let mixRatio = (radius - 16) / 50;
-            let c = colorInner.clone().lerp(colorMid, mixRatio * 2);
-            if(mixRatio > 0.5) c = colorMid.clone().lerp(colorOuter, (mixRatio - 0.5) * 2);
-
-            diskColors[i*3] = c.r; diskColors[i*3+1] = c.g; diskColors[i*3+2] = c.b;
+        // The Swarm (Asteroid Belt / Data Nodes orbiting the sun)
+        const swarmCount = 10000;
+        const swarmGeo = new THREE.BufferGeometry();
+        const swarmPos = new Float32Array(swarmCount * 3);
+        for(let i=0; i < swarmCount * 3; i+=3) {
+            const r = 35 + Math.random() * 80;
+            const theta = Math.random() * Math.PI * 2;
+            swarmPos[i] = r * Math.cos(theta);
+            swarmPos[i+1] = (Math.random() - 0.5) * 15; // Asteroid belt thickness
+            swarmPos[i+2] = r * Math.sin(theta);
         }
-        
-        diskGeo.setAttribute('position', new THREE.BufferAttribute(diskPos, 3));
-        diskGeo.setAttribute('color', new THREE.BufferAttribute(diskColors, 3));
-        const diskMaterial = new THREE.PointsMaterial({ 
-            size: 0.4, 
-            vertexColors: true, 
-            blending: THREE.AdditiveBlending, 
-            transparent: true, 
-            opacity: 0.8 
-        });
-        const accretionDisk = new THREE.Points(diskGeo, diskMaterial);
-        accretionDisk.rotation.x = Math.PI * 0.05; // Subtle tilt
-        scene.add(accretionDisk);
+        swarmGeo.setAttribute('position', new THREE.BufferAttribute(swarmPos, 3));
+        const swarmMat = new THREE.PointsMaterial({ color: 0xff5500, size: 0.3, transparent: true, opacity: 0.8 });
+        const theSwarm = new THREE.Points(swarmGeo, swarmMat);
+        scene.add(theSwarm);
 
-        // 4. The 4 Planetary Modules (Detailed Procedural Worlds)
+        // =========================================================================
+        // 6. THE PLANETARY SYSTEM (The 4 Stages)
+        // =========================================================================
         const planets = [];
         const planetData = [
-            // Stage 1: Volcanic (chaos)
-            { id: 1, type: 'volcanic', title: "STAGE 1: SENSOR SWARM", desc: "Violent volcanic world. Simulates Stochastic Resonance—utilizing chaos to amplify incredibly faint, hidden cosmic signals.", url: "stochastic_resonance.html", distance: 50, speed: 0.003, size: 3, atmoColor: 0xff3300 },
-            // Stage 2: Gas Giant (FFT layers)
-            { id: 2, type: 'gas_giant', title: "STAGE 2: INGESTION ROUTER", desc: "Massive gas giant. The layered atmospheric bands represent the Fast Fourier Transform (FFT) sorting complex data into clean frequency arrays.", url: "06_fft_router.html", distance: 70, speed: 0.002, size: 5, atmoColor: 0xffaa00 },
-            // Stage 3: Oceanic (reconstruction)
-            { id: 3, type: 'oceanic', title: "STAGE 3: MEMORY ENGINE", desc: "Terraformed Oceanic World. Represents the Machine Learning Core using Inverse Scattering to reconstruct perfect 3D geometric memory from scattered points.", url: "inverse_scattering.html", distance: 95, speed: 0.0015, size: 3.5, atmoColor: 0x00f3ff },
-            // Stage 4: Industrial (the forge)
-            { id: 4, type: 'industrial_forge', title: "STAGE 4: PHONONIC FORGE", desc: "Dense, metallic dwarf planet. Acoustic resonance waves superheating asteroid plasma, physically forcing the atoms to crystallize into highly evolved metamaterials.", url: "phononic_forge.html", distance: 120, speed: 0.001, size: 2.5, atmoColor: 0xaaaaaa }
+            { id: 1, type: 'volcanic', title: "STAGE 1", sub: "SENSOR SWARM", desc: "Violent volcanic world. Simulates Stochastic Resonance—utilizing chaos to amplify incredibly faint, hidden cosmic signals.", url: "stochastic_resonance.html", distance: 75, speed: 0.003, size: 4, glow: 0xff3300 },
+            { id: 2, type: 'gas', title: "STAGE 2", sub: "INGESTION ROUTER", desc: "Massive gas giant with orbital rings. Represents the Fast Fourier Transform (FFT) sorting complex data into clean frequency arrays.", url: "06_fft_router.html", distance: 120, speed: 0.002, size: 8, glow: 0xffaa00, hasRings: true },
+            { id: 3, type: 'ocean', title: "STAGE 3", sub: "MEMORY ENGINE", desc: "Terraformed Oceanic World. The Machine Learning Core using Inverse Scattering to reconstruct 3D geometric memory from scattered points.", url: "inverse_scattering.html", distance: 170, speed: 0.0015, size: 5, glow: 0x00f3ff, hasClouds: true },
+            { id: 4, type: 'forge', title: "STAGE 4", sub: "PHONONIC FORGE", desc: "Metallic dwarf planet. Acoustic resonance waves superheating asteroid plasma, forcing atoms to crystallize into highly evolved metamaterials.", url: "phononic_forge.html", distance: 220, speed: 0.001, size: 3.5, glow: 0x00f3ff }
         ];
 
         planetData.forEach((data, index) => {
-            // Core Planet Mesh with detailed procedural map/bump
+            // Planet Base Mesh
             const geo = new THREE.SphereGeometry(data.size, 64, 64);
-            const texture = generatePlanetTexture(data.type);
-            const mat = new THREE.MeshStandardMaterial({ 
-                map: texture, 
-                bumpMap: texture, 
-                bumpScale: 0.1, // Gives physical roughness from texture
-                roughness: data.type === 'oceanic' ? 0.2 : 0.8, // Ocean shiny, rock rough
-                metalness: data.type === 'industrial_forge' ? 0.5 : 0.1
-            });
+            const tex = generateHighDefTexture(data.type);
+            const mat = new THREE.MeshStandardMaterial({ map: tex, bumpMap: tex, bumpScale: 0.2, roughness: 0.7, metalness: data.type==='forge'?0.8:0.1 });
             const mesh = new THREE.Mesh(geo, mat);
 
-            // Detailed Atmosphere Layer
-            const atmoGeo = new THREE.SphereGeometry(data.size * 1.1, 32, 32);
-            const atmoMat = new THREE.MeshBasicMaterial({ 
-                color: data.atmoColor, 
-                transparent: true, 
-                opacity: 0.15, 
-                blending: THREE.AdditiveBlending 
-            });
-            const atmosphere = new THREE.Mesh(atmoGeo, atmoMat);
-            mesh.add(atmosphere); // Attach atmo to planet
-            
-            // Orbit Mathematics
+            // Add Clouds to Earth-like planet
+            if (data.hasClouds) {
+                const cloudGeo = new THREE.SphereGeometry(data.size * 1.02, 64, 64);
+                const cloudTex = generateHighDefTexture('clouds');
+                const cloudMat = new THREE.MeshStandardMaterial({ map: cloudTex, transparent: true, opacity: 0.9, depthWrite: false });
+                mesh.clouds = new THREE.Mesh(cloudGeo, cloudMat);
+                mesh.add(mesh.clouds);
+            }
+
+            // Add Physical 3D Rings to Gas Giant
+            if (data.hasRings) {
+                const ringGeo = new THREE.RingGeometry(data.size * 1.4, data.size * 2.2, 128);
+                const ringTex = generateHighDefTexture('gas'); // Reuse gas texture for striped rings
+                const ringMat = new THREE.MeshStandardMaterial({ map: ringTex, side: THREE.DoubleSide, transparent: true, opacity: 0.7 });
+                const ring = new THREE.Mesh(ringGeo, ringMat);
+                ring.rotation.x = Math.PI / 2 + 0.2; // Tilt the ring
+                mesh.add(ring);
+            }
+
+            // Atmosphere Glow
+            const atmoGeo = new THREE.SphereGeometry(data.size * 1.15, 32, 32);
+            const atmoMat = new THREE.MeshBasicMaterial({ color: data.glow, transparent: true, opacity: 0.15, blending: THREE.AdditiveBlending });
+            mesh.add(new THREE.Mesh(atmoGeo, atmoMat));
+
+            // Setup Orbit Math
             const angle = (index / planetData.length) * Math.PI * 2;
             mesh.position.x = Math.cos(angle) * data.distance;
             mesh.position.z = Math.sin(angle) * data.distance;
-            
-            // Store description data directly inside the 3D object for Javascript to read on hover
-            mesh.userData = data; 
-            mesh.userData.angle = angle; 
+            mesh.userData = data; mesh.userData.angle = angle;
 
-            // Add subtle orbital path ring
-            const ringGeo = new THREE.RingGeometry(data.distance - 0.1, data.distance + 0.1, 128);
-            const ringMat = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, transparent: true, opacity: 0.05 });
-            const ring = new THREE.Mesh(ringGeo, ringMat);
-            ring.rotation.x = Math.PI / 2;
-            scene.add(ring);
+            // Draw Orbital Path
+            const pathGeo = new THREE.RingGeometry(data.distance - 0.2, data.distance + 0.2, 128);
+            const pathMat = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, transparent: true, opacity: 0.05 });
+            const path = new THREE.Mesh(pathGeo, pathMat);
+            path.rotation.x = Math.PI / 2;
+            scene.add(path);
 
             scene.add(mesh);
             planets.push(mesh);
         });
 
-        // 5. The Particle SwarmBelt (red data rocks orbiting the central star)
-        const swarmCount = 5000;
-        const swarmGeo = new THREE.BufferGeometry();
-        const swarmPos = new Float32Array(swarmCount * 3);
-        
-        for(let i=0; i < swarmCount * 3; i+=3) {
-            // A tight belt of chaotic particles
-            const r = 20 + Math.random() * 60;
-            const theta = Math.random() * Math.PI * 2;
-            const phi = Math.acos(2 * Math.random() - 1);
-            
-            swarmPos[i] = r * Math.sin(phi) * Math.cos(theta);
-            swarmPos[i+1] = r * Math.sin(phi) * Math.sin(theta) * 0.1; // Flatten the Swarm Belt
-            swarmPos[i+2] = r * Math.cos(phi);
-        }
-        
-        swarmGeo.setAttribute('position', new THREE.BufferAttribute(swarmPos, 3));
-        const swarmMat = new THREE.PointsMaterial({ color: 0xff3300, size: 0.2, transparent: true, opacity: 0.7 });
-        const swarmBelt = new THREE.Points(swarmGeo, swarmMat);
-        scene.add(swarmBelt);
-
-        // --- 5. INTERACTION LOGIC (RAYCASTER) ---
+        // =========================================================================
+        // 7. RAYCASTING & HUD INTERACTION
+        // =========================================================================
         const raycaster = new THREE.Raycaster();
         const mouse = new THREE.Vector2();
-        const targetInfo = document.getElementById('target-info');
-        const targetTitle = document.getElementById('target-title');
-        const targetDesc = document.getElementById('target-desc');
+        
+        // UI Elements
+        const dataPanel = document.getElementById('data-panel');
+        const dpTitle = document.getElementById('dp-title');
+        const dpSub = document.getElementById('dp-sub');
+        const dpDesc = document.getElementById('dp-desc');
+        const reticle = document.getElementById('center-reticle');
+        
         let hoveredNode = null;
 
-        // Trace mouse coordinate from screen into 3D scene
         window.addEventListener('mousemove', (event) => {
             mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
             mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
         });
 
-        // Click detection to execute the launch link
         window.addEventListener('click', () => {
             if (hoveredNode && hoveredNode.userData.url) {
-                // Execute link in current tab (Native browser back button will work perfectly)
+                // EXECUTED IN CURRENT WINDOW. Native back button supported.
                 window.location.href = hoveredNode.userData.url;
             }
         });
@@ -367,59 +355,66 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        // --- 6. ANIMATION & PHYSICS LOOP ---
+        // =========================================================================
+        // 8. ANIMATION LOOP (The Physics Engine)
+        // =========================================================================
         function animate() {
             requestAnimationFrame(animate);
 
-            // Physics: Central star rotation
-            sphereStructure.rotation.y += 0.005;
+            // Sun & Corona Rotation
+            theSun.rotation.y += 0.002;
+            corona.scale.setScalar(1 + Math.sin(Date.now() * 0.002) * 0.02); // Pulsating star
 
-            // Physics: Accretion Disk (fast rotation at center)
-            accretionDisk.rotation.y -= 0.015;
+            // Swarm Rotation
+            theSwarm.rotation.y += 0.001;
 
-            // Physics: Chaotic Swarm rotation
-            swarmBelt.rotation.y += 0.001;
-            swarmBelt.rotation.z += 0.0005;
-
-            // Physics: Planetesimal Orbit/Spin
+            // Planet Orbits & Rotation
             planets.forEach(planet => {
+                // Move along orbital path
                 planet.userData.angle += planet.userData.speed;
                 planet.position.x = Math.cos(planet.userData.angle) * planet.userData.distance;
                 planet.position.z = Math.sin(planet.userData.angle) * planet.userData.distance;
+                // Spin on axis
                 planet.rotation.y += 0.005; 
+                // Rotate clouds separately if they exist
+                if (planet.clouds) planet.clouds.rotation.y += 0.007;
             });
 
-            // Raycasting for UI interaction
+            // UI Raycasting
             raycaster.setFromCamera(mouse, camera);
             const intersects = raycaster.intersectObjects(planets);
 
             if (intersects.length > 0) {
                 if (hoveredNode !== intersects[0].object) {
-                    // Lock-on logic
                     hoveredNode = intersects[0].object;
-                    // Highlight the target-info box with the planet's atmosphere color
-                    targetInfo.style.borderColor = '#' + hoveredNode.userData.atmoColor.toString(16).padStart(6, '0');
-                    targetInfo.classList.add('active');
-                    // Update HUD with original card descriptions
-                    targetTitle.innerText = hoveredNode.userData.title;
-                    targetDesc.innerText = hoveredNode.userData.desc;
+                    
+                    // Update HUD Content
+                    dpTitle.innerText = hoveredNode.userData.title;
+                    dpSub.innerText = hoveredNode.userData.sub;
+                    dpDesc.innerText = hoveredNode.userData.desc;
+                    dataPanel.style.borderTopColor = '#' + hoveredNode.userData.glow.toString(16).padStart(6, '0');
+                    
+                    // Trigger UI Animations
+                    dataPanel.classList.add('active');
+                    reticle.style.borderColor = '#' + hoveredNode.userData.glow.toString(16).padStart(6, '0');
+                    reticle.style.transform = 'translate(-50%, -50%) scale(1.5)';
                     document.body.style.cursor = 'pointer';
                 }
             } else {
                 if (hoveredNode) {
-                    // Unlock logic
                     hoveredNode = null;
-                    targetInfo.classList.remove('active');
+                    dataPanel.classList.remove('active');
+                    reticle.style.borderColor = '#00f3ff';
+                    reticle.style.transform = 'translate(-50%, -50%) scale(1)';
                     document.body.style.cursor = 'default';
                 }
             }
 
-            // Update controls and render frame
             controls.update();
             renderer.render(scene, camera);
         }
 
-        // --- INITIATE ENGINE ---
+        // INIT
         animate();
     </script>
 </body>
