@@ -3,214 +3,307 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Swarm | Technical Dossier</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <title>PROJECT SWARM // ATUL ARYAN</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-base: #050505;
-            --bg-panel: rgba(15, 15, 20, 0.7);
-            --accent-cyan: #00f3ff;
-            --accent-gold: #ffaa00;
-            --text-main: #a1a1aa;
-            --text-bright: #f4f4f5;
+            --cyan: #00f3ff;
+            --pink: #ff0055;
+            --gold: #ffaa00;
         }
 
-        body { margin: 0; padding: 0; background-color: var(--bg-base); color: var(--text-main); font-family: 'Inter', sans-serif; line-height: 1.6; overflow-x: hidden; }
+        body, html { margin: 0; padding: 0; width: 100vw; height: 100vh; background-color: #010103; overflow: hidden; font-family: 'Space Mono', monospace; cursor: crosshair; user-select: none; }
         
-        /* Subtle Canvas Background */
-        #data-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; opacity: 0.4; }
+        #webgl-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
 
-        /* Main Content Wrapper */
-        .dossier-container { position: relative; z-index: 10; max-width: 1200px; margin: 0 auto; padding: 60px 20px; }
-
-        /* Header Section */
-        header { border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 40px; margin-bottom: 40px; }
-        .sys-tag { font-family: 'Space Mono', monospace; color: var(--accent-cyan); font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 15px; display: inline-block; border: 1px solid var(--accent-cyan); padding: 4px 10px; }
-        h1 { color: var(--text-bright); font-size: 3.5rem; font-weight: 800; letter-spacing: -1px; margin: 0 0 10px 0; }
-        .author-block { margin-top: 20px; font-family: 'Space Mono', monospace; font-size: 1rem; color: var(--accent-gold); }
-        .author-block span { color: var(--text-main); font-size: 0.85rem; }
-
-        /* Bento Box Grid Layout */
-        .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; margin-bottom: 40px; }
-        
-        .panel { background: var(--bg-panel); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 30px; backdrop-filter: blur(10px); transition: border-color 0.3s ease; }
-        .panel:hover { border-color: rgba(0, 243, 255, 0.2); }
-        .panel h2 { color: var(--text-bright); font-size: 1.5rem; margin-top: 0; margin-bottom: 15px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
-        .panel h2::before { content: ''; display: block; width: 8px; height: 8px; background: var(--accent-cyan); border-radius: 50%; }
-        
-        .col-span-12 { grid-column: span 12; }
-        .col-span-8 { grid-column: span 8; }
-        .col-span-4 { grid-column: span 4; }
-        .col-span-6 { grid-column: span 6; }
-
-        @media (max-width: 900px) {
-            .col-span-8, .col-span-4, .col-span-6 { grid-column: span 12; }
+        /* The Holographic Projection Layer */
+        #hologram-layer {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            pointer-events: none; text-align: center;
+            background: radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.8) 100%);
         }
 
-        /* Typography within panels */
-        p { margin: 0 0 15px 0; font-size: 1.05rem; }
-        strong { color: var(--text-bright); font-weight: 600; }
-        .highlight { color: var(--accent-cyan); }
+        .data-payload { position: absolute; opacity: 0; transform: scale(0.9); transition: all 1s cubic-bezier(0.165, 0.84, 0.44, 1); filter: blur(10px); width: 80%; max-width: 1000px; }
+        .data-payload.active { opacity: 1; transform: scale(1); filter: blur(0px); }
 
-        /* Modules List */
-        .module-list { list-style: none; padding: 0; margin: 0; }
-        .module-list li { padding: 15px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 10px; border-radius: 8px; background: rgba(0,0,0,0.3); transition: 0.2s; }
-        .module-list li:hover { border-color: var(--accent-cyan); transform: translateX(5px); }
-        .module-list h3 { color: var(--text-bright); margin: 0 0 5px 0; font-size: 1.1rem; }
-        .module-list .tech-stack { font-family: 'Space Mono', monospace; font-size: 0.8rem; color: var(--accent-gold); margin-top: 8px; display: block;}
+        /* Typography - Alien, Minimal, Transcendent */
+        .architect { color: var(--gold); font-size: 1rem; letter-spacing: 10px; margin-bottom: 20px; text-transform: uppercase; animation: pulse 3s infinite; }
+        .title { font-family: 'Syncopate', sans-serif; font-size: 5vw; font-weight: 700; color: #fff; margin: 0; letter-spacing: 15px; text-shadow: 0 0 30px var(--cyan); line-height: 1.2; }
+        .subtitle { font-size: 1.2rem; color: var(--cyan); letter-spacing: 5px; margin-top: 20px; text-shadow: 0 0 10px var(--cyan); }
         
-        /* Links / Buttons */
-        a.launch-btn { display: inline-block; margin-top: 10px; color: var(--text-bright); text-decoration: none; font-family: 'Space Mono', monospace; font-size: 0.85rem; border-bottom: 1px dashed var(--accent-cyan); padding-bottom: 2px; transition: 0.2s; }
-        a.launch-btn:hover { color: var(--accent-cyan); border-bottom-style: solid; }
+        .body-text { color: #a0aec0; font-size: 1.2rem; line-height: 2; margin-top: 40px; font-weight: 300; letter-spacing: 1px; }
+        .highlight { color: #fff; font-weight: 700; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
+        .term { color: var(--pink); font-family: 'Syncopate', sans-serif; font-size: 0.9rem; letter-spacing: 3px; }
 
-        /* Glossary Term Interaction */
-        .term { cursor: help; border-bottom: 1px dotted var(--accent-gold); color: var(--accent-gold); position: relative; }
-        .term:hover { color: var(--accent-cyan); border-bottom-color: var(--accent-cyan); }
+        /* Dictionary Grid */
+        .dictionary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-top: 50px; text-align: left; }
+        .dict-item { border-left: 2px solid var(--cyan); padding-left: 20px; background: rgba(0, 243, 255, 0.02); padding: 20px; border-radius: 0 10px 10px 0; }
+        .dict-item h3 { font-family: 'Syncopate', sans-serif; color: var(--cyan); font-size: 1rem; margin: 0 0 15px 0; letter-spacing: 2px; }
+        .dict-item p { color: #8da1b9; font-size: 0.9rem; line-height: 1.8; margin: 0; }
+
+        /* Interaction Hint */
+        #hint { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,0.3); font-size: 0.8rem; letter-spacing: 8px; animation: blink 2s infinite; pointer-events: none; }
+        
+        @keyframes pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
+        @keyframes blink { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.8; } }
     </style>
 </head>
 <body>
 
-    <canvas id="data-bg"></canvas>
+    <canvas id="webgl-canvas"></canvas>
 
-    <div class="dossier-container">
-        <header>
-            <div class="sys-tag">Technical Dossier v1.0</div>
-            <h1>Project Swarm</h1>
-            <p style="font-size: 1.25rem; max-width: 800px;">A functional data engineering simulation demonstrating advanced signal processing, noise filtering, and distributed pipeline architecture.</p>
-            <div class="author-block">
-                Architect: Atul Aryan <br>
-                <span>Data & AI Engineering Sandbox</span>
+    <div id="hologram-layer">
+        
+        <div class="data-payload active" id="phase-0">
+            <div class="architect">SYSTEM ARCHITECT // ATUL ARYAN</div>
+            <h1 class="title">PROJECT<br>SWARM</h1>
+            <div class="subtitle">A DECENTRALIZED EDGE-COMPUTING PIPELINE</div>
+        </div>
+
+        <div class="data-payload" id="phase-1">
+            <div class="architect">DIRECTIVE // MISSION PARAMETERS</div>
+            <h1 class="title" style="font-size: 3vw;">FORM FOLLOWS FUNCTION</h1>
+            <div class="body-text">
+                Project Swarm is not merely a cosmic metaphor; it is a rigorous, functional sandbox for <span class="highlight">Data and AI Engineering</span>. <br><br>
+                By simulating a highly radioactive, chaotic stellar megastructure, this pipeline demonstrates the ability to ingest massive, noisy time-series data, execute advanced signal isolation algorithms, and construct fluid data architectures. It bridges the extreme entropy of astrophysics with the precise computational logic required for <span class="highlight">Medical AI, Real-time Edge Computing, and Health-Tech Imaging Systems</span>.
             </div>
-        </header>
+        </div>
 
-        <div class="grid">
+        <div class="data-payload" id="phase-2">
+            <div class="architect">MATHEMATICS // THE DICTIONARY</div>
+            <h1 class="title" style="font-size: 2.5vw;">COMPUTATIONAL TRANSLATION</h1>
             
-            <div class="panel col-span-8">
-                <h2>Project Abstract: The "Why"</h2>
-                <p><strong>Project Swarm</strong> was built to bridge the gap between abstract mathematical concepts and tangible <strong>Data Engineering</strong>. While it uses the metaphor of a "Type II Cosmic Megastructure," the underlying code is a rigorous sandbox for processing complex data.</p>
-                <p>The goal of this project is to demonstrate my capability in building end-to-end data pipelines. By simulating a chaotic environment (solar radiation), I created a testing ground to write Python and JavaScript logic that can ingest messy, high-volume time-series data, filter out extreme noise, and reconstruct meaningful 3D outputs.</p>
-                <p>These core principles—handling massive datasets, isolating signals from noise, and image reconstruction—are the exact computational foundations required for modern <strong>Medical AI and Health-Tech imaging systems</strong>.</p>
-            </div>
-
-            <div class="panel col-span-4">
-                <h2>System Parameters</h2>
-                <p><strong>Primary Language:</strong> Python / JS</p>
-                <p><strong>Data Structure:</strong> Time-Series Arrays, JSON</p>
-                <p><strong>Core Math:</strong> <span class="term" title="A mathematical algorithm that breaks down a complex wave into its individual frequencies.">Fast Fourier Transform</span>, <span class="term" title="An integral transform used to reconstruct 2D/3D images from 1D projections (Used heavily in CT/MRI scans).">Radon Transform</span></p>
-                <p><strong>Objective:</strong> Pipeline Optimization & Anomaly Detection</p>
-            </div>
-
-            <div class="panel col-span-12" style="border-top: 2px solid var(--accent-gold);">
-                <h2 style="color: var(--accent-gold);">Technical Glossary: Translating Metaphor to Code</h2>
-                <div class="grid" style="margin-bottom: 0;">
-                    <div class="col-span-6">
-                        <p><strong class="highlight">Stochastic Resonance:</strong> <br>
-                        <em>In Physics:</em> Using background white noise to amplify a signal that is normally too weak to detect.<br>
-                        <em>In Data Engineering:</em> A technique to enhance signal-to-noise ratios (SNR) in incredibly messy data streams, crucial for detecting anomalies in biological data or sensor arrays.</p>
-                    </div>
-                    <div class="col-span-6">
-                        <p><strong class="highlight">The Radon Transform:</strong> <br>
-                        <em>In Physics:</em> Reconstructing the 3D geometry of a shattered asteroid from its scattered echoes.<br>
-                        <em>In Medical AI:</em> The exact mathematical foundation used by CT scanners to take 2D X-ray slices and compute a perfect 3D model of the human body.</p>
-                    </div>
-                    <div class="col-span-6">
-                        <p><strong class="highlight">Fast Fourier Transform (FFT):</strong> <br>
-                        <em>In the Megastructure:</em> Separating raw solar power frequencies from acoustic data.<br>
-                        <em>In Data Pipelines:</em> An essential algorithm that converts time-domain data (a messy graph over time) into frequency-domain data (a clean list of ingredients), used heavily in audio and image processing.</p>
-                    </div>
-                    <div class="col-span-6">
-                        <p><strong class="highlight">Edge Computing / Decentralization:</strong> <br>
-                        <em>In the Megastructure:</em> Millions of rocks processing data independently rather than sending it to a central server.<br>
-                        <em>In Software:</em> Processing data directly at the source (like an IoT medical device) to reduce latency and bandwidth before sending payloads to the cloud.</p>
-                    </div>
+            <div class="dictionary">
+                <div class="dict-item">
+                    <h3>STOCHASTIC RESONANCE</h3>
+                    <p><span class="highlight">The Physics:</span> Utilizing background white noise to push weak signals over a detection threshold.<br><br><span class="highlight">The Application:</span> Enhancing Signal-to-Noise Ratios (SNR) in incredibly messy data streams, crucial for detecting anomalies in human biological data.</p>
+                </div>
+                <div class="dict-item">
+                    <h3>FAST FOURIER TRANSFORM</h3>
+                    <p><span class="highlight">The Physics:</span> Decoupling raw solar radiation from acoustic data.<br><br><span class="highlight">The Application:</span> A foundational algorithm that converts time-domain data into frequency-domain data. It actively untangles chaotic static into clean, structured arrays.</p>
+                </div>
+                <div class="dict-item">
+                    <h3>THE RADON TRANSFORM</h3>
+                    <p><span class="highlight">The Physics:</span> Inverse scattering reconstruction of shattered asteroids.<br><br><span class="highlight">The Application:</span> The exact mathematical logic used by CT/MRI scanners. It takes 1D/2D scattered points and computes perfect 3D spatial models from fragments.</p>
                 </div>
             </div>
-
-            <div class="panel col-span-12">
-                <h2>The Pipeline Modules (Interactive Simulators)</h2>
-                <p style="margin-bottom: 25px;">These modules execute the simulated mathematical logic directly in the browser.</p>
-                
-                <ul class="module-list grid" style="margin-bottom: 0;">
-                    <li class="col-span-6">
-                        <h3>Stage 1: Sensor Swarm (Signal Detection)</h3>
-                        <p style="font-size: 0.95rem;">Demonstrates Stochastic Resonance. The simulator injects Gaussian noise into a weak sine wave to prove that extreme entropy can trigger threshold detection.</p>
-                        <span class="tech-stack">Logic: Threshold Analysis, SNR</span>
-                        <a href="stochastic_resonance.html" class="launch-btn">Execute Module &rarr;</a>
-                    </li>
-                    <li class="col-span-6">
-                        <h3>Stage 2: Ingestion Router (Signal Isolation)</h3>
-                        <p style="font-size: 0.95rem;">Simulates a massive data firehose. Visualizes the FFT algorithm actively untangling chaotic time-series static into clean, structured data arrays.</p>
-                        <span class="tech-stack">Logic: Fast Fourier Transform</span>
-                        <a href="06_fft_router.html" class="launch-btn">Execute Module &rarr;</a>
-                    </li>
-                    <li class="col-span-6">
-                        <h3>Stage 3: Memory Engine (Data Reconstruction)</h3>
-                        <p style="font-size: 0.95rem;">The Inverse Scattering simulator. Takes randomized, shattered data points and applies reconstruction math to build perfect 3D spatial models.</p>
-                        <span class="tech-stack">Logic: Radon Transforms, Spatial Matrices</span>
-                        <a href="inverse_scattering.html" class="launch-btn">Execute Module &rarr;</a>
-                    </li>
-                    <li class="col-span-6">
-                        <h3>Stage 4: Phononic Forge (Output Generation)</h3>
-                        <p style="font-size: 0.95rem;">The visualization of the decentralized output payload, simulating the final assembly of processed data into usable constructs.</p>
-                        <span class="tech-stack">Logic: JSON Serialization, End-Point Routing</span>
-                        <a href="phononic_forge.html" class="launch-btn">Execute Module &rarr;</a>
-                    </li>
-                </ul>
-            </div>
-
         </div>
+
+        <div id="hint">[ CLICK THE VOID TO ADVANCE PHASE ]</div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
     <script>
-        const canvas = document.getElementById('data-bg');
-        const ctx = canvas.getContext('2d');
-        
-        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        window.addEventListener('resize', resize);
-        resize();
+        // =========================================================================
+        // TRANSCENDENT WEBGL SHADER ENGINE
+        // =========================================================================
+        const canvas = document.getElementById('webgl-canvas');
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x010103, 0.002);
 
-        const particles = [];
-        for(let i=0; i<150; i++) {
-            particles.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                vy: (Math.random() - 0.5) * 0.5,
-                size: Math.random() * 2
-            });
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
+        camera.position.z = 150;
+
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: false });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setClearColor(0x010103);
+
+        // --- THE FLUID SWARM MATHEMATICS (Custom Shaders) ---
+        // We bypass standard Three.js materials to write raw GPU instructions.
+        const particleCount = 100000;
+        const geometry = new THREE.BufferGeometry();
+        const positions = new Float32Array(particleCount * 3);
+        const randoms = new Float32Array(particleCount); // For chaotic offset
+
+        for (let i = 0; i < particleCount; i++) {
+            // Distribute particles in a massive sphere
+            const r = 50 + Math.random() * 50;
+            const theta = Math.random() * 2 * Math.PI;
+            const phi = Math.acos(2 * Math.random() - 1);
+            
+            positions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+            positions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+            positions[i * 3 + 2] = r * Math.cos(phi);
+            
+            randoms[i] = Math.random();
         }
+
+        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        geometry.setAttribute('aRandom', new THREE.BufferAttribute(randoms, 1));
+
+        // Raw GLSL (Graphics Library Shader Language)
+        const vertexShader = `
+            uniform float uTime;
+            uniform float uShockwave;
+            attribute float aRandom;
+            varying vec3 vColor;
+
+            // Pseudo-random noise function
+            vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+            vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+            vec4 permute(vec4 x) { return mod289(((x*34.0)+1.0)*x); }
+            vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
+
+            float snoise(vec3 v) { 
+                const vec2  C = vec2(1.0/6.0, 1.0/3.0) ;
+                const vec4  D = vec4(0.0, 0.5, 1.0, 2.0);
+                vec3 i  = floor(v + dot(v, C.yyy) );
+                vec3 x0 = v - i + dot(i, C.xxx) ;
+                vec3 g = step(x0.yzx, x0.xyz);
+                vec3 l = 1.0 - g;
+                vec3 i1 = min( g.xyz, l.zxy );
+                vec3 i2 = max( g.xyz, l.zxy );
+                vec3 x1 = x0 - i1 + C.xxx;
+                vec3 x2 = x0 - i2 + C.yyy;
+                vec3 x3 = x0 - D.yyy;
+                i = mod289(i); 
+                vec4 p = permute( permute( permute( i.z + vec4(0.0, i1.z, i2.z, 1.0 )) + i.y + vec4(0.0, i1.y, i2.y, 1.0 )) + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));
+                float n_ = 0.142857142857;
+                vec3  ns = n_ * D.wyz - D.xzx;
+                vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
+                vec4 x_ = floor(j * ns.z);
+                vec4 y_ = floor(j - 7.0 * x_ );
+                vec4 x = x_ *ns.x + ns.yyyy;
+                vec4 y = y_ *ns.x + ns.yyyy;
+                vec4 h = 1.0 - abs(x) - abs(y);
+                vec4 b0 = vec4( x.xy, y.xy );
+                vec4 b1 = vec4( x.zw, y.zw );
+                vec4 s0 = floor(b0)*2.0 + 1.0;
+                vec4 s1 = floor(b1)*2.0 + 1.0;
+                vec4 sh = -step(h, vec4(0.0));
+                vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy ;
+                vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww ;
+                vec3 p0 = vec3(a0.xy,h.x);
+                vec3 p1 = vec3(a0.zw,h.y);
+                vec3 p2 = vec3(a1.xy,h.z);
+                vec3 p3 = vec3(a1.zw,h.w);
+                vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3)));
+                p0 *= norm.x; p1 *= norm.y; p2 *= norm.z; p3 *= norm.w;
+                vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
+                m = m * m;
+                return 42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3) ) );
+            }
+
+            void main() {
+                // The Swarm Math: Noise + Time + Shockwave
+                float noiseVal = snoise(position * 0.02 + uTime * 0.2);
+                vec3 newPosition = position + normalize(position) * (noiseVal * 20.0);
+                
+                // Explosive entropy when clicked
+                newPosition += normalize(position) * (uShockwave * aRandom * 50.0);
+
+                // Morphing colors based on position
+                float dist = length(newPosition);
+                vec3 colorCyan = vec3(0.0, 0.95, 1.0);
+                vec3 colorPink = vec3(1.0, 0.0, 0.33);
+                vColor = mix(colorCyan, colorPink, sin(dist * 0.05 - uTime) * 0.5 + 0.5);
+                
+                // Additive brightness
+                vColor += uShockwave * 0.5;
+
+                vec4 mvPosition = modelViewMatrix * vec4(newPosition, 1.0);
+                gl_PointSize = (3.0 * aRandom) * (100.0 / -mvPosition.z);
+                gl_Position = projectionMatrix * mvPosition;
+            }
+        `;
+
+        const fragmentShader = `
+            varying vec3 vColor;
+            void main() {
+                // Create soft, glowing circular particles instead of harsh squares
+                vec2 pt = gl_PointCoord - vec2(0.5);
+                if(dot(pt, pt) > 0.25) discard;
+                gl_FragColor = vec4(vColor, 0.8);
+            }
+        `;
+
+        const material = new THREE.ShaderMaterial({
+            vertexShader, fragmentShader,
+            uniforms: {
+                uTime: { value: 0 },
+                uShockwave: { value: 0 }
+            },
+            transparent: true,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+        });
+
+        const swarmMesh = new THREE.Points(geometry, material);
+        scene.add(swarmMesh);
+
+        // =========================================================================
+        // UI & INTERACTION LOGIC (The Phase Shifter)
+        // =========================================================================
+        const payloads = [
+            document.getElementById('phase-0'),
+            document.getElementById('phase-1'),
+            document.getElementById('phase-2')
+        ];
+        let currentPhase = 0;
+        let shockwaveTarget = 0;
+
+        // Mouse Parallax (Entropy displacement)
+        let mouseX = 0, mouseY = 0;
+        let targetX = 0, targetY = 0;
+        window.addEventListener('mousemove', (e) => {
+            targetX = (e.clientX - window.innerWidth / 2) * 0.001;
+            targetY = (e.clientY - window.innerHeight / 2) * 0.001;
+        });
+
+        // The Quantum Collapse (Clicking advances the phase)
+        window.addEventListener('click', () => {
+            // Trigger Visual Shockwave
+            shockwaveTarget = 1.0; 
+
+            // Shift UI Phase
+            payloads[currentPhase].classList.remove('active');
+            currentPhase = (currentPhase + 1) % payloads.length;
+            
+            // Slight delay before text appears out of the chaos
+            setTimeout(() => {
+                payloads[currentPhase].classList.add('active');
+            }, 500);
+        });
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // =========================================================================
+        // PHYSICS & RENDERING LOOP
+        // =========================================================================
+        const clock = new THREE.Clock();
 
         function animate() {
             requestAnimationFrame(animate);
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const elapsedTime = clock.getElapsedTime();
+
+            // Update Shader Uniforms
+            material.uniforms.uTime.value = elapsedTime;
             
-            ctx.strokeStyle = 'rgba(0, 243, 255, 0.05)';
-            ctx.lineWidth = 1;
+            // Decay the shockwave back to 0
+            material.uniforms.uShockwave.value += (shockwaveTarget - material.uniforms.uShockwave.value) * 0.05;
+            if (shockwaveTarget > 0) shockwaveTarget -= 0.02;
 
-            for(let i=0; i<particles.length; i++) {
-                let p = particles[i];
-                p.y += p.vy;
-                if(p.y < 0) p.y = canvas.height;
-                if(p.y > canvas.height) p.y = 0;
+            // Fluid Camera Rotation
+            swarmMesh.rotation.y += 0.001;
+            swarmMesh.rotation.x += 0.0005;
 
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
-                ctx.fillRect(p.x, p.y, p.size, p.size);
+            // Parallax mouse interaction
+            mouseX += (targetX - mouseX) * 0.05;
+            mouseY += (targetY - mouseY) * 0.05;
+            camera.position.x = mouseX * 50;
+            camera.position.y = -mouseY * 50;
+            camera.lookAt(scene.position);
 
-                // Draw connecting lines for a "network" feel
-                for(let j=i; j<particles.length; j++) {
-                    let p2 = particles[j];
-                    let dx = p.x - p2.x;
-                    let dy = p.y - p2.y;
-                    let dist = Math.sqrt(dx*dx + dy*dy);
-                    
-                    if(dist < 100) {
-                        ctx.beginPath();
-                        ctx.moveTo(p.x, p.y);
-                        ctx.lineTo(p2.x, p2.y);
-                        ctx.stroke();
-                    }
-                }
-            }
+            renderer.render(scene, camera);
         }
+
         animate();
     </script>
 </body>
