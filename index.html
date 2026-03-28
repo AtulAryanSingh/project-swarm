@@ -3,366 +3,214 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Swarm | HOLOGRAPHIC DATA TOPOLOGY</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600&family=Space+Mono&display=swap" rel="stylesheet">
+    <title>Project Swarm | Technical Dossier</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --cyan: #00f3ff;
-            --pink: #ff0055;
-            --gold: #ffaa00;
-            --bg-dark: #030407;
+            --bg-base: #050505;
+            --bg-panel: rgba(15, 15, 20, 0.7);
+            --accent-cyan: #00f3ff;
+            --accent-gold: #ffaa00;
+            --text-main: #a1a1aa;
+            --text-bright: #f4f4f5;
         }
 
-        body { margin: 0; padding: 0; overflow: hidden; background-color: var(--bg-dark); color: #fff; font-family: 'Rajdhani', sans-serif; user-select: none; }
-        #webgl-canvas { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; }
+        body { margin: 0; padding: 0; background-color: var(--bg-base); color: var(--text-main); font-family: 'Inter', sans-serif; line-height: 1.6; overflow-x: hidden; }
         
-        .scanlines {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 2; pointer-events: none;
-            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1));
-            background-size: 100% 4px; opacity: 0.3;
+        /* Subtle Canvas Background */
+        #data-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; opacity: 0.4; }
+
+        /* Main Content Wrapper */
+        .dossier-container { position: relative; z-index: 10; max-width: 1200px; margin: 0 auto; padding: 60px 20px; }
+
+        /* Header Section */
+        header { border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 40px; margin-bottom: 40px; }
+        .sys-tag { font-family: 'Space Mono', monospace; color: var(--accent-cyan); font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 15px; display: inline-block; border: 1px solid var(--accent-cyan); padding: 4px 10px; }
+        h1 { color: var(--text-bright); font-size: 3.5rem; font-weight: 800; letter-spacing: -1px; margin: 0 0 10px 0; }
+        .author-block { margin-top: 20px; font-family: 'Space Mono', monospace; font-size: 1rem; color: var(--accent-gold); }
+        .author-block span { color: var(--text-main); font-size: 0.85rem; }
+
+        /* Bento Box Grid Layout */
+        .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; margin-bottom: 40px; }
+        
+        .panel { background: var(--bg-panel); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 30px; backdrop-filter: blur(10px); transition: border-color 0.3s ease; }
+        .panel:hover { border-color: rgba(0, 243, 255, 0.2); }
+        .panel h2 { color: var(--text-bright); font-size: 1.5rem; margin-top: 0; margin-bottom: 15px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+        .panel h2::before { content: ''; display: block; width: 8px; height: 8px; background: var(--accent-cyan); border-radius: 50%; }
+        
+        .col-span-12 { grid-column: span 12; }
+        .col-span-8 { grid-column: span 8; }
+        .col-span-4 { grid-column: span 4; }
+        .col-span-6 { grid-column: span 6; }
+
+        @media (max-width: 900px) {
+            .col-span-8, .col-span-4, .col-span-6 { grid-column: span 12; }
         }
 
-        #hud-layer {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none;
-            display: flex; flex-direction: column; justify-content: space-between; padding: 40px; box-sizing: border-box;
-        }
+        /* Typography within panels */
+        p { margin: 0 0 15px 0; font-size: 1.05rem; }
+        strong { color: var(--text-bright); font-weight: 600; }
+        .highlight { color: var(--accent-cyan); }
 
-        .header { display: flex; justify-content: space-between; align-items: flex-start; width: 100%; }
-        .brand { border-left: 4px solid var(--cyan); padding-left: 20px; }
-        .brand h1 { font-family: 'Orbitron', sans-serif; font-size: 2.5rem; margin: 0 0 5px 0; letter-spacing: 10px; color: #fff; text-shadow: 0 0 20px rgba(0,243,255,0.5); }
-        .brand p { font-family: 'Space Mono', monospace; font-size: 0.85rem; color: var(--cyan); margin: 0; letter-spacing: 2px; }
+        /* Modules List */
+        .module-list { list-style: none; padding: 0; margin: 0; }
+        .module-list li { padding: 15px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 10px; border-radius: 8px; background: rgba(0,0,0,0.3); transition: 0.2s; }
+        .module-list li:hover { border-color: var(--accent-cyan); transform: translateX(5px); }
+        .module-list h3 { color: var(--text-bright); margin: 0 0 5px 0; font-size: 1.1rem; }
+        .module-list .tech-stack { font-family: 'Space Mono', monospace; font-size: 0.8rem; color: var(--accent-gold); margin-top: 8px; display: block;}
+        
+        /* Links / Buttons */
+        a.launch-btn { display: inline-block; margin-top: 10px; color: var(--text-bright); text-decoration: none; font-family: 'Space Mono', monospace; font-size: 0.85rem; border-bottom: 1px dashed var(--accent-cyan); padding-bottom: 2px; transition: 0.2s; }
+        a.launch-btn:hover { color: var(--accent-cyan); border-bottom-style: solid; }
 
-        .nav-controls { pointer-events: auto; display: flex; gap: 15px; }
-        .hud-btn {
-            background: rgba(0, 243, 255, 0.05); border: 1px solid rgba(0, 243, 255, 0.3); padding: 10px 20px;
-            color: var(--cyan); font-family: 'Orbitron', sans-serif; font-size: 0.85rem; letter-spacing: 2px;
-            text-decoration: none; text-transform: uppercase; cursor: pointer; transition: 0.3s; backdrop-filter: blur(5px);
-        }
-        .hud-btn:hover { background: rgba(0, 243, 255, 0.2); border-color: var(--cyan); box-shadow: 0 0 15px rgba(0,243,255,0.4); }
-        .btn-forge { color: var(--pink); border-color: rgba(255,0,85,0.3); background: rgba(255,0,85,0.05); }
-        .btn-forge:hover { background: rgba(255,0,85,0.2); border-color: var(--pink); box-shadow: 0 0 15px rgba(255,0,85,0.4); }
-        .btn-auth { color: var(--gold); border-color: rgba(255,170,0,0.3); background: rgba(255,170,0,0.05); }
-        .btn-auth:hover { background: rgba(255,170,0,0.2); border-color: var(--gold); box-shadow: 0 0 15px rgba(255,170,0,0.4); }
-
-        /* Telemetry Data Panel (Bottom Left) */
-        #telemetry-panel {
-            position: absolute; bottom: 40px; left: 40px; width: 450px;
-            background: rgba(3, 4, 7, 0.8); border: 1px solid rgba(255,255,255,0.1); padding: 30px;
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            opacity: 0; transform: translateX(-20px); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: auto;
-        }
-        #telemetry-panel.active { opacity: 1; transform: translateX(0); }
-        .panel-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
-        .node-id { font-family: 'Space Mono', monospace; color: #fff; font-size: 2rem; opacity: 0.5; }
-        .node-title h2 { font-family: 'Orbitron', sans-serif; color: #fff; margin: 0 0 5px 0; font-size: 1.2rem; letter-spacing: 2px; }
-        .node-title .sub { font-family: 'Space Mono', monospace; color: var(--cyan); font-size: 0.75rem; letter-spacing: 1px; }
-        #node-desc { color: #a0aec0; font-size: 1.05rem; line-height: 1.6; margin: 0 0 20px 0; font-weight: 300; }
-        .sys-status { font-family: 'Space Mono', monospace; font-size: 0.8rem; color: #fff; background: rgba(255,255,255,0.1); padding: 8px 15px; display: inline-block; animation: blink 2s infinite; }
-
-        /* ARCHITECT DOSSIER PANEL (Center Modal) */
-        #architect-modal {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95); width: 600px;
-            background: rgba(5, 7, 12, 0.95); border: 1px solid var(--gold); padding: 40px;
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 0 30px rgba(255,170,0,0.05);
-            opacity: 0; visibility: hidden; transition: all 0.3s ease; pointer-events: auto; z-index: 100;
-        }
-        #architect-modal.active { opacity: 1; visibility: visible; transform: translate(-50%, -50%) scale(1); }
-        .modal-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid rgba(255,170,0,0.3); padding-bottom: 20px; margin-bottom: 25px; }
-        .modal-header h2 { font-family: 'Orbitron', sans-serif; font-size: 2rem; color: #fff; margin: 0; letter-spacing: 3px; }
-        .modal-header .sub-role { font-family: 'Space Mono', monospace; color: var(--gold); font-size: 0.9rem; letter-spacing: 1px; margin-top: 5px; }
-        .close-btn { background: transparent; border: none; color: #fff; font-family: 'Orbitron', sans-serif; font-size: 1.5rem; cursor: pointer; transition: 0.2s; opacity: 0.5; }
-        .close-btn:hover { color: var(--pink); opacity: 1; }
-        .modal-body p { color: #a0aec0; font-size: 1.1rem; line-height: 1.7; margin: 0 0 15px 0; }
-        .modal-body strong { color: #fff; font-family: 'Rajdhani', sans-serif; letter-spacing: 1px; }
-
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-
-        .reticle { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 30px; height: 30px; pointer-events: none; transition: 0.3s; }
-        .reticle::before { content: ''; position: absolute; top: -5px; left: -5px; width: 10px; height: 10px; border-top: 1px solid rgba(255,255,255,0.5); border-left: 1px solid rgba(255,255,255,0.5); }
-        .reticle::after { content: ''; position: absolute; bottom: -5px; right: -5px; width: 10px; height: 10px; border-bottom: 1px solid rgba(255,255,255,0.5); border-right: 1px solid rgba(255,255,255,0.5); }
-
-        .terminal-text { position: absolute; bottom: 40px; right: 40px; text-align: right; color: rgba(255,255,255,0.3); font-family: 'Space Mono', monospace; font-size: 0.75rem; line-height: 2; }
+        /* Glossary Term Interaction */
+        .term { cursor: help; border-bottom: 1px dotted var(--accent-gold); color: var(--accent-gold); position: relative; }
+        .term:hover { color: var(--accent-cyan); border-bottom-color: var(--accent-cyan); }
     </style>
 </head>
 <body>
 
-    <div class="scanlines"></div>
-    <div id="webgl-canvas"></div>
+    <canvas id="data-bg"></canvas>
 
-    <div id="hud-layer">
-        <div class="header">
-            <div class="brand">
-                <h1>PROJECT SWARM</h1>
-                <p>HOLOGRAPHIC DATA TOPOLOGY // EDGE PIPELINE</p>
+    <div class="dossier-container">
+        <header>
+            <div class="sys-tag">Technical Dossier v1.0</div>
+            <h1>Project Swarm</h1>
+            <p style="font-size: 1.25rem; max-width: 800px;">A functional data engineering simulation demonstrating advanced signal processing, noise filtering, and distributed pipeline architecture.</p>
+            <div class="author-block">
+                Architect: Atul Aryan <br>
+                <span>Data & AI Engineering Sandbox</span>
             </div>
-            <div class="nav-controls">
-                <a href="celestial_mapping.html" class="hud-btn">SYSTEM_MAP</a>
-                <a href="economics_mapping.html" class="hud-btn btn-forge">THE_FORGE</a>
-                <button class="hud-btn btn-auth" id="btn-architect">SYS.ARCHITECT</button>
+        </header>
+
+        <div class="grid">
+            
+            <div class="panel col-span-8">
+                <h2>Project Abstract: The "Why"</h2>
+                <p><strong>Project Swarm</strong> was built to bridge the gap between abstract mathematical concepts and tangible <strong>Data Engineering</strong>. While it uses the metaphor of a "Type II Cosmic Megastructure," the underlying code is a rigorous sandbox for processing complex data.</p>
+                <p>The goal of this project is to demonstrate my capability in building end-to-end data pipelines. By simulating a chaotic environment (solar radiation), I created a testing ground to write Python and JavaScript logic that can ingest messy, high-volume time-series data, filter out extreme noise, and reconstruct meaningful 3D outputs.</p>
+                <p>These core principles—handling massive datasets, isolating signals from noise, and image reconstruction—are the exact computational foundations required for modern <strong>Medical AI and Health-Tech imaging systems</strong>.</p>
             </div>
-        </div>
 
-        <div class="reticle" id="reticle"></div>
+            <div class="panel col-span-4">
+                <h2>System Parameters</h2>
+                <p><strong>Primary Language:</strong> Python / JS</p>
+                <p><strong>Data Structure:</strong> Time-Series Arrays, JSON</p>
+                <p><strong>Core Math:</strong> <span class="term" title="A mathematical algorithm that breaks down a complex wave into its individual frequencies.">Fast Fourier Transform</span>, <span class="term" title="An integral transform used to reconstruct 2D/3D images from 1D projections (Used heavily in CT/MRI scans).">Radon Transform</span></p>
+                <p><strong>Objective:</strong> Pipeline Optimization & Anomaly Detection</p>
+            </div>
 
-        <div id="telemetry-panel">
-            <div class="panel-header">
-                <div class="node-id" id="t-id">01</div>
-                <div class="node-title">
-                    <h2 id="t-title">NODE DESIGNATION</h2>
-                    <div class="sub" id="t-sub">PROCESS CLASSIFICATION</div>
+            <div class="panel col-span-12" style="border-top: 2px solid var(--accent-gold);">
+                <h2 style="color: var(--accent-gold);">Technical Glossary: Translating Metaphor to Code</h2>
+                <div class="grid" style="margin-bottom: 0;">
+                    <div class="col-span-6">
+                        <p><strong class="highlight">Stochastic Resonance:</strong> <br>
+                        <em>In Physics:</em> Using background white noise to amplify a signal that is normally too weak to detect.<br>
+                        <em>In Data Engineering:</em> A technique to enhance signal-to-noise ratios (SNR) in incredibly messy data streams, crucial for detecting anomalies in biological data or sensor arrays.</p>
+                    </div>
+                    <div class="col-span-6">
+                        <p><strong class="highlight">The Radon Transform:</strong> <br>
+                        <em>In Physics:</em> Reconstructing the 3D geometry of a shattered asteroid from its scattered echoes.<br>
+                        <em>In Medical AI:</em> The exact mathematical foundation used by CT scanners to take 2D X-ray slices and compute a perfect 3D model of the human body.</p>
+                    </div>
+                    <div class="col-span-6">
+                        <p><strong class="highlight">Fast Fourier Transform (FFT):</strong> <br>
+                        <em>In the Megastructure:</em> Separating raw solar power frequencies from acoustic data.<br>
+                        <em>In Data Pipelines:</em> An essential algorithm that converts time-domain data (a messy graph over time) into frequency-domain data (a clean list of ingredients), used heavily in audio and image processing.</p>
+                    </div>
+                    <div class="col-span-6">
+                        <p><strong class="highlight">Edge Computing / Decentralization:</strong> <br>
+                        <em>In the Megastructure:</em> Millions of rocks processing data independently rather than sending it to a central server.<br>
+                        <em>In Software:</em> Processing data directly at the source (like an IoT medical device) to reduce latency and bandwidth before sending payloads to the cloud.</p>
+                    </div>
                 </div>
             </div>
-            <p id="node-desc">Awaiting node selection and telemetry handoff...</p>
-            <div class="sys-status">> CLICK TO INITIATE DATA LINK</div>
-        </div>
 
-        <div id="architect-modal">
-            <div class="modal-header">
-                <div>
-                    <h2>ATUL ARYAN</h2>
-                    <div class="sub-role">DATA & AI ENGINEERING CANDIDATE</div>
-                </div>
-                <button class="close-btn" id="close-architect">X</button>
+            <div class="panel col-span-12">
+                <h2>The Pipeline Modules (Interactive Simulators)</h2>
+                <p style="margin-bottom: 25px;">These modules execute the simulated mathematical logic directly in the browser.</p>
+                
+                <ul class="module-list grid" style="margin-bottom: 0;">
+                    <li class="col-span-6">
+                        <h3>Stage 1: Sensor Swarm (Signal Detection)</h3>
+                        <p style="font-size: 0.95rem;">Demonstrates Stochastic Resonance. The simulator injects Gaussian noise into a weak sine wave to prove that extreme entropy can trigger threshold detection.</p>
+                        <span class="tech-stack">Logic: Threshold Analysis, SNR</span>
+                        <a href="stochastic_resonance.html" class="launch-btn">Execute Module &rarr;</a>
+                    </li>
+                    <li class="col-span-6">
+                        <h3>Stage 2: Ingestion Router (Signal Isolation)</h3>
+                        <p style="font-size: 0.95rem;">Simulates a massive data firehose. Visualizes the FFT algorithm actively untangling chaotic time-series static into clean, structured data arrays.</p>
+                        <span class="tech-stack">Logic: Fast Fourier Transform</span>
+                        <a href="06_fft_router.html" class="launch-btn">Execute Module &rarr;</a>
+                    </li>
+                    <li class="col-span-6">
+                        <h3>Stage 3: Memory Engine (Data Reconstruction)</h3>
+                        <p style="font-size: 0.95rem;">The Inverse Scattering simulator. Takes randomized, shattered data points and applies reconstruction math to build perfect 3D spatial models.</p>
+                        <span class="tech-stack">Logic: Radon Transforms, Spatial Matrices</span>
+                        <a href="inverse_scattering.html" class="launch-btn">Execute Module &rarr;</a>
+                    </li>
+                    <li class="col-span-6">
+                        <h3>Stage 4: Phononic Forge (Output Generation)</h3>
+                        <p style="font-size: 0.95rem;">The visualization of the decentralized output payload, simulating the final assembly of processed data into usable constructs.</p>
+                        <span class="tech-stack">Logic: JSON Serialization, End-Point Routing</span>
+                        <a href="phononic_forge.html" class="launch-btn">Execute Module &rarr;</a>
+                    </li>
+                </ul>
             </div>
-            <div class="modal-body">
-                <p><strong>MISSION:</strong> Project Swarm is a learning-driven, functional technical demonstration bridging abstract mathematical concepts with tangible data engineering.</p>
-                <p><strong>ARCHITECTURE:</strong> This system simulates the ingestion of high-volume, noisy time-series data. It is built to showcase complex pipeline logic, including the application of Fast Fourier Transforms (FFT) for signal isolation and Radon Transforms for 3D inverse scattering reconstruction.</p>
-                <p><strong>OBJECTIVE:</strong> Designed entirely as a portfolio sandbox to demonstrate capability in Python pipelines, fluid data architecture, and machine learning logic integration.</p>
-            </div>
-        </div>
 
-        <div class="terminal-text">
-            SYS.OP.MODE: MANUAL_ORBIT<br>
-            CMD: DRAG_TO_ROTATE<br>
-            CMD: SCROLL_TO_SCALE<br>
-            AWAITING_INPUT_
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-
     <script>
-        // =========================================================================
-        // UI MODAL LOGIC (Author Section)
-        // =========================================================================
-        const btnArchitect = document.getElementById('btn-architect');
-        const modalArchitect = document.getElementById('architect-modal');
-        const btnClose = document.getElementById('close-architect');
-
-        btnArchitect.addEventListener('click', () => { modalArchitect.classList.add('active'); });
-        btnClose.addEventListener('click', () => { modalArchitect.classList.remove('active'); });
-
-        // =========================================================================
-        // SCENE SETUP 
-        // =========================================================================
-        const container = document.getElementById('webgl-canvas');
-        const scene = new THREE.Scene();
-        scene.fog = new THREE.FogExp2(0x030407, 0.003);
-
-        const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 2000);
-        camera.position.set(0, 100, 250);
-
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        container.appendChild(renderer.domElement);
-
-        const controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true; controls.dampingFactor = 0.05; 
-        controls.maxDistance = 600; controls.minDistance = 50;
-
-        const gridHelper = new THREE.GridHelper(1000, 50, 0x00f3ff, 0x111111);
-        gridHelper.position.y = -100;
-        gridHelper.material.opacity = 0.1;
-        gridHelper.material.transparent = true;
-        scene.add(gridHelper);
-
-        // =========================================================================
-        // THE SINGULARITY 
-        // =========================================================================
-        const coreGroup = new THREE.Group();
-        scene.add(coreGroup);
-
-        const ehGeo = new THREE.SphereGeometry(25, 64, 64);
-        const ehMat = new THREE.MeshBasicMaterial({ color: 0x000000 });
-        const eventHorizon = new THREE.Mesh(ehGeo, ehMat);
-        coreGroup.add(eventHorizon);
-
-        const diskCount = 40000;
-        const diskGeo = new THREE.BufferGeometry();
-        const diskPos = new Float32Array(diskCount * 3);
-        const diskCol = new Float32Array(diskCount * 3);
+        const canvas = document.getElementById('data-bg');
+        const ctx = canvas.getContext('2d');
         
-        const cCore = new THREE.Color(0xffffff);
-        const cMid = new THREE.Color(0xffaa00);
-        const cEdge = new THREE.Color(0xff0055);
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resize);
+        resize();
 
-        for(let i=0; i<diskCount; i++) {
-            const radius = 26 + Math.pow(Math.random(), 4) * 120;
-            const angle = Math.random() * Math.PI * 2;
-            const warp = Math.sin(angle * 3) * (60 / radius);
-            const y = (Math.random() - 0.5) * 2 + warp;
-
-            diskPos[i*3] = Math.cos(angle) * radius;
-            diskPos[i*3+1] = y;
-            diskPos[i*3+2] = Math.sin(angle) * radius;
-
-            let ratio = (radius - 26) / 120;
-            let c = cCore.clone().lerp(cMid, ratio * 4);
-            if(ratio > 0.25) c = cMid.clone().lerp(cEdge, (ratio - 0.25) * 1.5);
-
-            diskCol[i*3] = c.r; diskCol[i*3+1] = c.g; diskCol[i*3+2] = c.b;
+        const particles = [];
+        for(let i=0; i<150; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                vy: (Math.random() - 0.5) * 0.5,
+                size: Math.random() * 2
+            });
         }
-        
-        diskGeo.setAttribute('position', new THREE.BufferAttribute(diskPos, 3));
-        diskGeo.setAttribute('color', new THREE.BufferAttribute(diskCol, 3));
-        
-        const diskMat = new THREE.PointsMaterial({ size: 0.2, vertexColors: true, blending: THREE.AdditiveBlending, transparent: true, opacity: 0.8 });
-        const accretionDisk = new THREE.Points(diskGeo, diskMat);
-        accretionDisk.rotation.x = Math.PI * 0.15;
-        accretionDisk.rotation.z = Math.PI * 0.05;
-        coreGroup.add(accretionDisk);
 
-        const boundaryGeo = new THREE.IcosahedronGeometry(150, 2);
-        const boundaryMat = new THREE.MeshBasicMaterial({ color: 0x00f3ff, wireframe: true, transparent: true, opacity: 0.03 });
-        const boundary = new THREE.Mesh(boundaryGeo, boundaryMat);
-        scene.add(boundary);
-
-        // =========================================================================
-        // THE PIPELINE NODES
-        // =========================================================================
-        const nodes = [];
-        const nodeData = [
-            { id: "01", title: "STOCHASTIC RESONANCE", sub: "STAGE 1 // SENSOR SWARM", desc: "Data extraction via environmental noise. Node utilizes chaotic background radiation to amplify and detect incredibly faint, hidden telemetry signals.", url: "stochastic_resonance.html", distance: 80, speed: 0.004, size: 4, color: 0xff3300 },
-            { id: "02", title: "INGESTION ROUTER", sub: "STAGE 2 // FFT PROCESSING", desc: "High-volume data sorting. Fast Fourier Transform (FFT) algorithms instantly decouple massive power yields from complex acoustic data streams.", url: "06_fft_router.html", distance: 110, speed: 0.003, size: 6, color: 0xffaa00, hasRing: true },
-            { id: "03", title: "MEMORY ENGINE", sub: "STAGE 3 // INVERSE SCATTERING", desc: "Machine Learning Core reconstruction. Applies the Radon Transform to scattered data points, rebuilding perfect 3D geometric matrices from fragments.", url: "inverse_scattering.html", distance: 140, speed: 0.002, size: 5, color: 0x00f3ff },
-            { id: "04", title: "VON NEUMANN FORGE", sub: "STAGE 4 // PHONONIC ASSEMBLY", desc: "Physical matter replication. Acoustic resonance waves physically force raw plasma to crystallize into highly evolved Smart Rock metamaterials.", url: "phononic_forge.html", distance: 170, speed: 0.0015, size: 4.5, color: 0xff0055 }
-        ];
-
-        nodeData.forEach((data, index) => {
-            const geo = new THREE.IcosahedronGeometry(data.size, 2);
-            const mat = new THREE.MeshBasicMaterial({ color: data.color, wireframe: true, transparent: true, opacity: 0.8 });
-            const mesh = new THREE.Mesh(geo, mat);
-
-            const coreGeo = new THREE.IcosahedronGeometry(data.size * 0.8, 1);
-            const coreMat = new THREE.MeshBasicMaterial({ color: 0x000000 });
-            const core = new THREE.Mesh(coreGeo, coreMat);
-            mesh.add(core);
-
-            if (data.hasRing) {
-                const rGeo = new THREE.TorusGeometry(data.size * 1.8, 0.1, 4, 64);
-                const rMat = new THREE.MeshBasicMaterial({ color: data.color, transparent: true, opacity: 0.5 });
-                const ring = new THREE.Mesh(rGeo, rMat);
-                ring.rotation.x = Math.PI / 2;
-                mesh.add(ring);
-            }
-
-            const angle = (index / nodeData.length) * Math.PI * 2;
-            mesh.position.x = Math.cos(angle) * data.distance;
-            mesh.position.z = Math.sin(angle) * data.distance;
-            mesh.userData = data; mesh.userData.angle = angle;
-
-            const pathGeo = new THREE.RingGeometry(data.distance - 0.2, data.distance + 0.2, 128);
-            const pathMat = new THREE.MeshBasicMaterial({ color: data.color, side: THREE.DoubleSide, transparent: true, opacity: 0.15 });
-            const path = new THREE.Mesh(pathGeo, pathMat);
-            path.rotation.x = Math.PI / 2;
-            scene.add(path);
-
-            scene.add(mesh);
-            nodes.push(mesh);
-        });
-
-        // =========================================================================
-        // RAYCASTING 
-        // =========================================================================
-        const raycaster = new THREE.Raycaster();
-        const mouse = new THREE.Vector2();
-        
-        const tId = document.getElementById('t-id');
-        const tTitle = document.getElementById('t-title');
-        const tSub = document.getElementById('t-sub');
-        const tDesc = document.getElementById('node-desc');
-        const panel = document.getElementById('telemetry-panel');
-        const reticle = document.getElementById('reticle');
-        
-        let hoveredNode = null;
-
-        window.addEventListener('mousemove', (e) => {
-            mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-            mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
-        });
-
-        window.addEventListener('click', () => {
-            // Prevent navigating if the modal is open
-            if(modalArchitect.classList.contains('active')) return; 
-            
-            if (hoveredNode && hoveredNode.userData.url) window.location.href = hoveredNode.userData.url;
-        });
-
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-
-        // =========================================================================
-        // PHYSICS LOOP
-        // =========================================================================
         function animate() {
             requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.strokeStyle = 'rgba(0, 243, 255, 0.05)';
+            ctx.lineWidth = 1;
 
-            accretionDisk.rotation.y -= 0.008;
-            boundary.rotation.y += 0.001;
-            boundary.rotation.z += 0.0005;
+            for(let i=0; i<particles.length; i++) {
+                let p = particles[i];
+                p.y += p.vy;
+                if(p.y < 0) p.y = canvas.height;
+                if(p.y > canvas.height) p.y = 0;
 
-            nodes.forEach(node => {
-                node.userData.angle += node.userData.speed;
-                node.position.x = Math.cos(node.userData.angle) * node.userData.distance;
-                node.position.z = Math.sin(node.userData.angle) * node.userData.distance;
-                node.rotation.x += 0.01; 
-                node.rotation.y += 0.01;
-            });
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+                ctx.fillRect(p.x, p.y, p.size, p.size);
 
-            // Only run hover logic if the modal is closed
-            if(!modalArchitect.classList.contains('active')) {
-                raycaster.setFromCamera(mouse, camera);
-                const intersects = raycaster.intersectObjects(nodes, true);
-
-                if (intersects.length > 0) {
-                    const targetObj = intersects[0].object.parent === scene ? intersects[0].object : intersects[0].object.parent;
+                // Draw connecting lines for a "network" feel
+                for(let j=i; j<particles.length; j++) {
+                    let p2 = particles[j];
+                    let dx = p.x - p2.x;
+                    let dy = p.y - p2.y;
+                    let dist = Math.sqrt(dx*dx + dy*dy);
                     
-                    if (hoveredNode !== targetObj && targetObj.userData.url) {
-                        hoveredNode = targetObj;
-                        
-                        tId.innerText = hoveredNode.userData.id;
-                        tTitle.innerText = hoveredNode.userData.title;
-                        tSub.innerText = hoveredNode.userData.sub;
-                        tSub.style.color = '#' + hoveredNode.userData.color.toString(16).padStart(6, '0');
-                        tDesc.innerText = hoveredNode.userData.desc;
-                        
-                        panel.style.borderTop = '2px solid #' + hoveredNode.userData.color.toString(16).padStart(6, '0');
-                        panel.classList.add('active');
-                        
-                        reticle.style.borderColor = '#' + hoveredNode.userData.color.toString(16).padStart(6, '0');
-                        reticle.style.transform = 'translate(-50%, -50%) scale(1.5) rotate(45deg)';
-                        document.body.style.cursor = 'crosshair';
-                    }
-                } else {
-                    if (hoveredNode) {
-                        hoveredNode = null;
-                        panel.classList.remove('active');
-                        reticle.style.borderColor = 'transparent';
-                        reticle.style.transform = 'translate(-50%, -50%) scale(1) rotate(0deg)';
-                        document.body.style.cursor = 'default';
+                    if(dist < 100) {
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
                     }
                 }
             }
-
-            controls.update();
-            renderer.render(scene, camera);
         }
-
         animate();
     </script>
 </body>
