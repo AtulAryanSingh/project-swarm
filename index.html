@@ -3,92 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Swarm | TYPE II SINGULARITY</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+    <title>Project Swarm | HOLOGRAPHIC DATA TOPOLOGY</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600&family=Space+Mono&display=swap" rel="stylesheet">
     <style>
-        body { margin: 0; padding: 0; overflow: hidden; background-color: #000; font-family: 'Rajdhani', sans-serif; color: #fff; user-select: none; }
+        :root {
+            --cyan: #00f3ff;
+            --pink: #ff0055;
+            --gold: #ffaa00;
+            --bg-dark: #030407;
+        }
+
+        body { margin: 0; padding: 0; overflow: hidden; background-color: var(--bg-dark); color: #fff; font-family: 'Rajdhani', sans-serif; user-select: none; }
         #webgl-canvas { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; }
         
-        /* Loading Screen */
-        #loading-screen {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #010205; z-index: 9999;
-            display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 1s ease;
+        .scanlines {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 2; pointer-events: none;
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1));
+            background-size: 100% 4px; opacity: 0.3;
         }
-        .loader-text { font-family: 'Orbitron', sans-serif; color: #ffaa00; font-size: 1.5rem; letter-spacing: 5px; animation: pulse 1.5s infinite; }
-        .loader-sub { color: #00f3ff; font-family: monospace; margin-top: 10px; font-size: 0.9rem; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-        /* HUD UI */
         #hud-layer {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none;
             display: flex; flex-direction: column; justify-content: space-between; padding: 40px; box-sizing: border-box;
-            background: radial-gradient(circle at center, transparent 50%, rgba(0,0,0,0.8) 100%);
         }
 
-        .top-nav { display: flex; justify-content: space-between; width: 100%; align-items: flex-start; }
-        .brand h1 { font-family: 'Orbitron', sans-serif; font-size: 2.5rem; margin: 0 0 5px 0; letter-spacing: 8px; color: #fff; text-shadow: 0 0 15px rgba(255,255,255,0.5); }
-        .brand p { font-size: 1rem; color: #ffaa00; margin: 0; letter-spacing: 4px; text-transform: uppercase; }
+        .header { display: flex; justify-content: space-between; align-items: flex-start; width: 100%; }
+        .brand { border-left: 4px solid var(--cyan); padding-left: 20px; }
+        .brand h1 { font-family: 'Orbitron', sans-serif; font-size: 2.5rem; margin: 0 0 5px 0; letter-spacing: 10px; color: #fff; text-shadow: 0 0 20px rgba(0,243,255,0.5); }
+        .brand p { font-family: 'Space Mono', monospace; font-size: 0.85rem; color: var(--cyan); margin: 0; letter-spacing: 2px; }
 
-        .sys-controls { pointer-events: auto; display: flex; gap: 15px; }
-        .cyber-btn {
-            padding: 10px 20px; background: rgba(0,0,0,0.5); border: 1px solid #555; color: #fff;
-            font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 0.9rem; letter-spacing: 2px;
-            text-transform: uppercase; text-decoration: none; backdrop-filter: blur(5px); transition: 0.3s; cursor: pointer;
+        .nav-controls { pointer-events: auto; display: flex; gap: 15px; }
+        .hud-btn {
+            background: rgba(0, 243, 255, 0.05); border: 1px solid rgba(0, 243, 255, 0.3); padding: 10px 20px;
+            color: var(--cyan); font-family: 'Orbitron', sans-serif; font-size: 0.85rem; letter-spacing: 2px;
+            text-decoration: none; text-transform: uppercase; cursor: pointer; transition: 0.3s; backdrop-filter: blur(5px);
         }
-        .cyber-btn:hover { border-color: #ffaa00; color: #ffaa00; box-shadow: 0 0 15px rgba(255, 170, 0, 0.3); }
+        .hud-btn:hover { background: rgba(0, 243, 255, 0.2); border-color: var(--cyan); box-shadow: 0 0 15px rgba(0,243,255,0.4); }
+        .btn-forge { color: var(--pink); border-color: rgba(255,0,85,0.3); background: rgba(255,0,85,0.05); }
+        .btn-forge:hover { background: rgba(255,0,85,0.2); border-color: var(--pink); box-shadow: 0 0 15px rgba(255,0,85,0.4); }
+        .btn-auth { color: var(--gold); border-color: rgba(255,170,0,0.3); background: rgba(255,170,0,0.05); }
+        .btn-auth:hover { background: rgba(255,170,0,0.2); border-color: var(--gold); box-shadow: 0 0 15px rgba(255,170,0,0.4); }
 
-        /* Targeting Info Panel */
-        #target-info {
-            position: absolute; bottom: 40px; left: 40px; width: 400px; padding: 25px;
-            background: rgba(2, 5, 10, 0.85); backdrop-filter: blur(10px); border-left: 3px solid #00f3ff;
-            opacity: 0; transform: translateY(20px); transition: all 0.4s ease; pointer-events: auto;
+        /* Telemetry Data Panel (Bottom Left) */
+        #telemetry-panel {
+            position: absolute; bottom: 40px; left: 40px; width: 450px;
+            background: rgba(3, 4, 7, 0.8); border: 1px solid rgba(255,255,255,0.1); padding: 30px;
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            opacity: 0; transform: translateX(-20px); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: auto;
         }
-        #target-info.active { opacity: 1; transform: translateY(0); }
-        #target-info h2 { font-family: 'Orbitron', sans-serif; color: #fff; margin: 0 0 5px 0; font-size: 1.4rem; letter-spacing: 2px; }
-        #target-info .subtitle { color: #00f3ff; font-weight: bold; font-size: 0.85rem; margin-bottom: 12px; letter-spacing: 2px; }
-        #target-info p { color: #a0aec0; font-size: 1.05rem; line-height: 1.6; margin: 0 0 15px 0; }
-        .status-text { color: #ffaa00; font-family: monospace; font-size: 0.85rem; animation: pulse 1.5s infinite; }
+        #telemetry-panel.active { opacity: 1; transform: translateX(0); }
+        .panel-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
+        .node-id { font-family: 'Space Mono', monospace; color: #fff; font-size: 2rem; opacity: 0.5; }
+        .node-title h2 { font-family: 'Orbitron', sans-serif; color: #fff; margin: 0 0 5px 0; font-size: 1.2rem; letter-spacing: 2px; }
+        .node-title .sub { font-family: 'Space Mono', monospace; color: var(--cyan); font-size: 0.75rem; letter-spacing: 1px; }
+        #node-desc { color: #a0aec0; font-size: 1.05rem; line-height: 1.6; margin: 0 0 20px 0; font-weight: 300; }
+        .sys-status { font-family: 'Space Mono', monospace; font-size: 0.8rem; color: #fff; background: rgba(255,255,255,0.1); padding: 8px 15px; display: inline-block; animation: blink 2s infinite; }
 
-        .reticle { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; pointer-events: none; transition: 0.3s; }
-        .reticle::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 4px; height: 4px; background: #fff; border-radius: 50%; }
+        /* ARCHITECT DOSSIER PANEL (Center Modal) */
+        #architect-modal {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95); width: 600px;
+            background: rgba(5, 7, 12, 0.95); border: 1px solid var(--gold); padding: 40px;
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 0 30px rgba(255,170,0,0.05);
+            opacity: 0; visibility: hidden; transition: all 0.3s ease; pointer-events: auto; z-index: 100;
+        }
+        #architect-modal.active { opacity: 1; visibility: visible; transform: translate(-50%, -50%) scale(1); }
+        .modal-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid rgba(255,170,0,0.3); padding-bottom: 20px; margin-bottom: 25px; }
+        .modal-header h2 { font-family: 'Orbitron', sans-serif; font-size: 2rem; color: #fff; margin: 0; letter-spacing: 3px; }
+        .modal-header .sub-role { font-family: 'Space Mono', monospace; color: var(--gold); font-size: 0.9rem; letter-spacing: 1px; margin-top: 5px; }
+        .close-btn { background: transparent; border: none; color: #fff; font-family: 'Orbitron', sans-serif; font-size: 1.5rem; cursor: pointer; transition: 0.2s; opacity: 0.5; }
+        .close-btn:hover { color: var(--pink); opacity: 1; }
+        .modal-body p { color: #a0aec0; font-size: 1.1rem; line-height: 1.7; margin: 0 0 15px 0; }
+        .modal-body strong { color: #fff; font-family: 'Rajdhani', sans-serif; letter-spacing: 1px; }
 
-        .hint { position: absolute; bottom: 40px; right: 40px; text-align: right; color: rgba(255,255,255,0.3); font-family: monospace; font-size: 0.8rem; line-height: 1.8; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        .reticle { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 30px; height: 30px; pointer-events: none; transition: 0.3s; }
+        .reticle::before { content: ''; position: absolute; top: -5px; left: -5px; width: 10px; height: 10px; border-top: 1px solid rgba(255,255,255,0.5); border-left: 1px solid rgba(255,255,255,0.5); }
+        .reticle::after { content: ''; position: absolute; bottom: -5px; right: -5px; width: 10px; height: 10px; border-bottom: 1px solid rgba(255,255,255,0.5); border-right: 1px solid rgba(255,255,255,0.5); }
+
+        .terminal-text { position: absolute; bottom: 40px; right: 40px; text-align: right; color: rgba(255,255,255,0.3); font-family: 'Space Mono', monospace; font-size: 0.75rem; line-height: 2; }
     </style>
 </head>
 <body>
 
-    <div id="loading-screen">
-        <div class="loader-text">SYNTHESIZING UNIVERSE</div>
-        <div class="loader-sub">GENERATING PROCEDURAL FRACTAL TERRAINS...</div>
-    </div>
-
+    <div class="scanlines"></div>
     <div id="webgl-canvas"></div>
 
     <div id="hud-layer">
-        <div class="top-nav">
+        <div class="header">
             <div class="brand">
                 <h1>PROJECT SWARM</h1>
-                <p>EVENT HORIZON TERMINAL</p>
+                <p>HOLOGRAPHIC DATA TOPOLOGY // EDGE PIPELINE</p>
             </div>
-            <div class="sys-controls">
-                <a href="celestial_mapping.html" class="cyber-btn">SYSTEM_MAP</a>
-                <a href="economics_mapping.html" class="cyber-btn" style="border-color: #ff0055; color: #ff0055;">THE_FORGE</a>
+            <div class="nav-controls">
+                <a href="celestial_mapping.html" class="hud-btn">SYSTEM_MAP</a>
+                <a href="economics_mapping.html" class="hud-btn btn-forge">THE_FORGE</a>
+                <button class="hud-btn btn-auth" id="btn-architect">SYS.ARCHITECT</button>
             </div>
         </div>
 
-        <div class="reticle" id="center-reticle"></div>
+        <div class="reticle" id="reticle"></div>
 
-        <div id="target-info">
-            <h2 id="dp-title">MODULE</h2>
-            <div class="subtitle" id="dp-sub">CLASSIFICATION</div>
-            <p id="dp-desc">Telemetry data.</p>
-            <div class="status-text">> CLICK TO INITIATE DESCENT</div>
+        <div id="telemetry-panel">
+            <div class="panel-header">
+                <div class="node-id" id="t-id">01</div>
+                <div class="node-title">
+                    <h2 id="t-title">NODE DESIGNATION</h2>
+                    <div class="sub" id="t-sub">PROCESS CLASSIFICATION</div>
+                </div>
+            </div>
+            <p id="node-desc">Awaiting node selection and telemetry handoff...</p>
+            <div class="sys-status">> CLICK TO INITIATE DATA LINK</div>
         </div>
 
-        <div class="hint">
-            [ DRAG TO ORBIT SINGULARITY ]<br>
-            [ SCROLL TO ZOOM ]<br>
-            [ SELECT PLANETARY NODE ]
+        <div id="architect-modal">
+            <div class="modal-header">
+                <div>
+                    <h2>ATUL ARYAN</h2>
+                    <div class="sub-role">DATA & AI ENGINEERING CANDIDATE</div>
+                </div>
+                <button class="close-btn" id="close-architect">X</button>
+            </div>
+            <div class="modal-body">
+                <p><strong>MISSION:</strong> Project Swarm is a learning-driven, functional technical demonstration bridging abstract mathematical concepts with tangible data engineering.</p>
+                <p><strong>ARCHITECTURE:</strong> This system simulates the ingestion of high-volume, noisy time-series data. It is built to showcase complex pipeline logic, including the application of Fast Fourier Transforms (FFT) for signal isolation and Radon Transforms for 3D inverse scattering reconstruction.</p>
+                <p><strong>OBJECTIVE:</strong> Designed entirely as a portfolio sandbox to demonstrate capability in Python pipelines, fluid data architecture, and machine learning logic integration.</p>
+            </div>
+        </div>
+
+        <div class="terminal-text">
+            SYS.OP.MODE: MANUAL_ORBIT<br>
+            CMD: DRAG_TO_ROTATE<br>
+            CMD: SCROLL_TO_SCALE<br>
+            AWAITING_INPUT_
         </div>
     </div>
 
@@ -97,320 +144,226 @@
 
     <script>
         // =========================================================================
-        // 1. ADVANCED MATHEMATICAL TEXTURE ENGINE (Replaces external images)
+        // UI MODAL LOGIC (Author Section)
         // =========================================================================
-        function generateHighDefTexture(type) {
-            const canvas = document.createElement('canvas');
-            canvas.width = 2048; canvas.height = 1024; // Ultra HD resolution
-            const ctx = canvas.getContext('2d');
+        const btnArchitect = document.getElementById('btn-architect');
+        const modalArchitect = document.getElementById('architect-modal');
+        const btnClose = document.getElementById('close-architect');
 
-            // Advanced Fractional Brownian Motion (fBm) noise approximation
-            function noise(x, y) { return Math.sin(x*0.05)*Math.cos(y*0.05) + Math.sin(x*0.1)*0.5 + Math.cos(y*0.1)*0.5; }
-
-            if (type === 'skydome') {
-                const grad = ctx.createLinearGradient(0, 0, 0, 1024);
-                grad.addColorStop(0, '#010205'); grad.addColorStop(0.5, '#050a14'); grad.addColorStop(1, '#010205');
-                ctx.fillStyle = grad; ctx.fillRect(0, 0, 2048, 1024);
-                
-                // Milky Way Dust
-                ctx.globalCompositeOperation = 'lighter';
-                for(let i=0; i<100; i++) {
-                    const cx = Math.random()*2048, cy = Math.random()*1024, cr = 100+Math.random()*300;
-                    const rgrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, cr);
-                    rgrad.addColorStop(0, 'rgba(50, 100, 255, 0.03)'); rgrad.addColorStop(1, 'rgba(0,0,0,0)');
-                    ctx.fillStyle = rgrad; ctx.fillRect(cx-cr, cy-cr, cr*2, cr*2);
-                }
-                // 20,000 Stars
-                for(let i=0; i<20000; i++) {
-                    ctx.fillStyle = Math.random()>0.8 ? '#aaccff' : '#ffffff';
-                    ctx.globalAlpha = Math.random();
-                    ctx.fillRect(Math.random()*2048, Math.random()*1024, Math.random()*1.5, Math.random()*1.5);
-                }
-            }
-            else if (type === 'oceanic') {
-                ctx.fillStyle = '#021526'; ctx.fillRect(0, 0, 2048, 1024); // Deep Ocean
-                ctx.fillStyle = '#1b3b22'; // Landmass
-                for(let x=0; x<2048; x+=4) {
-                    for(let y=0; y<1024; y+=4) {
-                        let n = noise(x, y) + noise(x*2.5, y*2.5)*0.5;
-                        if(n > 0.4) {
-                            ctx.fillStyle = n > 0.8 ? '#4a3b2c' : '#1b3b22'; // Mountains vs Jungle
-                            ctx.fillRect(x, y, 4, 4);
-                        }
-                    }
-                }
-            }
-            else if (type === 'clouds') {
-                ctx.clearRect(0,0,2048,1024);
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-                for(let x=0; x<2048; x+=8) {
-                    for(let y=0; y<1024; y+=8) {
-                        let n = noise(x*1.5, y*1.5);
-                        if(n > 0.6) { ctx.beginPath(); ctx.arc(x, y, (n-0.6)*20, 0, Math.PI*2); ctx.fill(); }
-                    }
-                }
-            }
-            else if (type === 'gas_giant') {
-                for(let y=0; y<1024; y++) {
-                    let v = Math.sin(y * 0.02) + Math.sin(y * 0.08) * 0.4;
-                    let r = 180 + v * 40 + Math.random()*10;
-                    let g = 130 + v * 30 + Math.random()*10;
-                    let b = 80 + v * 20;
-                    ctx.fillStyle = `rgb(${r},${g},${b})`;
-                    ctx.fillRect(0, y, 2048, 1);
-                }
-                // Giant Storm
-                const grad = ctx.createRadialGradient(800, 600, 0, 800, 600, 150);
-                grad.addColorStop(0, 'rgba(150, 40, 10, 0.9)'); grad.addColorStop(1, 'rgba(150, 40, 10, 0)');
-                ctx.fillStyle = grad; ctx.fillRect(0,0,2048,1024);
-            }
-            else if (type === 'volcanic') {
-                ctx.fillStyle = '#110502'; ctx.fillRect(0, 0, 2048, 1024); // Obsidian
-                ctx.strokeStyle = '#ff3300'; ctx.lineWidth = 3;
-                for(let i=0; i<150; i++) { // Lava rivers
-                    ctx.beginPath(); ctx.moveTo(Math.random()*2048, Math.random()*1024);
-                    for(let j=0; j<15; j++) { ctx.lineTo(Math.random()*2048, Math.random()*1024); }
-                    ctx.stroke();
-                }
-                for(let i=0; i<5000; i++) { // Craters
-                    ctx.fillStyle = '#0a0301'; ctx.beginPath(); ctx.arc(Math.random()*2048, Math.random()*1024, Math.random()*8, 0, Math.PI*2); ctx.fill();
-                }
-            }
-            else if (type === 'forge') {
-                ctx.fillStyle = '#1a1c23'; ctx.fillRect(0, 0, 2048, 1024); // Dark Metal
-                ctx.strokeStyle = '#00f3ff'; ctx.lineWidth = 1;
-                for(let x=0; x<2048; x+=64) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,1024); ctx.stroke(); }
-                for(let y=0; y<1024; y+=64) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(2048,y); ctx.stroke(); }
-                for(let i=0; i<5000; i++) {
-                    ctx.fillStyle = Math.random()>0.8?'#00f3ff':'#333'; ctx.fillRect(Math.random()*2048, Math.random()*1024, 4, 4);
-                }
-            }
-            return new THREE.CanvasTexture(canvas);
-        }
+        btnArchitect.addEventListener('click', () => { modalArchitect.classList.add('active'); });
+        btnClose.addEventListener('click', () => { modalArchitect.classList.remove('active'); });
 
         // =========================================================================
-        // 2. SCENE INITIALIZATION & POST-PROCESSING ENGINE
+        // SCENE SETUP 
         // =========================================================================
         const container = document.getElementById('webgl-canvas');
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 5000);
-        camera.position.set(0, 80, 250);
+        scene.fog = new THREE.FogExp2(0x030407, 0.003);
 
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: "high-performance" });
+        const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 2000);
+        camera.position.set(0, 100, 250);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        // Tone mapping makes bright lights (accretion disk) look cinematic
-        renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1.2;
         container.appendChild(renderer.domElement);
 
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true; controls.dampingFactor = 0.05; 
-        controls.maxDistance = 800; controls.minDistance = 50;
+        controls.maxDistance = 600; controls.minDistance = 50;
 
-        // --- Lighting ---
-        scene.add(new THREE.AmbientLight(0x050a10, 1.5));
-        const singularityLight = new THREE.PointLight(0xffddaa, 5, 2000); // Massive light from the accretion disk
-        scene.add(singularityLight);
+        const gridHelper = new THREE.GridHelper(1000, 50, 0x00f3ff, 0x111111);
+        gridHelper.position.y = -100;
+        gridHelper.material.opacity = 0.1;
+        gridHelper.material.transparent = true;
+        scene.add(gridHelper);
 
         // =========================================================================
-        // 3. ASYNC GENERATION (To prevent freezing while rendering textures)
+        // THE SINGULARITY 
         // =========================================================================
-        setTimeout(() => {
-            
-            // 1. Skydome Background
-            const skyGeo = new THREE.SphereGeometry(2000, 64, 64);
-            const skyMat = new THREE.MeshBasicMaterial({ map: generateHighDefTexture('skydome'), side: THREE.BackSide, fog: false });
-            scene.add(new THREE.Mesh(skyGeo, skyMat));
+        const coreGroup = new THREE.Group();
+        scene.add(coreGroup);
 
-            // 2. THE BLACK HOLE (Gargantua)
-            const bhGroup = new THREE.Group();
-            scene.add(bhGroup);
+        const ehGeo = new THREE.SphereGeometry(25, 64, 64);
+        const ehMat = new THREE.MeshBasicMaterial({ color: 0x000000 });
+        const eventHorizon = new THREE.Mesh(ehGeo, ehMat);
+        coreGroup.add(eventHorizon);
 
-            // The Event Horizon (Pitch Black Core)
-            const ehGeo = new THREE.SphereGeometry(20, 64, 64);
-            const ehMat = new THREE.MeshBasicMaterial({ color: 0x000000 });
-            const eventHorizon = new THREE.Mesh(ehGeo, ehMat);
-            bhGroup.add(eventHorizon);
+        const diskCount = 40000;
+        const diskGeo = new THREE.BufferGeometry();
+        const diskPos = new Float32Array(diskCount * 3);
+        const diskCol = new Float32Array(diskCount * 3);
+        
+        const cCore = new THREE.Color(0xffffff);
+        const cMid = new THREE.Color(0xffaa00);
+        const cEdge = new THREE.Color(0xff0055);
 
-            // The Photon Sphere (Thin glowing ring right on the edge)
-            const photonGeo = new THREE.SphereGeometry(20.5, 64, 64);
-            const photonMat = new THREE.MeshBasicMaterial({ color: 0xffffee, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending, side: THREE.BackSide });
-            bhGroup.add(new THREE.Mesh(photonGeo, photonMat));
+        for(let i=0; i<diskCount; i++) {
+            const radius = 26 + Math.pow(Math.random(), 4) * 120;
+            const angle = Math.random() * Math.PI * 2;
+            const warp = Math.sin(angle * 3) * (60 / radius);
+            const y = (Math.random() - 0.5) * 2 + warp;
 
-            // The Accretion Disk (100,000 volumetric particles)
-            const diskCount = 100000;
-            const diskGeo = new THREE.BufferGeometry();
-            const diskPos = new Float32Array(diskCount * 3);
-            const diskCol = new Float32Array(diskCount * 3);
-            
-            const cInner = new THREE.Color(0xffffff); // White hot
-            const cMid = new THREE.Color(0xffaa00);   // Golden
-            const cOuter = new THREE.Color(0xff3300); // Deep red
+            diskPos[i*3] = Math.cos(angle) * radius;
+            diskPos[i*3+1] = y;
+            diskPos[i*3+2] = Math.sin(angle) * radius;
 
-            for(let i=0; i<diskCount; i++) {
-                // Skew distribution to pack densely near the event horizon
-                const radius = 22 + Math.pow(Math.random(), 3) * 80;
-                const angle = Math.random() * Math.PI * 2;
-                
-                // Warp the y-axis to simulate gravitational lensing (bending light)
-                const warp = Math.sin(angle * 2) * (50 / radius);
-                const y = (Math.random() - 0.5) * 2 + warp;
+            let ratio = (radius - 26) / 120;
+            let c = cCore.clone().lerp(cMid, ratio * 4);
+            if(ratio > 0.25) c = cMid.clone().lerp(cEdge, (ratio - 0.25) * 1.5);
 
-                diskPos[i*3] = Math.cos(angle) * radius;
-                diskPos[i*3+1] = y;
-                diskPos[i*3+2] = Math.sin(angle) * radius;
+            diskCol[i*3] = c.r; diskCol[i*3+1] = c.g; diskCol[i*3+2] = c.b;
+        }
+        
+        diskGeo.setAttribute('position', new THREE.BufferAttribute(diskPos, 3));
+        diskGeo.setAttribute('color', new THREE.BufferAttribute(diskCol, 3));
+        
+        const diskMat = new THREE.PointsMaterial({ size: 0.2, vertexColors: true, blending: THREE.AdditiveBlending, transparent: true, opacity: 0.8 });
+        const accretionDisk = new THREE.Points(diskGeo, diskMat);
+        accretionDisk.rotation.x = Math.PI * 0.15;
+        accretionDisk.rotation.z = Math.PI * 0.05;
+        coreGroup.add(accretionDisk);
 
-                // Color gradient based on heat/distance
-                let ratio = (radius - 22) / 80;
-                let c = cInner.clone().lerp(cMid, ratio * 3);
-                if(ratio > 0.33) c = cMid.clone().lerp(cOuter, (ratio - 0.33) * 1.5);
+        const boundaryGeo = new THREE.IcosahedronGeometry(150, 2);
+        const boundaryMat = new THREE.MeshBasicMaterial({ color: 0x00f3ff, wireframe: true, transparent: true, opacity: 0.03 });
+        const boundary = new THREE.Mesh(boundaryGeo, boundaryMat);
+        scene.add(boundary);
 
-                diskCol[i*3] = c.r; diskCol[i*3+1] = c.g; diskCol[i*3+2] = c.b;
+        // =========================================================================
+        // THE PIPELINE NODES
+        // =========================================================================
+        const nodes = [];
+        const nodeData = [
+            { id: "01", title: "STOCHASTIC RESONANCE", sub: "STAGE 1 // SENSOR SWARM", desc: "Data extraction via environmental noise. Node utilizes chaotic background radiation to amplify and detect incredibly faint, hidden telemetry signals.", url: "stochastic_resonance.html", distance: 80, speed: 0.004, size: 4, color: 0xff3300 },
+            { id: "02", title: "INGESTION ROUTER", sub: "STAGE 2 // FFT PROCESSING", desc: "High-volume data sorting. Fast Fourier Transform (FFT) algorithms instantly decouple massive power yields from complex acoustic data streams.", url: "06_fft_router.html", distance: 110, speed: 0.003, size: 6, color: 0xffaa00, hasRing: true },
+            { id: "03", title: "MEMORY ENGINE", sub: "STAGE 3 // INVERSE SCATTERING", desc: "Machine Learning Core reconstruction. Applies the Radon Transform to scattered data points, rebuilding perfect 3D geometric matrices from fragments.", url: "inverse_scattering.html", distance: 140, speed: 0.002, size: 5, color: 0x00f3ff },
+            { id: "04", title: "VON NEUMANN FORGE", sub: "STAGE 4 // PHONONIC ASSEMBLY", desc: "Physical matter replication. Acoustic resonance waves physically force raw plasma to crystallize into highly evolved Smart Rock metamaterials.", url: "phononic_forge.html", distance: 170, speed: 0.0015, size: 4.5, color: 0xff0055 }
+        ];
+
+        nodeData.forEach((data, index) => {
+            const geo = new THREE.IcosahedronGeometry(data.size, 2);
+            const mat = new THREE.MeshBasicMaterial({ color: data.color, wireframe: true, transparent: true, opacity: 0.8 });
+            const mesh = new THREE.Mesh(geo, mat);
+
+            const coreGeo = new THREE.IcosahedronGeometry(data.size * 0.8, 1);
+            const coreMat = new THREE.MeshBasicMaterial({ color: 0x000000 });
+            const core = new THREE.Mesh(coreGeo, coreMat);
+            mesh.add(core);
+
+            if (data.hasRing) {
+                const rGeo = new THREE.TorusGeometry(data.size * 1.8, 0.1, 4, 64);
+                const rMat = new THREE.MeshBasicMaterial({ color: data.color, transparent: true, opacity: 0.5 });
+                const ring = new THREE.Mesh(rGeo, rMat);
+                ring.rotation.x = Math.PI / 2;
+                mesh.add(ring);
             }
-            diskGeo.setAttribute('position', new THREE.BufferAttribute(diskPos, 3));
-            diskGeo.setAttribute('color', new THREE.BufferAttribute(diskCol, 3));
-            const diskMat = new THREE.PointsMaterial({ size: 0.15, vertexColors: true, blending: THREE.AdditiveBlending, transparent: true, opacity: 0.6 });
-            const accretionDisk = new THREE.Points(diskGeo, diskMat);
-            // Tilt the disk for the cinematic Interstellar angle
-            accretionDisk.rotation.x = Math.PI * 0.1;
-            accretionDisk.rotation.z = Math.PI * 0.05;
-            bhGroup.add(accretionDisk);
 
-            // 3. THE PLANETARY SYSTEM
-            const planets = [];
-            const planetData = [
-                { type: 'volcanic', title: "STOCHASTIC RESONANCE", sub: "STAGE 1", desc: "Violent volcanic world. Utilizing chaotic solar wind background noise to amplify faint data.", url: "stochastic_resonance.html", distance: 70, speed: 0.004, size: 3.5, glow: 0xff3300 },
-                { type: 'gas_giant', title: "INGESTION ROUTER", sub: "STAGE 2", desc: "Massive gas giant. Fast Fourier Transform (FFT) algorithms sorting chaotic firehoses into frequency arrays.", url: "06_fft_router.html", distance: 110, speed: 0.0025, size: 6, glow: 0xffaa00, hasRings: true },
-                { type: 'oceanic', title: "INVERSE SCATTERING", sub: "STAGE 3", desc: "Oceanic World. Machine Learning Core reconstructs perfect 3D geometric memory from shattered data.", url: "inverse_scattering.html", distance: 160, speed: 0.0018, size: 4.5, glow: 0x00f3ff, hasClouds: true },
-                { type: 'forge', title: "PHONONIC FORGE", sub: "STAGE 4", desc: "Dense cybernetic planet. Acoustic resonance waves crystallizing plasma into highly evolved Smart Rocks.", url: "phononic_forge.html", distance: 210, speed: 0.0012, size: 3, glow: 0x00f3ff }
-            ];
+            const angle = (index / nodeData.length) * Math.PI * 2;
+            mesh.position.x = Math.cos(angle) * data.distance;
+            mesh.position.z = Math.sin(angle) * data.distance;
+            mesh.userData = data; mesh.userData.angle = angle;
 
-            planetData.forEach((data, index) => {
-                // High Def Base Mesh
-                const geo = new THREE.SphereGeometry(data.size, 64, 64);
-                const tex = generateHighDefTexture(data.type);
-                const mat = new THREE.MeshStandardMaterial({ map: tex, bumpMap: tex, bumpScale: 0.2, roughness: 0.7, metalness: data.type==='forge'?0.8:0.1 });
-                const mesh = new THREE.Mesh(geo, mat);
+            const pathGeo = new THREE.RingGeometry(data.distance - 0.2, data.distance + 0.2, 128);
+            const pathMat = new THREE.MeshBasicMaterial({ color: data.color, side: THREE.DoubleSide, transparent: true, opacity: 0.15 });
+            const path = new THREE.Mesh(pathGeo, pathMat);
+            path.rotation.x = Math.PI / 2;
+            scene.add(path);
 
-                // Earth-like Clouds
-                if (data.hasClouds) {
-                    const cGeo = new THREE.SphereGeometry(data.size * 1.02, 64, 64);
-                    const cMat = new THREE.MeshStandardMaterial({ map: generateHighDefTexture('clouds'), transparent: true, opacity: 0.9, depthWrite: false });
-                    mesh.clouds = new THREE.Mesh(cGeo, cMat);
-                    mesh.add(mesh.clouds);
-                }
+            scene.add(mesh);
+            nodes.push(mesh);
+        });
 
-                // Saturn-like Rings for Gas Giant
-                if (data.hasRings) {
-                    const rGeo = new THREE.RingGeometry(data.size * 1.5, data.size * 2.5, 128);
-                    const rTex = generateHighDefTexture('gas_giant'); // Reuse gas bands for ring lines
-                    const rMat = new THREE.MeshStandardMaterial({ map: rTex, side: THREE.DoubleSide, transparent: true, opacity: 0.8 });
-                    const ring = new THREE.Mesh(rGeo, rMat);
-                    ring.rotation.x = Math.PI / 2 + 0.2;
-                    mesh.add(ring);
-                }
+        // =========================================================================
+        // RAYCASTING 
+        // =========================================================================
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+        
+        const tId = document.getElementById('t-id');
+        const tTitle = document.getElementById('t-title');
+        const tSub = document.getElementById('t-sub');
+        const tDesc = document.getElementById('node-desc');
+        const panel = document.getElementById('telemetry-panel');
+        const reticle = document.getElementById('reticle');
+        
+        let hoveredNode = null;
 
-                // Additive Atmosphere Glow
-                const aGeo = new THREE.SphereGeometry(data.size * 1.15, 32, 32);
-                const aMat = new THREE.MeshBasicMaterial({ color: data.glow, transparent: true, opacity: 0.15, blending: THREE.AdditiveBlending });
-                mesh.add(new THREE.Mesh(aGeo, aMat));
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+        });
 
-                // Orbit Math
-                const angle = (index / planetData.length) * Math.PI * 2;
-                mesh.position.x = Math.cos(angle) * data.distance;
-                mesh.position.z = Math.sin(angle) * data.distance;
-                mesh.userData = data; mesh.userData.angle = angle;
-
-                // Orbit Line
-                const pGeo = new THREE.RingGeometry(data.distance - 0.2, data.distance + 0.2, 128);
-                const pMat = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, transparent: true, opacity: 0.05 });
-                const path = new THREE.Mesh(pGeo, pMat);
-                path.rotation.x = Math.PI / 2;
-                scene.add(path);
-
-                scene.add(mesh);
-                planets.push(mesh);
-            });
-
-            // 4. RAYCASTING & UI LOGIC
-            const raycaster = new THREE.Raycaster();
-            const mouse = new THREE.Vector2();
+        window.addEventListener('click', () => {
+            // Prevent navigating if the modal is open
+            if(modalArchitect.classList.contains('active')) return; 
             
-            const dpTitle = document.getElementById('dp-title');
-            const dpSub = document.getElementById('dp-sub');
-            const dpDesc = document.getElementById('dp-desc');
-            const dataPanel = document.getElementById('target-info');
-            const reticle = document.getElementById('center-reticle');
-            let hoveredNode = null;
+            if (hoveredNode && hoveredNode.userData.url) window.location.href = hoveredNode.userData.url;
+        });
 
-            window.addEventListener('mousemove', (e) => {
-                mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-                mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // =========================================================================
+        // PHYSICS LOOP
+        // =========================================================================
+        function animate() {
+            requestAnimationFrame(animate);
+
+            accretionDisk.rotation.y -= 0.008;
+            boundary.rotation.y += 0.001;
+            boundary.rotation.z += 0.0005;
+
+            nodes.forEach(node => {
+                node.userData.angle += node.userData.speed;
+                node.position.x = Math.cos(node.userData.angle) * node.userData.distance;
+                node.position.z = Math.sin(node.userData.angle) * node.userData.distance;
+                node.rotation.x += 0.01; 
+                node.rotation.y += 0.01;
             });
 
-            window.addEventListener('click', () => {
-                if (hoveredNode && hoveredNode.userData.url) window.location.href = hoveredNode.userData.url;
-            });
-
-            window.addEventListener('resize', () => {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            });
-
-            // Hide Loading Screen
-            document.getElementById('loading-screen').style.opacity = '0';
-            setTimeout(() => document.getElementById('loading-screen').style.display = 'none', 1000);
-
-            // 5. PHYSICS LOOP
-            function animate() {
-                requestAnimationFrame(animate);
-
-                // Fast rotation for the inner accretion disk
-                accretionDisk.rotation.y -= 0.01;
-
-                // Planet orbits
-                planets.forEach(planet => {
-                    planet.userData.angle += planet.userData.speed;
-                    planet.position.x = Math.cos(planet.userData.angle) * planet.userData.distance;
-                    planet.position.z = Math.sin(planet.userData.angle) * planet.userData.distance;
-                    planet.rotation.y += 0.005; 
-                    if (planet.clouds) planet.clouds.rotation.y += 0.007;
-                });
-
-                // UI Interactivity
+            // Only run hover logic if the modal is closed
+            if(!modalArchitect.classList.contains('active')) {
                 raycaster.setFromCamera(mouse, camera);
-                const intersects = raycaster.intersectObjects(planets);
+                const intersects = raycaster.intersectObjects(nodes, true);
 
                 if (intersects.length > 0) {
-                    if (hoveredNode !== intersects[0].object) {
-                        hoveredNode = intersects[0].object;
-                        dpTitle.innerText = hoveredNode.userData.title;
-                        dpSub.innerText = hoveredNode.userData.sub;
-                        dpDesc.innerText = hoveredNode.userData.desc;
-                        dataPanel.style.borderLeftColor = '#' + hoveredNode.userData.glow.toString(16).padStart(6, '0');
-                        reticle.style.borderColor = '#' + hoveredNode.userData.glow.toString(16).padStart(6, '0');
-                        reticle.style.transform = 'translate(-50%, -50%) scale(1.5)';
-                        dataPanel.classList.add('active');
-                        document.body.style.cursor = 'pointer';
+                    const targetObj = intersects[0].object.parent === scene ? intersects[0].object : intersects[0].object.parent;
+                    
+                    if (hoveredNode !== targetObj && targetObj.userData.url) {
+                        hoveredNode = targetObj;
+                        
+                        tId.innerText = hoveredNode.userData.id;
+                        tTitle.innerText = hoveredNode.userData.title;
+                        tSub.innerText = hoveredNode.userData.sub;
+                        tSub.style.color = '#' + hoveredNode.userData.color.toString(16).padStart(6, '0');
+                        tDesc.innerText = hoveredNode.userData.desc;
+                        
+                        panel.style.borderTop = '2px solid #' + hoveredNode.userData.color.toString(16).padStart(6, '0');
+                        panel.classList.add('active');
+                        
+                        reticle.style.borderColor = '#' + hoveredNode.userData.color.toString(16).padStart(6, '0');
+                        reticle.style.transform = 'translate(-50%, -50%) scale(1.5) rotate(45deg)';
+                        document.body.style.cursor = 'crosshair';
                     }
                 } else {
                     if (hoveredNode) {
                         hoveredNode = null;
-                        dataPanel.classList.remove('active');
-                        reticle.style.borderColor = 'rgba(255,255,255,0.2)';
-                        reticle.style.transform = 'translate(-50%, -50%) scale(1)';
+                        panel.classList.remove('active');
+                        reticle.style.borderColor = 'transparent';
+                        reticle.style.transform = 'translate(-50%, -50%) scale(1) rotate(0deg)';
                         document.body.style.cursor = 'default';
                     }
                 }
-
-                controls.update();
-                renderer.render(scene, camera);
             }
-            animate();
 
-        }, 100); // Small delay to allow loading screen to render
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        animate();
     </script>
 </body>
 </html>
