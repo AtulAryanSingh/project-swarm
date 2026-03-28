@@ -17,7 +17,6 @@
             --panel-bg: rgba(3, 10, 20, 0.75);
         }
 
-        /* The Grid Background */
         body {
             background-color: var(--bg-void);
             background-image: 
@@ -29,7 +28,6 @@
             margin: 0;
             padding: 0;
             line-height: 1.6;
-            overflow-x: hidden;
         }
 
         h1, h2, h3 {
@@ -39,13 +37,11 @@
             margin-top: 0;
         }
 
-        /* Top Header Area */
         .hero {
             padding: 80px 20px 60px;
             text-align: center;
             border-bottom: 1px solid rgba(0, 240, 255, 0.3);
             background: radial-gradient(circle at center, rgba(0, 240, 255, 0.05) 0%, transparent 70%);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
 
         .hero h1 {
@@ -53,7 +49,7 @@
             color: #ffffff;
             margin-bottom: 5px;
             letter-spacing: 8px;
-            text-shadow: 0 0 20px var(--hud-cyan), 0 0 40px var(--hud-cyan);
+            text-shadow: 0 0 20px var(--hud-cyan);
         }
 
         .hero p {
@@ -69,18 +65,14 @@
             padding: 20px;
         }
 
-        /* HUD Panels */
         .panel {
             background: var(--panel-bg);
             border: 1px solid rgba(0, 240, 255, 0.2);
             padding: 35px;
             margin-bottom: 40px;
             position: relative;
-            backdrop-filter: blur(5px);
-            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
         }
 
-        /* Sci-Fi Corner Accents */
         .panel::before, .panel::after {
             content: ''; position: absolute; width: 15px; height: 15px;
         }
@@ -88,19 +80,18 @@
         .panel::after { bottom: -1px; right: -1px; border-bottom: 2px solid var(--hud-cyan); border-right: 2px solid var(--hud-cyan); }
 
         .panel-green { border-color: rgba(0, 255, 102, 0.3); }
-        .panel-green::before { border-color: var(--hud-green); }
-        .panel-green::after { border-color: var(--hud-green); }
+        .panel-green::before, .panel-green::after { border-color: var(--hud-green); }
 
         .panel h2 { font-size: 2rem; color: #ffffff; }
         .panel h2.cyan { text-shadow: 0 0 10px var(--hud-cyan); }
         .panel h2.green { text-shadow: 0 0 10px var(--hud-green); }
         
         .highlight { color: var(--hud-pink); font-weight: bold; text-shadow: 0 0 8px var(--hud-pink); }
+        
         .data-list { list-style: none; padding: 0; }
         .data-list li { margin-bottom: 15px; padding-left: 20px; border-left: 2px solid var(--hud-cyan); }
         .data-list strong { color: #ffffff; font-family: 'Rajdhani', sans-serif; font-size: 1.2rem; letter-spacing: 1px;}
 
-        /* Grid for Stages */
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
@@ -111,10 +102,62 @@
             background: rgba(0, 0, 0, 0.6);
             border: 1px solid rgba(0, 240, 255, 0.3);
             padding: 30px;
-            position: relative;
             transition: all 0.2s ease;
         }
 
         .card:hover {
             border-color: var(--hud-cyan);
-            box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.1), 0 0 15px rgba(0, 240,
+            box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .card h3 { color: #ffffff; font-size: 1.6rem; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;}
+
+        /* Buttons with NO target="_blank" */
+        .hud-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 25px;
+            background: transparent;
+            color: var(--hud-cyan);
+            text-decoration: none;
+            border: 1px solid var(--hud-cyan);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .hud-btn:hover { background: var(--hud-cyan); color: #000; box-shadow: 0 0 15px var(--hud-cyan); }
+        
+        .hud-btn-pink { color: var(--hud-pink); border-color: var(--hud-pink); }
+        .hud-btn-pink:hover { background: var(--hud-pink); color: #000; box-shadow: 0 0 15px var(--hud-pink); }
+
+        .btn-group { display: flex; gap: 20px; justify-content: center; margin-top: 30px;}
+    </style>
+</head>
+<body>
+
+    <div class="hero">
+        <h1>PROJECT SWARM</h1>
+        <p>A DECENTRALIZED, CHAOS-DRIVEN COSMIC DATA PIPELINE</p>
+    </div>
+
+    <div class="container">
+        
+        <div class="panel panel-green">
+            <h2 class="green">SYSTEM_ARCHITECTURE (SOFTWARE_LEVEL)</h2>
+            <p>Beneath the cosmic metaphor, this project is a <strong>functional simulation of an Edge Computing data pipeline.</strong></p>
+            <ul class="data-list">
+                <li><strong>PIPELINE STATUS:</strong> Functional Simulation. Physics are simulated; processing math (FFT, Radon Transforms) is executing live.</li>
+                <li><strong>I/O STRUCTURE:</strong> Ingests high-volume, noisy time-series arrays -> Outputs segregated frequency arrays and serialized JSON.</li>
+                <li><strong>DECENTRALIZATION:</strong> Emulates a distributed network of asynchronous edge nodes (Swarm) streaming to a central broker (Sphere).</li>
+            </ul>
+        </div>
+
+        <div class="panel">
+            <h2 class="cyan">CORE_PHILOSOPHY: ENTROPY_AS_ENGINE</h2>
+            <p>Traditional human engineering attempts to build a fortress against the universe. Projects like Elon Musk's
