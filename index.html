@@ -3,154 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Swarm | 3D STELLAR TERMINAL</title>
+    <title>Project Swarm | EVENT HORIZON TERMINAL</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden; /* Prevent scrolling, the 3D canvas fills the screen */
-            background-color: #020205;
-            font-family: 'Rajdhani', sans-serif;
-            color: #fff;
-        }
-
-        /* The 3D Canvas */
-        #webgl-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 1;
-        }
-
-        /* 2D HUD Overlay (Pointer events none so you can click the 3D objects behind it) */
+        body { margin: 0; padding: 0; overflow: hidden; background-color: #000; font-family: 'Rajdhani', sans-serif; color: #fff; }
+        #webgl-canvas { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; }
+        
         #hud-layer {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 10;
-            pointer-events: none; 
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 40px;
-            box-sizing: border-box;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10;
+            pointer-events: none; display: flex; flex-direction: column; justify-content: space-between;
+            padding: 40px; box-sizing: border-box;
+            background: radial-gradient(circle at center, transparent 60%, rgba(0,0,0,0.8) 100%);
         }
 
-        /* Top Left Title */
-        .title-block h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 3rem;
-            margin: 0 0 10px 0;
-            letter-spacing: 4px;
-            color: #fff;
-            text-shadow: 0 0 20px #00f3ff;
-        }
-        .title-block p {
-            font-size: 1.2rem;
-            color: #00f3ff;
-            margin: 0;
-            letter-spacing: 2px;
-        }
+        .title-block h1 { font-family: 'Orbitron', sans-serif; font-size: 3rem; margin: 0 0 5px 0; letter-spacing: 6px; color: #fff; text-shadow: 0 0 20px #ffaa00; }
+        .title-block p { font-size: 1.2rem; color: #ffaa00; margin: 0; letter-spacing: 3px; }
 
-        /* Top Right Dashboard Links (Re-enable pointer events for buttons) */
-        .dashboard-links {
-            position: absolute;
-            top: 40px;
-            right: 40px;
-            pointer-events: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            align-items: flex-end;
-        }
-
+        .dashboard-links { position: absolute; top: 40px; right: 40px; pointer-events: auto; display: flex; flex-direction: column; gap: 15px; align-items: flex-end; }
+        
         .hud-btn {
-            padding: 10px 20px;
-            background: rgba(0, 243, 255, 0.1);
-            border: 1px solid #00f3ff;
-            color: #00f3ff;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: bold;
-            text-decoration: none;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            backdrop-filter: blur(5px);
-            transition: 0.3s;
-            cursor: pointer;
+            padding: 10px 20px; background: rgba(255, 170, 0, 0.05); border: 1px solid #ffaa00; color: #ffaa00;
+            font-family: 'Orbitron', sans-serif; font-weight: bold; text-decoration: none; text-transform: uppercase;
+            letter-spacing: 2px; backdrop-filter: blur(5px); transition: 0.3s; cursor: pointer;
         }
+        .hud-btn:hover { background: #ffaa00; color: #000; box-shadow: 0 0 20px #ffaa00; }
 
-        .hud-btn:hover {
-            background: #00f3ff;
-            color: #000;
-            box-shadow: 0 0 20px #00f3ff;
-        }
-
-        .hud-btn-pink { border-color: #ff0055; color: #ff0055; background: rgba(255, 0, 85, 0.1); }
-        .hud-btn-pink:hover { background: #ff0055; color: #000; box-shadow: 0 0 20px #ff0055; }
-
-        /* The Targeting Info Panel (Bottom Left) */
         #target-info {
-            background: rgba(5, 5, 10, 0.8);
-            border-left: 3px solid #ff0055;
-            padding: 25px;
-            width: 400px;
-            backdrop-filter: blur(10px);
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.3s ease;
+            background: rgba(10, 5, 0, 0.85); border-left: 3px solid #00f3ff; padding: 25px; width: 400px;
+            backdrop-filter: blur(10px); opacity: 0; transform: translateY(20px); transition: all 0.3s ease;
         }
+        #target-info.active { opacity: 1; transform: translateY(0); }
+        #target-info h2 { font-family: 'Orbitron', sans-serif; color: #00f3ff; margin: 0 0 10px 0; font-size: 1.5rem; border-bottom: 1px solid rgba(0, 243, 255, 0.3); padding-bottom: 10px; }
+        #target-info p { color: #d0d0d0; font-size: 1.1rem; line-height: 1.5; margin: 0 0 15px 0; }
+        .status-text { color: #ffaa00; font-family: monospace; font-size: 0.95rem; letter-spacing: 1px; animation: blink 1.5s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
-        #target-info.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        #target-info h2 {
-            font-family: 'Orbitron', sans-serif;
-            color: #ff0055;
-            margin: 0 0 10px 0;
-            font-size: 1.5rem;
-            border-bottom: 1px solid rgba(255, 0, 85, 0.3);
-            padding-bottom: 10px;
-        }
-
-        #target-info p {
-            color: #a0aec0;
-            font-size: 1.1rem;
-            line-height: 1.5;
-            margin: 0 0 15px 0;
-        }
-
-        .status-text {
-            color: #00ff66;
-            font-family: monospace;
-            font-size: 0.9rem;
-            letter-spacing: 1px;
-            animation: blink 1.5s infinite;
-        }
-
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-
-        /* Crosshair in the center */
-        .crosshair {
-            position: absolute; top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 40px; height: 40px;
-            border: 1px solid rgba(0, 243, 255, 0.2);
-            border-radius: 50%;
-            pointer-events: none;
-        }
-        .crosshair::before, .crosshair::after {
-            content: ''; position: absolute; background: rgba(0, 243, 255, 0.4);
-        }
-        .crosshair::before { top: 50%; left: -10px; right: -10px; height: 1px; }
-        .crosshair::after { left: 50%; top: -10px; bottom: -10px; width: 1px; }
-
+        .crosshair { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 50px; height: 50px; border: 1px solid rgba(255, 170, 0, 0.2); border-radius: 50%; pointer-events: none; }
+        .crosshair::before, .crosshair::after { content: ''; position: absolute; background: rgba(255, 170, 0, 0.5); }
+        .crosshair::before { top: 50%; left: -15px; right: -15px; height: 1px; }
+        .crosshair::after { left: 50%; top: -15px; bottom: -15px; width: 1px; }
     </style>
 </head>
 <body>
@@ -160,16 +51,14 @@
     <div id="hud-layer">
         <div class="title-block">
             <h1>PROJECT SWARM</h1>
-            <p>STELLAR ARCHITECTURE VISUALIZER</p>
+            <p>SINGULARITY ENGINE ONLINE</p>
         </div>
 
         <div class="dashboard-links">
-            <a href="celestial_mapping.html" class="hud-btn">INNER SYSTEM VIEW</a>
-            <a href="economics_mapping.html" class="hud-btn hud-btn-pink">VON NEUMANN SIMULATOR</a>
-            <div style="color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-top: 10px; text-align: right; font-family: monospace;">
-                [ LEFT CLICK + DRAG TO ROTATE ]<br>
-                [ SCROLL TO ZOOM ]<br>
-                [ CLICK NODES TO INITIATE ]
+            <a href="celestial_mapping.html" class="hud-btn">SYSTEM TELEMETRY</a>
+            <a href="economics_mapping.html" class="hud-btn" style="border-color: #00f3ff; color: #00f3ff;">VON NEUMANN FORGE</a>
+            <div style="color: rgba(255,255,255,0.4); font-size: 0.8rem; margin-top: 10px; text-align: right; font-family: monospace;">
+                [ DRAG TO ORBIT ]<br>[ SCROLL TO ZOOM ]<br>[ SELECT PLANET TO INITIATE ]
             </div>
         </div>
 
@@ -178,7 +67,7 @@
         <div id="target-info">
             <h2 id="target-title">TARGET LOCKED</h2>
             <p id="target-desc">Awaiting telemetry...</p>
-            <div class="status-text">> CLICK NODE TO INITIATE SEQUENCE</div>
+            <div class="status-text">> INITIATE DESCENT SEQUENCE</div>
         </div>
     </div>
 
@@ -186,195 +75,231 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
     <script>
-        // --- SETUP SCENE, CAMERA, RENDERER ---
+        // --- 1. PROCEDURAL TEXTURE GENERATOR (Creates real-looking planets without image files) ---
+        function generatePlanetTexture(type) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 1024; canvas.height = 512;
+            const ctx = canvas.getContext('2d');
+
+            if (type === 'volcanic') {
+                ctx.fillStyle = '#2a1508'; ctx.fillRect(0, 0, 1024, 512);
+                for(let i=0; i<8000; i++) {
+                    ctx.fillStyle = Math.random() > 0.9 ? '#ff3300' : '#110a05'; // Lava and dark rock
+                    ctx.globalAlpha = Math.random() * 0.8;
+                    ctx.beginPath(); ctx.arc(Math.random()*1024, Math.random()*512, Math.random()*8, 0, Math.PI*2); ctx.fill();
+                }
+            } else if (type === 'gas_giant') {
+                const gradient = ctx.createLinearGradient(0, 0, 0, 512);
+                gradient.addColorStop(0, '#c2b280'); gradient.addColorStop(0.3, '#8b6b4a'); 
+                gradient.addColorStop(0.6, '#e0cda9'); gradient.addColorStop(1, '#5c4033');
+                ctx.fillStyle = gradient; ctx.fillRect(0, 0, 1024, 512);
+                for(let i=0; i<300; i++) {
+                    ctx.fillStyle = Math.random() > 0.5 ? '#ffffff' : '#3e2723';
+                    ctx.globalAlpha = Math.random() * 0.15;
+                    ctx.fillRect(0, Math.random()*512, 1024, Math.random()*20); // Gas bands
+                }
+            } else if (type === 'oceanic') {
+                ctx.fillStyle = '#001f3f'; ctx.fillRect(0, 0, 1024, 512); // Deep water
+                for(let i=0; i<5000; i++) {
+                    ctx.fillStyle = '#ffffff'; ctx.globalAlpha = Math.random() * 0.4; // Storm clouds
+                    ctx.beginPath(); ctx.arc(Math.random()*1024, Math.random()*512, Math.random()*15, 0, Math.PI*2); ctx.fill();
+                }
+            } else if (type === 'barren') {
+                ctx.fillStyle = '#555555'; ctx.fillRect(0, 0, 1024, 512);
+                for(let i=0; i<10000; i++) {
+                    ctx.fillStyle = Math.random() > 0.5 ? '#888888' : '#222222'; // Craters and dust
+                    ctx.globalAlpha = Math.random() * 0.5;
+                    ctx.beginPath(); ctx.arc(Math.random()*1024, Math.random()*512, Math.random()*4, 0, Math.PI*2); ctx.fill();
+                }
+            }
+            return new THREE.CanvasTexture(canvas);
+        }
+
+        // --- 2. SCENE SETUP ---
         const container = document.getElementById('webgl-canvas');
         const scene = new THREE.Scene();
-        scene.fog = new THREE.FogExp2(0x020205, 0.005); // Deep space fade
+        const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 2000);
+        camera.position.set(0, 60, 140);
 
-        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(0, 30, 80); // Elevated viewing angle
-
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(window.devicePixelRatio);
         container.appendChild(renderer.domElement);
 
-        // --- CONTROLS ---
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true;
-        controls.dampingFactor = 0.05;
-        controls.maxDistance = 200;
-        controls.minDistance = 20;
+        controls.enableDamping = true; controls.dampingFactor = 0.05; controls.maxDistance = 400; controls.minDistance = 30;
 
-        // --- LIGHTING ---
-        const ambientLight = new THREE.AmbientLight(0x222222);
-        scene.add(ambientLight);
+        // --- 3. LIGHTING (The intense light of the accretion disk) ---
+        scene.add(new THREE.AmbientLight(0x111111));
+        const diskLight = new THREE.PointLight(0xffaa00, 3, 500);
+        scene.add(diskLight);
+        const coreLight = new THREE.PointLight(0xffffff, 1, 100);
+        scene.add(coreLight);
 
-        // A massive blue light coming from the central star
-        const starLight = new THREE.PointLight(0x00f3ff, 2, 200);
-        scene.add(starLight);
+        // --- 4. THE BLACK HOLE (Event Horizon) ---
+        const eventHorizonGeo = new THREE.SphereGeometry(12, 64, 64);
+        const eventHorizonMat = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Pure Black
+        const blackHole = new THREE.Mesh(eventHorizonGeo, eventHorizonMat);
+        scene.add(blackHole);
 
-        // --- CONSTRUCT THE SYSTEM ---
+        // Background Starfield
+        const starGeo = new THREE.BufferGeometry();
+        const starPos = new Float32Array(5000 * 3);
+        for(let i=0; i<15000; i++) { starPos[i] = (Math.random() - 0.5) * 1000; }
+        starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+        const starMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.5, transparent: true, opacity: 0.8 });
+        scene.add(new THREE.Points(starGeo, starMat));
+
+        // --- 5. THE ACCRETION DISK (Interstellar Style Plasma) ---
+        const diskCount = 8000;
+        const diskGeo = new THREE.BufferGeometry();
+        const diskPos = new Float32Array(diskCount * 3);
+        const diskColors = new Float32Array(diskCount * 3);
         
-        // 1. Central Star (The Distant Sphere)
-        const starGeo = new THREE.SphereGeometry(8, 64, 64);
-        const starMat = new THREE.MeshBasicMaterial({ color: 0x00f3ff, wireframe: true }); 
-        const centralStar = new THREE.Mesh(starGeo, starMat);
-        scene.add(centralStar);
+        const colorInner = new THREE.Color(0xffffff); // White hot core
+        const colorMid = new THREE.Color(0xffaa00);   // Golden orange plasma
+        const colorOuter = new THREE.Color(0xff3300); // Deep red edges
 
-        // Adding an inner solid core to the star
-        const coreGeo = new THREE.SphereGeometry(7.5, 32, 32);
-        const coreMat = new THREE.MeshStandardMaterial({ color: 0x0088ff, emissive: 0x0044aa, roughness: 0.2 });
-        const starCore = new THREE.Mesh(coreGeo, coreMat);
-        scene.add(starCore);
-
-        // 2. The Swarm (Particle System)
-        const swarmCount = 3000;
-        const swarmGeo = new THREE.BufferGeometry();
-        const swarmPos = new Float32Array(swarmCount * 3);
-        
-        for(let i=0; i < swarmCount * 3; i+=3) {
-            // Create a chaotic spherical belt around the star
-            const r = 15 + Math.random() * 40;
-            const theta = Math.random() * Math.PI * 2;
-            const phi = Math.acos(2 * Math.random() - 1);
+        for(let i=0; i < diskCount; i++) {
+            // Skew distribution to be extremely dense near the event horizon
+            const radius = 14 + Math.pow(Math.random(), 2) * 45; 
+            const angle = Math.random() * Math.PI * 2;
             
-            swarmPos[i] = r * Math.sin(phi) * Math.cos(theta);
-            swarmPos[i+1] = r * Math.sin(phi) * Math.sin(theta) * 0.3; // Flatten the Swarm into a disk
-            swarmPos[i+2] = r * Math.cos(phi);
+            // Adding a slight warp/bend to the disk for realism
+            const yOffset = (Math.random() - 0.5) * (radius * 0.05); 
+
+            diskPos[i*3] = Math.cos(angle) * radius;
+            diskPos[i*3+1] = yOffset;
+            diskPos[i*3+2] = Math.sin(angle) * radius;
+
+            // Color gradient based on distance from the black hole
+            let mixRatio = (radius - 14) / 45;
+            let c = colorInner.clone().lerp(colorMid, mixRatio * 2);
+            if(mixRatio > 0.5) c = colorMid.clone().lerp(colorOuter, (mixRatio - 0.5) * 2);
+
+            diskColors[i*3] = c.r; diskColors[i*3+1] = c.g; diskColors[i*3+2] = c.b;
         }
         
-        swarmGeo.setAttribute('position', new THREE.BufferAttribute(swarmPos, 3));
-        const swarmMat = new THREE.PointsMaterial({ color: 0xff0055, size: 0.3, transparent: true, opacity: 0.6 });
-        const swarmSystem = new THREE.Points(swarmGeo, swarmMat);
-        scene.add(swarmSystem);
+        diskGeo.setAttribute('position', new THREE.BufferAttribute(diskPos, 3));
+        diskGeo.setAttribute('color', new THREE.BufferAttribute(diskColors, 3));
+        const diskMaterial = new THREE.PointsMaterial({ size: 0.4, vertexColors: true, blending: THREE.AdditiveBlending, transparent: true, opacity: 0.8 });
+        const accretionDisk = new THREE.Points(diskGeo, diskMaterial);
+        
+        // Tilt the disk slightly
+        accretionDisk.rotation.x = Math.PI * 0.05;
+        scene.add(accretionDisk);
 
-        // 3. The Planetary Nodes (The Four Stages)
-        const nodes = [];
-        const nodeData = [
-            { id: 1, title: "STAGE 1: SENSOR SWARM", desc: "Stochastic Resonance: Utilizing chaotic background noise of the solar wind to amplify incredibly faint, hidden cosmic signals.", url: "stochastic_resonance.html", color: 0x00ff66, distance: 25, speed: 0.002, size: 2 },
-            { id: 2, title: "STAGE 2: INGESTION ROUTER", desc: "Untangling the Firehose: Fast Fourier Transform (FFT) algorithms instantly separate massive power yields from complex acoustic vibrations.", url: "06_fft_router.html", color: 0xff00ff, distance: 35, speed: 0.0015, size: 2.5 },
-            { id: 3, title: "STAGE 3: MEMORY ENGINE", desc: "Inverse Scattering: Machine Learning Core uses advanced mathematics (Radon Transform) to reconstruct a perfect 3D memory of unseen anomalies.", url: "inverse_scattering.html", color: 0xffaa00, distance: 45, speed: 0.001, size: 2.2 },
-            { id: 4, title: "STAGE 4: PHONONIC FORGE", desc: "Von Neumann Assembly: Acoustic resonance waves physically force superheated asteroid plasma to crystallize into highly evolved Smart Rocks.", url: "phononic_forge.html", color: 0xff0055, distance: 55, speed: 0.0008, size: 3 }
+        // --- 6. THE 4 PLANETARY MODULES ---
+        const planets = [];
+        const planetData = [
+            { id: 1, type: 'volcanic', title: "STAGE 1: SENSOR SWARM", desc: "Violent volcanic world. Simulates Stochastic Resonance—using chaos to amplify faint signals.", url: "stochastic_resonance.html", distance: 45, speed: 0.003, size: 3, atmoColor: 0xff3300 },
+            { id: 2, type: 'gas_giant', title: "STAGE 2: INGESTION ROUTER", desc: "Massive gas giant. Represents the Fast Fourier Transform (FFT) sorting chaotic atmospheric bands into pure data.", url: "06_fft_router.html", distance: 65, speed: 0.002, size: 5, atmoColor: 0xffaa00 },
+            { id: 3, type: 'oceanic', title: "STAGE 3: MEMORY ENGINE", desc: "Deep oceanic world. The Machine Learning Core using Inverse Scattering to reconstruct perfect 3D memories beneath the surface.", url: "inverse_scattering.html", distance: 90, speed: 0.0015, size: 3.5, atmoColor: 0x0088ff },
+            { id: 4, type: 'barren', title: "STAGE 4: PHONONIC FORGE", desc: "Dense, metallic dwarf planet. The Von Neumann Forge superheating elements into new metamaterials.", url: "phononic_forge.html", distance: 115, speed: 0.001, size: 2.5, atmoColor: 0xaaaaaa }
         ];
 
-        nodeData.forEach((data, index) => {
-            const geo = new THREE.SphereGeometry(data.size, 32, 32);
+        planetData.forEach((data, index) => {
+            // Core Planet Mesh with Procedural Texture
+            const geo = new THREE.SphereGeometry(data.size, 64, 64);
+            const texture = generatePlanetTexture(data.type);
             const mat = new THREE.MeshStandardMaterial({ 
-                color: data.color, 
-                emissive: data.color,
-                emissiveIntensity: 0.5,
-                roughness: 0.1,
-                metalness: 0.8
+                map: texture, 
+                bumpMap: texture, bumpScale: 0.1, // Gives the planet physical bumps based on the texture
+                roughness: data.type === 'oceanic' ? 0.2 : 0.8, // Water is shiny, rock is rough
+                metalness: data.type === 'barren' ? 0.5 : 0.1
             });
             const mesh = new THREE.Mesh(geo, mat);
+
+            // Glowing Atmosphere wrapper
+            const atmoGeo = new THREE.SphereGeometry(data.size * 1.1, 32, 32);
+            const atmoMat = new THREE.MeshBasicMaterial({ color: data.atmoColor, transparent: true, opacity: 0.15, blending: THREE.AdditiveBlending });
+            const atmosphere = new THREE.Mesh(atmoGeo, atmoMat);
+            mesh.add(atmosphere); // Attach atmosphere to planet
             
-            // Initial positioning
-            const angle = (index / nodeData.length) * Math.PI * 2;
+            // Orbit Math
+            const angle = (index / planetData.length) * Math.PI * 2;
             mesh.position.x = Math.cos(angle) * data.distance;
             mesh.position.z = Math.sin(angle) * data.distance;
             
-            // Store data inside the 3D object for the Raycaster to read
             mesh.userData = data; 
-            mesh.userData.angle = angle; // Store current orbital angle
+            mesh.userData.angle = angle;
 
-            // Add an orbital ring line so the user sees the path
-            const ringGeo = new THREE.RingGeometry(data.distance - 0.2, data.distance + 0.2, 64);
-            const ringMat = new THREE.MeshBasicMaterial({ color: data.color, side: THREE.DoubleSide, transparent: true, opacity: 0.1 });
+            // Subtle orbital path ring
+            const ringGeo = new THREE.RingGeometry(data.distance - 0.1, data.distance + 0.1, 128);
+            const ringMat = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, transparent: true, opacity: 0.05 });
             const ring = new THREE.Mesh(ringGeo, ringMat);
-            ring.rotation.x = Math.PI / 2; // Lay it flat
+            ring.rotation.x = Math.PI / 2;
             scene.add(ring);
 
             scene.add(mesh);
-            nodes.push(mesh);
+            planets.push(mesh);
         });
 
-        // --- INTERACTION LOGIC (RAYCASTER) ---
+        // --- 7. INTERACTION LOGIC (RAYCASTER) ---
         const raycaster = new THREE.Raycaster();
         const mouse = new THREE.Vector2();
-        
         const targetInfo = document.getElementById('target-info');
         const targetTitle = document.getElementById('target-title');
         const targetDesc = document.getElementById('target-desc');
-        
         let hoveredNode = null;
 
-        // Track mouse movement to project 2D mouse coordinates into the 3D scene
         window.addEventListener('mousemove', (event) => {
             mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
             mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
         });
 
-        // Handle Clicks
         window.addEventListener('click', () => {
             if (hoveredNode && hoveredNode.userData.url) {
-                // The user clicked a planet. Launch the simulator.
                 window.location.href = hoveredNode.userData.url;
             }
         });
 
-        // Handle Window Resize
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        // --- MAIN ANIMATION LOOP ---
+        // --- 8. PHYSICS & ANIMATION LOOP ---
         function animate() {
             requestAnimationFrame(animate);
 
-            // 1. Rotate the Central Star
-            centralStar.rotation.y += 0.005;
-            centralStar.rotation.x += 0.002;
+            // Rotate the Accretion Disk extremely fast near the center
+            accretionDisk.rotation.y -= 0.015;
 
-            // 2. Rotate the Swarm Particle System
-            swarmSystem.rotation.y += 0.001;
-            swarmSystem.rotation.z += 0.0005;
-
-            // 3. Orbit the Planetary Nodes
-            nodes.forEach(node => {
-                node.userData.angle += node.userData.speed;
-                node.position.x = Math.cos(node.userData.angle) * node.userData.distance;
-                node.position.z = Math.sin(node.userData.angle) * node.userData.distance;
-                node.rotation.y += 0.01; // Spin on axis
+            // Orbit the Planets and spin them on their axis
+            planets.forEach(planet => {
+                planet.userData.angle += planet.userData.speed;
+                planet.position.x = Math.cos(planet.userData.angle) * planet.userData.distance;
+                planet.position.z = Math.sin(planet.userData.angle) * planet.userData.distance;
+                planet.rotation.y += 0.005; 
             });
 
-            // 4. Raycasting (Detecting Hover)
+            // Raycasting for UI interaction
             raycaster.setFromCamera(mouse, camera);
-            const intersects = raycaster.intersectObjects(nodes);
+            const intersects = raycaster.intersectObjects(planets);
 
             if (intersects.length > 0) {
                 if (hoveredNode !== intersects[0].object) {
                     hoveredNode = intersects[0].object;
-                    // Enlarge the hovered planet slightly
-                    hoveredNode.scale.set(1.2, 1.2, 1.2);
-                    
-                    // Update HUD
                     targetTitle.innerText = hoveredNode.userData.title;
                     targetDesc.innerText = hoveredNode.userData.desc;
-                    targetInfo.style.borderColor = '#' + hoveredNode.userData.color.toString(16).padStart(6, '0');
+                    targetInfo.style.borderColor = '#' + hoveredNode.userData.atmoColor.toString(16).padStart(6, '0');
                     targetInfo.classList.add('active');
                     document.body.style.cursor = 'pointer';
                 }
             } else {
                 if (hoveredNode) {
-                    // Reset the planet size when mouse leaves
-                    hoveredNode.scale.set(1, 1, 1);
                     hoveredNode = null;
-                    
-                    // Hide HUD
                     targetInfo.classList.remove('active');
                     document.body.style.cursor = 'default';
                 }
             }
 
-            // Update controls and render frame
             controls.update();
             renderer.render(scene, camera);
         }
 
-        // Initiate the Engine
         animate();
     </script>
 </body>
