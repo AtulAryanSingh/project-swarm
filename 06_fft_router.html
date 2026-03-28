@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Swarm: FFT Ingestion Router</title>
+    <style>
+        body {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .dashboard {
+            background-color: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            width: 900px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            position: relative;
+        }
+        .home-btn {
+            position: absolute; top: 15px; right: 20px; color: #58a6ff; text-decoration: none; 
+            font-size: 0.9rem; font-weight: bold; border: 1px solid #30363d; padding: 5px 10px; border-radius: 6px;
+        }
+        .home-btn:hover { background-color: #30363d; }
+        .top-bar {
+            padding: 15px 25px; border-bottom: 1px solid #30363d; background-color: #0d1117;
+        }
+        .title { font-weight: bold; font-size: 1.2rem; color: #ffffff; }
+        .subtitle { font-size: 0.8rem; color: #8b949e; margin-top: 5px; }
+        
+        .canvas-container { padding: 20px; display: flex; flex-direction: column; gap: 20px; }
+        .chart-box { background-color: #090a0f; border: 1px solid #30363d; border-radius: 8px; position: relative; }
+        .chart-label { position: absolute; top: 10px; left: 15px; font-size: 0.8rem; font-weight: bold; color: #c9d1d9; }
+        canvas { display: block; width: 100%; height: 180px; }
+        
+        .controls {
+            display: flex; align-items: center; justify-content: center; gap: 20px;
+            padding: 20px; background-color: #161b22; border-top: 1px solid #30363d;
+        }
+        input[type=range] { width: 300px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="dashboard">
+    <a href="index.html" class="home-btn">&#8592; Back to Dashboard</a>
+    <div class="top-bar">
+        <div class="title">Module 2: Fast Fourier Transform (FFT) Router</div>
+        <div class="subtitle">Untangling Solar Chaos into Structured Data Arrays</div>
+    </div>
+
+    <div class="canvas-container">
+        <div class="chart-box">
+            <div class="chart-label">Raw Telemetry (Time Domain) <span style="color:#ff3366;">[Signal + Solar Noise]</span></div>
+            <canvas id="timeCanvas" width="860" height="180"></canvas>
+        </div>
+        
+        <div class="chart-box">
+            <div class="chart-label">FFT Output (Frequency Domain) <span style="color:#58a6ff;">[Isolated Smart Rock Data]</span></div>
+            <canvas id="freqCanvas" width="860" height="180"></canvas>
+        </div>
+    </div>
+
+    <div class="controls">
+        <span style="font-weight: bold; color: #ffffff;">Solar Entropy (Noise):</span>
+        <input type="range" id="noiseSlider" min="0" max="3" step="0.1" value="1.5">
+        <span id="noiseVal" style="font-family: monospace; color: #ff3366; font-weight: bold;">1.5</span>
+    </div>
+</div>
+
+<script>
+    const timeCtx = document.getElementById('timeCanvas').getContext('2d');
+    const freqCtx = document.getElementById('freqCanvas').getContext('2d');
+    const noiseSlider = document.getElementById('noiseSlider');
+    const noiseVal = document.getElementById('noiseVal');
+
+    const width = 860;
+    const height = 180;
+    const centerY = height / 2;
+
+    // The core frequency of our Smart Rock
+    const targetFreq = 15; 
+
+    function draw() {
+        let noiseLevel = parseFloat(noiseSlider.value);
+        noiseVal.innerText = noiseLevel.toFixed(1);
+
+        timeCtx.clearRect(0, 0, width, height);
+        freqCtx.clearRect(0, 0, width, height);
+
+        // 1. Draw Time Domain (Raw Wave)
+        timeCtx.beginPath();
+        timeCtx.strokeStyle = '#ff3366';
+        timeCtx.lineWidth = 2;
+        
+        for (let x = 0; x < width; x++) {
+            // The clean signal
+            let signal = Math.sin((x / width) * Math.PI * 2 * targetFreq) * 30;
+            // The solar noise
+            let noise = (Math.random() - 0.5) * 100 * noiseLevel;
+            
+            let y = centerY + signal + noise;
+            
+            if (x === 0) timeCtx.moveTo(x, y);
+            else timeCtx.lineTo(x, y);
+        }
+        timeCtx.stroke();
+
+        // 2. Draw Frequency Domain (FFT Simulation)
+        freqCtx.beginPath();
+        freqCtx.strokeStyle = '#58a6ff';
+        freqCtx.lineWidth = 3;
+
+        let numBins = 100;
+        let binWidth = width / numBins;
+
+        for (let i = 0; i < numBins; i++) {
+            let x = i * binWidth;
+            let barHeight = 0;
+
+            // Generate the clean isolated spike at the target frequency
+            if (i === targetFreq) {
+                barHeight = 120; // The Smart Rock signal stands tall
+            } else {
+                // Background noise floor creeping up slightly as noise increases
+                barHeight = Math.random() * 10 * noiseLevel; 
+            }
+
+            freqCtx.moveTo(x + binWidth/2, height);
+            freqCtx.lineTo(x + binWidth/2, height - barHeight);
+        }
+        freqCtx.stroke();
+    }
+
+    noiseSlider.addEventListener('input', draw);
+    draw(); // Initial draw
+</script>
+
+</body>
+</html>
