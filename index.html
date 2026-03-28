@@ -4,77 +4,157 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Project Swarm | The Antifragile Ecosystem</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-void: #020617;
+            --bg-panel: rgba(15, 23, 42, 0.6);
+            --neon-blue: #0ea5e9;
+            --neon-pink: #ec4899;
+            --neon-green: #10b981;
+            --text-main: #cbd5e1;
+            --text-header: #f8fafc;
+            --border-dim: rgba(51, 65, 85, 0.5);
+        }
+
         body {
-            background-color: #0d1117;
-            color: #c9d1d9;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background: radial-gradient(circle at top, #0f172a 0%, var(--bg-void) 100%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
             margin: 0;
             padding: 0;
             line-height: 1.6;
         }
+
+        h1, h2, h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--text-header);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
         .hero {
-            background: linear-gradient(180deg, #161b22 0%, #0d1117 100%);
-            padding: 80px 20px;
+            padding: 100px 20px 80px;
             text-align: center;
-            border-bottom: 1px solid #30363d;
+            border-bottom: 1px solid var(--border-dim);
+            background: linear-gradient(180deg, rgba(2,6,23,0) 0%, var(--bg-void) 100%);
         }
+
         .hero h1 {
-            font-size: 3.5rem;
-            color: #ffffff;
+            font-size: 4rem;
             margin-bottom: 10px;
-            letter-spacing: 2px;
+            letter-spacing: 4px;
+            text-shadow: 0 0 30px rgba(14, 165, 233, 0.4);
         }
+
         .hero p {
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             max-width: 800px;
             margin: 0 auto;
-            color: #8b949e;
+            color: #94a3b8;
+            font-weight: 400;
         }
+
         .container {
-            max-width: 1000px;
-            margin: 40px auto;
+            max-width: 1100px;
+            margin: -40px auto 60px auto;
             padding: 20px;
+            position: relative;
+            z-index: 10;
         }
+
         .story-section {
-            background-color: #161b22;
-            padding: 30px;
-            border-radius: 8px;
-            border: 1px solid #30363d;
+            background: var(--bg-panel);
+            backdrop-filter: blur(12px);
+            padding: 40px;
+            border-radius: 16px;
+            border: 1px solid var(--border-dim);
             margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: border-color 0.3s ease;
         }
-        .story-section h2 { color: #58a6ff; }
-        .highlight { color: #ff3366; font-weight: bold; }
+
+        .story-section:hover {
+            border-color: rgba(14, 165, 233, 0.3);
+        }
+
+        .highlight-green { color: var(--neon-green); text-shadow: 0 0 10px rgba(16, 185, 129, 0.3); }
+        .highlight-blue { color: var(--neon-blue); text-shadow: 0 0 10px rgba(14, 165, 233, 0.3); }
+        .highlight-pink { color: var(--neon-pink); font-weight: bold; }
         
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 20px;
+            gap: 25px;
         }
+
         .card {
-            background-color: #161b22;
-            border: 1px solid #30363d;
-            border-radius: 8px;
-            padding: 20px;
-            transition: transform 0.2s, border-color 0.2s;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-dim);
+            border-radius: 12px;
+            padding: 30px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
         }
+
+        /* Subtle glowing top border for cards */
+        .card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+            opacity: 0.3; transition: opacity 0.3s ease;
+        }
+
         .card:hover {
             transform: translateY(-5px);
-            border-color: #58a6ff;
+            border-color: rgba(14, 165, 233, 0.4);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4), 0 0 20px rgba(14, 165, 233, 0.1);
         }
-        .card h3 { color: #ffffff; margin-top: 0; }
-        .card p { color: #8b949e; font-size: 0.95rem; }
+
+        .card:hover::before { opacity: 1; }
+        .card h3 { margin-top: 0; color: #e2e8f0; font-size: 1.3rem; }
+        .card p { color: #94a3b8; font-size: 0.95rem; line-height: 1.7; }
+
         .btn {
             display: inline-block;
-            margin-top: 15px;
-            padding: 10px 20px;
-            background-color: #238636;
+            margin-top: 20px;
+            padding: 12px 24px;
             color: white;
             text-decoration: none;
-            border-radius: 6px;
-            font-weight: bold;
+            border-radius: 8px;
+            font-weight: 600;
+            font-family: 'Space Grotesk', sans-serif;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-size: 0.9rem;
         }
-        .btn:hover { background-color: #2ea043; }
+
+        .btn-green { background: linear-gradient(135deg, #059669 0%, #10b981 100%); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2); }
+        .btn-green:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4); }
+
+        .btn-blue { background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%); box-shadow: 0 4px 15px rgba(14, 165, 233, 0.2); }
+        .btn-blue:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(14, 165, 233, 0.4); }
+
+        .btn-pink { background: linear-gradient(135deg, #db2777 0%, #ec4899 100%); box-shadow: 0 4px 15px rgba(236, 72, 153, 0.2); }
+        .btn-pink:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4); }
+
+        .dashboard-panel {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.8) 0%, rgba(2, 6, 23, 0.9) 100%);
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            box-shadow: 0 0 40px rgba(14, 165, 233, 0.1) inset;
+        }
+
+        .dashboard-panel h2 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
     </style>
 </head>
 <body>
@@ -86,63 +166,6 @@
 
     <div class="container">
         
-        <div class="story-section" style="border-color: #2ea043;">
-            <h2 style="color: #2ea043;">System Architecture (The Software Level)</h2>
-            <p>Beneath the cosmic metaphor, this project is a <strong>functional simulation of an Edge Computing data pipeline.</strong></p>
-            <ul style="color: #8b949e; line-height: 1.8;">
-                <li><strong>Pipeline Status:</strong> Functional Simulation. The physics are simulated; the data processing math (FFT, Radon Transforms) is executing live.</li>
-                <li><strong>I/O Structure:</strong> Ingests high-volume, noisy time-series arrays -> Outputs segregated frequency arrays and serialized JSON coordinate payloads.</li>
-                <li><strong>Decentralization:</strong> Emulates a distributed network of asynchronous edge nodes (the Swarm) streaming to a central message broker and routing system (the Sphere).</li>
-            </ul>
-        </div>
-
-        <div class="story-section">
-            <h2>The Philosophy: Entropy as an Engine</h2>
-            <p>Traditional human engineering attempts to build a fortress against the universe. Projects like Elon Musk's <strong>Terafab</strong> aim to brute-force orbital manufacturing, launching incredibly fragile silicon chips into space and hiding them behind massive radiation shields. When the shield fails, the system dies.</p>
-            <p><strong>Project Swarm is the exact opposite.</strong></p>
-            <p>We do not fight the chaos of the cosmos; we align with it. Project Swarm proposes launching a massive web of raw, programmable <span class="highlight">Piezo-phononic Smart Rocks</span> into a highly radioactive solar orbit. Rather than avoiding destruction, these nodes <em>require</em> destruction to function. When a solar anomaly crushes a node, it generates raw energy (The Seebeck Effect) and acoustic data (Phononic Scattering). The universe's entropy becomes our computational engine.</p>
-        </div>
-
-        <div class="story-section" style="border-color: #58a6ff; text-align: center; padding: 50px 20px; margin-top: 40px;">
-            <h2 style="color: #58a6ff; font-size: 2.2rem; margin-bottom: 10px;">The Master Dashboard: Distributed Forge Mapping</h2>
-            <p style="color: #c9d1d9; font-size: 1.1rem; max-width: 700px; margin: 0 auto 25px auto;">
-                Zoom out to the planetary scale or dive into the exponential growth curves of the decentralized Distributed Forge. Watch live as the Swarm breaks the logic of human economics, harvesting Terawatts of solar chaos for replication EROEI.
-            </p>
-            <div style="display: flex; gap: 20px; justify-content: center;">
-                <a href="celestial_mapping.html" class="btn" style="background-color: #1f6feb; font-size: 1.1rem; padding: 12px 25px; border-radius: 8px;" target="_blank">Launch Inner System View</a>
-                <a href="economics_mapping.html" class="btn" style="background-color: #ff3366; font-size: 1.1rem; padding: 12px 25px; border-radius: 8px;" target="_blank">Launch Von Neumann Simulator</a>
-            </div>
-        </div>
-        <br>
-
-        <h2 style="color: #ffffff; text-align: center; margin-bottom: 30px;">The Four Stages of the Swarm</h2>
-        <div class="grid">
-            
-            <div class="card">
-                <h3>Stage 1: The Sensor Swarm</h3>
-                <p><strong>Stochastic Resonance:</strong> Millions of nodes orbit the sun. By utilizing the chaotic background noise of the solar wind, the swarm amplifies incredibly faint, hidden cosmic signals that would otherwise be undetectable to human instruments.</p>
-                <a href="stochastic_resonance.html" class="btn" target="_blank">Launch Simulator</a>
-            </div>
-
-            <div class="card">
-                <h3>Stage 2: The Ingestion Router</h3>
-                <p><strong>Untangling the Firehose:</strong> The central Energy Sphere receives a chaotic stream of dying rocks. It uses a Fast Fourier Transform (FFT) to instantly separate massive power yields (Energy) from complex acoustic vibrations (Data), routing them perfectly.</p>
-              <a href="06_fft_router.html" class="btn" target="_blank">Launch Simulator</a>
-            </div>
-
-            <div class="card">
-                <h3>Stage 3: The Memory Engine</h3>
-                <p><strong>Inverse Scattering:</strong> When a rock shatters, the data is not lost. The Machine Learning Core takes the scattered, chaotic static and uses advanced mathematics (the Radon Transform) to reconstruct a perfect 3D geometric memory of the unseen anomaly.</p>
-                <a href="inverse_scattering.html" class="btn" target="_blank">Launch Simulator</a>
-            </div>
-
-            <div class="card">
-                <h3>Stage 4: The Phononic Forge</h3>
-                <p><strong>Von Neumann Assembly:</strong> The system uses harvested energy to superheat raw asteroid dust. It blasts the plasma with acoustic resonance waves, physically forcing the atoms to crystallize into highly evolved, brand-new Smart Rocks.</p>
-                <a href="phononic_forge.html" class="btn" target="_blank">Launch Simulator</a>
-            </div>
-
-        </div>
-    </div>
-</body>
-</html>
+        <div class="story-section" style="border-top: 3px solid var(--neon-green);">
+            <h2 class="highlight-green">System Architecture (The Software Level)</h2>
+            <p>Beneath
