@@ -3,205 +3,352 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Swarm | TYPE II COMMAND TERMINAL</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <title>Project Swarm | NEURAL LINK ESTABLISHED</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-void: #030508;
-            --hud-cyan: #00f0ff;
-            --hud-pink: #ff003c;
-            --hud-green: #00ff66;
-            --text-data: #8da1b9;
-            --panel-bg: rgba(3, 10, 20, 0.75);
+            --cyan: #00f3ff;
+            --pink: #ff0055;
+            --dark: #050508;
+            --glass: rgba(5, 5, 8, 0.4);
         }
 
-        body {
-            background-color: var(--bg-void);
-            background-image: 
-                linear-gradient(rgba(0, 240, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 240, 255, 0.05) 1px, transparent 1px);
-            background-size: 40px 40px;
-            color: var(--text-data);
-            font-family: 'Share Tech Mono', monospace;
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
-        }
-
-        h1, h2, h3 {
+        body, html {
+            margin: 0; padding: 0; 
+            width: 100%; min-height: 100vh;
+            background-color: var(--dark);
+            color: #fff;
             font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* The Living Background */
+        canvas#swarm-engine {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: 0;
+            pointer-events: none; /* Let clicks pass through to the UI */
+        }
+
+        /* Holographic Overlay */
+        .interface-layer {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-bottom: 100px;
+        }
+
+        /* Decryption Typography */
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 5vw;
+            font-weight: 900;
+            margin: 10vh 0 10px 0;
+            letter-spacing: 0.5vw;
             text-transform: uppercase;
-            letter-spacing: 3px;
-            margin-top: 0;
-        }
-
-        .hero {
-            padding: 80px 20px 60px;
-            text-align: center;
-            border-bottom: 1px solid rgba(0, 240, 255, 0.3);
-            background: radial-gradient(circle at center, rgba(0, 240, 255, 0.05) 0%, transparent 70%);
-        }
-
-        .hero h1 {
-            font-size: 4.5rem;
-            color: #ffffff;
-            margin-bottom: 5px;
-            letter-spacing: 8px;
-            text-shadow: 0 0 20px var(--hud-cyan);
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            color: var(--hud-cyan);
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 20px;
-        }
-
-        .panel {
-            background: var(--panel-bg);
-            border: 1px solid rgba(0, 240, 255, 0.2);
-            padding: 35px;
-            margin-bottom: 40px;
+            color: #fff;
+            text-shadow: 0 0 20px var(--cyan), 0 0 40px var(--cyan);
             position: relative;
         }
 
-        .panel::before, .panel::after {
-            content: ''; position: absolute; width: 15px; height: 15px;
-        }
-        .panel::before { top: -1px; left: -1px; border-top: 2px solid var(--hud-cyan); border-left: 2px solid var(--hud-cyan); }
-        .panel::after { bottom: -1px; right: -1px; border-bottom: 2px solid var(--hud-cyan); border-right: 2px solid var(--hud-cyan); }
-
-        .panel-green { border-color: rgba(0, 255, 102, 0.3); }
-        .panel-green::before, .panel-green::after { border-color: var(--hud-green); }
-
-        .panel h2 { font-size: 2rem; color: #ffffff; }
-        .panel h2.cyan { text-shadow: 0 0 10px var(--hud-cyan); }
-        .panel h2.green { text-shadow: 0 0 10px var(--hud-green); }
-        
-        .highlight { color: var(--hud-pink); font-weight: bold; text-shadow: 0 0 8px var(--hud-pink); }
-        
-        .data-list { list-style: none; padding: 0; }
-        .data-list li { margin-bottom: 15px; padding-left: 20px; border-left: 2px solid var(--hud-cyan); }
-        .data-list strong { color: #ffffff; font-family: 'Rajdhani', sans-serif; font-size: 1.2rem; letter-spacing: 1px;}
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-            gap: 30px;
-        }
-
-        .card {
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid rgba(0, 240, 255, 0.3);
-            padding: 30px;
-            transition: all 0.2s ease;
-        }
-
-        .card:hover {
-            border-color: var(--hud-cyan);
-            box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.1);
-            transform: translateY(-3px);
-        }
-
-        .card h3 { color: #ffffff; font-size: 1.6rem; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;}
-
-        /* Buttons with NO target="_blank" */
-        .hud-btn {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 10px 25px;
-            background: transparent;
-            color: var(--hud-cyan);
-            text-decoration: none;
-            border: 1px solid var(--hud-cyan);
-            font-family: 'Rajdhani', sans-serif;
+        .subtitle {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--pink);
+            letter-spacing: 5px;
             font-size: 1.2rem;
-            font-weight: bold;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            text-shadow: 0 0 10px var(--pink);
+            margin-bottom: 60px;
         }
 
-        .hud-btn:hover { background: var(--hud-cyan); color: #000; box-shadow: 0 0 15px var(--hud-cyan); }
-        
-        .hud-btn-pink { color: var(--hud-pink); border-color: var(--hud-pink); }
-        .hud-btn-pink:hover { background: var(--hud-pink); color: #000; box-shadow: 0 0 15px var(--hud-pink); }
+        /* The Core UI Elements */
+        .holo-container {
+            width: 85%;
+            max-width: 1400px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
 
-        .btn-group { display: flex; gap: 20px; justify-content: center; margin-top: 30px;}
+        .holo-panel {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(0, 243, 255, 0.15);
+            padding: 40px;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5), inset 0 0 20px rgba(0, 243, 255, 0.05);
+            overflow: hidden;
+        }
+
+        /* Corner targeting brackets */
+        .holo-panel::before, .holo-panel::after { content: ''; position: absolute; width: 30px; height: 30px; transition: 0.3s; }
+        .holo-panel::before { top: 0; left: 0; border-top: 2px solid var(--cyan); border-left: 2px solid var(--cyan); }
+        .holo-panel::after { bottom: 0; right: 0; border-bottom: 2px solid var(--cyan); border-right: 2px solid var(--cyan); }
+        .holo-panel:hover::before, .holo-panel:hover::after { width: 100%; height: 100%; opacity: 0.2; }
+
+        .holo-panel.pink-border::before { border-color: var(--pink); }
+        .holo-panel.pink-border::after { border-color: var(--pink); }
+
+        .holo-panel h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            color: var(--cyan);
+            margin-top: 0;
+            border-bottom: 1px solid rgba(0, 243, 255, 0.2);
+            padding-bottom: 15px;
+            letter-spacing: 2px;
+        }
+
+        .holo-panel p, .holo-panel li {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #a0aec0;
+        }
+
+        .holo-panel strong { color: #fff; text-shadow: 0 0 5px rgba(255,255,255,0.5); }
+        .highlight { color: var(--pink); font-weight: bold; text-shadow: 0 0 10px var(--pink); }
+
+        /* The Module Grid */
+        .module-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .module-card {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 0, 85, 0.2);
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .module-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            background: rgba(255, 0, 85, 0.05);
+            border-color: var(--pink);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.8), inset 0 0 30px rgba(255, 0, 85, 0.2);
+        }
+
+        .module-card h3 { font-family: 'Orbitron', sans-serif; color: #fff; font-size: 1.4rem; margin-top: 0; }
+        
+        /* Cyberpunk Interactive Buttons */
+        .cyber-btn {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 12px 20px;
+            background: transparent;
+            color: var(--cyan);
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-decoration: none;
+            border: 1px solid var(--cyan);
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .cyber-btn::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 243, 255, 0.4), transparent);
+            transition: 0.5s;
+        }
+
+        .cyber-btn:hover { background: var(--cyan); color: #000; box-shadow: 0 0 20px var(--cyan); }
+        .cyber-btn:hover::before { left: 100%; }
+
+        .btn-pink { color: var(--pink); border-color: var(--pink); }
+        .btn-pink:hover { background: var(--pink); color: #000; box-shadow: 0 0 20px var(--pink); }
+        .btn-pink::before { background: linear-gradient(90deg, transparent, rgba(255, 0, 85, 0.4), transparent); }
+
     </style>
 </head>
 <body>
 
-    <div class="hero">
-        <h1>PROJECT SWARM</h1>
-        <p>A DECENTRALIZED, CHAOS-DRIVEN COSMIC DATA PIPELINE</p>
+    <canvas id="swarm-engine"></canvas>
+
+    <div class="interface-layer">
+        
+        <h1 class="decrypt" data-target="PROJECT SWARM">LOADING...</h1>
+        <div class="subtitle decrypt" data-target="TYPE II COSMIC DATA PIPELINE">INITIALIZING...</div>
+
+        <div class="holo-container">
+            
+            <div class="holo-panel pink-border" style="text-align: center;">
+                <h2 style="color: var(--pink); border-color: rgba(255,0,85,0.2);">DISTRIBUTED FORGE TELEMETRY</h2>
+                <p>Zoom out to the planetary scale or dive into the exponential growth curves of the decentralized Distributed Forge. Watch live as the Swarm breaks the logic of human economics.</p>
+                <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 30px;">
+                    <a href="celestial_mapping.html" class="cyber-btn">INNER SYSTEM VIEW</a>
+                    <a href="economics_mapping.html" class="cyber-btn btn-pink">VON NEUMANN SIMULATOR</a>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 40px;">
+                <div class="holo-panel">
+                    <h2>SYSTEM_ARCHITECTURE</h2>
+                    <p>Beneath the cosmic metaphor, this project is a <strong>functional simulation of an Edge Computing data pipeline.</strong></p>
+                    <ul style="list-style-type: square; color: var(--cyan);">
+                        <li><span style="color: #a0aec0;"><strong>STATUS:</strong> Functional Simulation. Data processing math (FFT, Radon Transforms) executing live.</span></li>
+                        <li><span style="color: #a0aec0;"><strong>I/O STRUCTURE:</strong> Ingests noisy time-series arrays &rarr; Outputs serialized JSON payloads.</span></li>
+                        <li><span style="color: #a0aec0;"><strong>DECENTRALIZATION:</strong> Emulates a distributed network of edge nodes streaming to a central broker.</span></li>
+                    </ul>
+                </div>
+
+                <div class="holo-panel">
+                    <h2>ENTROPY_AS_ENGINE</h2>
+                    <p>Traditional human engineering builds fortresses against the universe. Projects like Elon Musk's <strong>Terafab</strong> aim to brute-force orbital manufacturing with fragile silicon chips hidden behind radiation shields.</p>
+                    <p>We align with the chaos. Project Swarm proposes launching a web of <span class="highlight">Piezo-phononic Smart Rocks</span> into a highly radioactive solar orbit. Rather than avoiding destruction, they <em>require</em> it. When an anomaly crushes a node, it generates raw energy and acoustic data. The universe's entropy becomes our computational engine.</p>
+                </div>
+            </div>
+
+            <h2 style="font-family: 'Orbitron'; font-size: 2.5rem; text-align: center; margin-top: 40px; text-shadow: 0 0 15px #fff;">THE FOUR STAGES</h2>
+            
+            <div class="module-grid">
+                <div class="module-card">
+                    <div>
+                        <h3>STAGE 1: SENSOR SWARM</h3>
+                        <p><strong>Stochastic Resonance:</strong> Utilizing the chaotic background noise of the solar wind to amplify incredibly faint, hidden cosmic signals.</p>
+                    </div>
+                    <a href="stochastic_resonance.html" class="cyber-btn">EXECUTE_MOD_01</a>
+                </div>
+
+                <div class="module-card">
+                    <div>
+                        <h3>STAGE 2: INGESTION ROUTER</h3>
+                        <p><strong>Untangling the Firehose:</strong> Fast Fourier Transform (FFT) algorithms instantly separate massive power yields from complex acoustic vibrations.</p>
+                    </div>
+                    <a href="06_fft_router.html" class="cyber-btn">EXECUTE_MOD_02</a>
+                </div>
+
+                <div class="module-card">
+                    <div>
+                        <h3>STAGE 3: MEMORY ENGINE</h3>
+                        <p><strong>Inverse Scattering:</strong> Machine Learning Core uses advanced mathematics (Radon Transform) to reconstruct a perfect 3D memory of unseen anomalies.</p>
+                    </div>
+                    <a href="inverse_scattering.html" class="cyber-btn">EXECUTE_MOD_03</a>
+                </div>
+
+                <div class="module-card">
+                    <div>
+                        <h3>STAGE 4: PHONONIC FORGE</h3>
+                        <p><strong>Von Neumann Assembly:</strong> Acoustic resonance waves physically force superheated asteroid plasma to crystallize into highly evolved Smart Rocks.</p>
+                    </div>
+                    <a href="phononic_forge.html" class="cyber-btn">EXECUTE_MOD_04</a>
+                </div>
+            </div>
+
+        </div>
     </div>
 
-    <div class="container">
-        
-        <div class="panel panel-green">
-            <h2 class="green">SYSTEM_ARCHITECTURE (SOFTWARE_LEVEL)</h2>
-            <p>Beneath the cosmic metaphor, this project is a <strong>functional simulation of an Edge Computing data pipeline.</strong></p>
-            <ul class="data-list">
-                <li><strong>PIPELINE STATUS:</strong> Functional Simulation. Physics are simulated; processing math (FFT, Radon Transforms) is executing live.</li>
-                <li><strong>I/O STRUCTURE:</strong> Ingests high-volume, noisy time-series arrays -> Outputs segregated frequency arrays and serialized JSON.</li>
-                <li><strong>DECENTRALIZATION:</strong> Emulates a distributed network of asynchronous edge nodes (Swarm) streaming to a central broker (Sphere).</li>
-            </ul>
-        </div>
+    <script>
+        // 1. TEXT DECRYPTION EFFECT
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*";
+        document.querySelectorAll('.decrypt').forEach(el => {
+            let iterations = 0;
+            const targetText = el.getAttribute('data-target');
+            const interval = setInterval(() => {
+                el.innerText = targetText.split("").map((letter, index) => {
+                    if(index < iterations) return targetText[index];
+                    return letters[Math.floor(Math.random() * 26)];
+                }).join("");
+                if(iterations >= targetText.length) clearInterval(interval);
+                iterations += 1 / 3;
+            }, 30);
+        });
 
-        <div class="panel">
-            <h2 class="cyan">CORE_PHILOSOPHY: ENTROPY_AS_ENGINE</h2>
-            <p>Traditional human engineering attempts to build a fortress against the universe. Projects like Elon Musk's <strong>Terafab</strong> aim to brute-force orbital manufacturing, launching incredibly fragile silicon chips into space and hiding them behind massive radiation shields. When the shield fails, the system dies.</p>
-            <p style="color: #ffffff; font-size: 1.1rem; border-left: 4px solid var(--hud-pink); padding-left: 15px;">Project Swarm is the exact opposite.</p>
-            <p>We do not fight the chaos of the cosmos; we align with it. Project Swarm proposes launching a massive web of raw, programmable <span class="highlight">Piezo-phononic Smart Rocks</span> into a highly radioactive solar orbit. Rather than avoiding destruction, these nodes <em>require</em> destruction to function. When a solar anomaly crushes a node, it generates raw energy and acoustic data. The universe's entropy becomes our computational engine.</p>
-        </div>
+        // 2. THE LIVING SWARM ENGINE (Canvas Physics)
+        const canvas = document.getElementById('swarm-engine');
+        const ctx = canvas.getContext('2d');
+        let width, height, particles;
 
-        <div class="panel" style="text-align: center; border-color: var(--hud-pink);">
-            <h2 style="color: var(--hud-pink); text-shadow: 0 0 10px var(--hud-pink);">MASTER_DASHBOARD: DISTRIBUTED_FORGE_MAPPING</h2>
-            <p>Zoom out to the planetary scale or dive into the exponential growth curves of the decentralized Distributed Forge. Watch live as the Swarm breaks the logic of human economics.</p>
-            <div class="btn-group">
-                <a href="celestial_mapping.html" class="hud-btn">INITIATE INNER SYSTEM VIEW</a>
-                <a href="economics_mapping.html" class="hud-btn hud-btn-pink">INITIATE VON NEUMANN SIMULATOR</a>
-            </div>
-        </div>
+        function init() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            particles = [];
+            // Calculate particle count based on screen size
+            const numParticles = Math.floor((width * height) / 12000);
+            
+            for(let i = 0; i < numParticles; i++) {
+                particles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    vx: (Math.random() - 0.5) * 1.5,
+                    vy: (Math.random() - 0.5) * 1.5,
+                    radius: Math.random() * 2 + 1,
+                    color: Math.random() > 0.5 ? '#00f3ff' : '#ff0055' // Cyan or Pink
+                });
+            }
+        }
 
-        <h2 style="text-align: center; color: #fff; font-size: 2.5rem; margin: 60px 0 30px; letter-spacing: 5px;">THE_FOUR_STAGES</h2>
-        
-        <div class="grid">
-            <div class="card">
-                <h3>STAGE 1: SENSOR SWARM</h3>
-                <p><strong>Stochastic Resonance:</strong> Millions of nodes orbit the sun. By utilizing the chaotic background noise of the solar wind, the swarm amplifies incredibly faint, hidden cosmic signals.</p>
-                <a href="stochastic_resonance.html" class="hud-btn">EXECUTE MODULE</a>
-            </div>
+        // Mouse Interaction
+        let mouse = { x: null, y: null };
+        window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
+        window.addEventListener('mouseout', () => { mouse.x = null; mouse.y = null; });
+        window.addEventListener('resize', init);
 
-            <div class="card">
-                <h3>STAGE 2: INGESTION ROUTER</h3>
-                <p><strong>Untangling the Firehose:</strong> The central Energy Sphere receives a chaotic stream of dying rocks. It uses a Fast Fourier Transform (FFT) to route them perfectly.</p>
-                <a href="06_fft_router.html" class="hud-btn">EXECUTE MODULE</a>
-            </div>
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, width, height);
 
-            <div class="card">
-                <h3>STAGE 3: MEMORY ENGINE</h3>
-                <p><strong>Inverse Scattering:</strong> When a rock shatters, data is not lost. The ML Core uses the Radon Transform to reconstruct a perfect 3D geometric memory.</p>
-                <a href="inverse_scattering.html" class="hud-btn">EXECUTE MODULE</a>
-            </div>
+            particles.forEach((p, index) => {
+                // Movement
+                p.x += p.vx; p.y += p.vy;
 
-            <div class="card">
-                <h3>STAGE 4: PHONONIC FORGE</h3>
-                <p><strong>Von Neumann Assembly:</strong> Harvested energy superheats asteroid dust. Acoustic resonance waves physically force atoms to crystallize into Smart Rocks.</p>
-                <a href="phononic_forge.html" class="hud-btn">EXECUTE MODULE</a>
-            </div>
-        </div>
+                // Wall bounce
+                if(p.x < 0 || p.x > width) p.vx *= -1;
+                if(p.y < 0 || p.y > height) p.vy *= -1;
 
-    </div>
+                // Mouse Repulsion (Entropy effect)
+                if (mouse.x != null && mouse.y != null) {
+                    let dx = mouse.x - p.x;
+                    let dy = mouse.y - p.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < 120) {
+                        p.x -= dx / 15;
+                        p.y -= dy / 15;
+                    }
+                }
+
+                // Draw Particle
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.fill();
+
+                // Draw Neural Connections
+                for(let j = index; j < particles.length; j++) {
+                    let p2 = particles[j];
+                    let dx = p.x - p2.x;
+                    let dy = p.y - p2.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if(distance < 100) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(0, 243, 255, ${1 - distance/100})`; // Fade out lines based on distance
+                        ctx.lineWidth = 0.5;
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
+                    }
+                }
+            });
+        }
+
+        init();
+        animate();
+    </script>
 </body>
 </html>
