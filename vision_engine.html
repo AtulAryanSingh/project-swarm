@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Swarm | SCALE-INVARIANT ENGINE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600&family=Space+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg: #020308; --cyan: #00f3ff; --pink: #ff0055; --gold: #ffaa00; --text: #a0aec0; }
+        body { margin: 0; padding: 0; background-color: var(--bg); color: #fff; font-family: 'Rajdhani', sans-serif; overflow: hidden; user-select: none; }
+        
+        #webgl-canvas { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; }
+        
+        .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; padding: 40px; box-sizing: border-box; background: linear-gradient(90deg, rgba(2,3,8,0.9) 0%, rgba(2,3,8,0.4) 30%, rgba(2,3,8,0) 50%, rgba(2,3,8,0.8) 100%); }
+
+        .header { pointer-events: auto; }
+        .brand h1 { font-family: 'Orbitron', sans-serif; font-size: 2.5rem; margin: 0 0 5px 0; letter-spacing: 10px; text-transform: uppercase; }
+        .brand p { font-family: 'Space Mono', monospace; color: var(--cyan); margin: 0; font-size: 0.9rem; letter-spacing: 3px; }
+
+        /* The Control Panel (Left) */
+        .info-panel { width: 450px; pointer-events: auto; margin-top: 40px; }
+        .info-card { background: rgba(5,8,15,0.7); border: 1px solid rgba(255,255,255,0.1); padding: 30px; border-radius: 8px; backdrop-filter: blur(10px); transition: 0.4s; border-left: 3px solid var(--cyan); }
+        .info-card h2 { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; margin-top: 0; color: #fff; }
+        .info-card h3 { font-family: 'Space Mono', monospace; font-size: 0.9rem; color: var(--cyan); border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+        .info-card p { color: var(--text); font-size: 1.1rem; line-height: 1.6; font-weight: 300; }
+
+        /* Scale Slider Controls */
+        .scale-controls { display: flex; gap: 10px; margin-top: 20px; }
+        .btn-scale { flex: 1; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); color: var(--text); font-family: 'Orbitron', sans-serif; font-size: 0.9rem; letter-spacing: 1px; cursor: pointer; transition: 0.3s; text-transform: uppercase; }
+        .btn-scale.active { background: rgba(0, 243, 255, 0.1); border-color: var(--cyan); color: var(--cyan); box-shadow: inset 0 0 15px rgba(0,243,255,0.2); }
+        .btn-scale:hover:not(.active) { border-color: #fff; color: #fff; }
+
+        /* AI/ML Transcendent Panel (Right) */
+        .ai-panel { position: absolute; right: 40px; top: 50%; transform: translateY(-50%); width: 400px; pointer-events: auto; background: rgba(5,8,15,0.7); border: 1px solid rgba(255,170,0,0.3); padding: 30px; border-radius: 8px; backdrop-filter: blur(10px); border-right: 3px solid var(--gold); }
+        .ai-panel h2 { font-family: 'Orbitron', sans-serif; color: var(--gold); margin-top: 0; font-size: 1.3rem; }
+        .ai-panel p { color: var(--text); font-size: 1.05rem; line-height: 1.6; margin-bottom: 15px; }
+        .equation { font-family: 'Space Mono', monospace; background: rgba(0,0,0,0.5); padding: 15px; border-left: 2px solid var(--gold); color: #fff; font-size: 0.9rem; margin: 20px 0; text-align: center; }
+        
+        .btn-back { position: absolute; bottom: 40px; left: 40px; padding: 10px 20px; border: 1px solid var(--text); color: var(--text); text-decoration: none; font-family: 'Space Mono', monospace; pointer-events: auto; transition: 0.3s; }
+        .btn-back:hover { border-color: #fff; color: #fff; }
+
+        .hint { position: absolute; bottom: 40px; right: 40px; font-family: 'Space Mono', monospace; font-size: 0.8rem; color: rgba(255,255,255,0.3); }
+    </style>
+</head>
+<body>
+
+    <div id="webgl-canvas"></div>
+
+    <div class="overlay">
+        <div class="header">
+            <div class="brand">
+                <h1>PROJECT SWARM</h1>
+                <p>SCALE-INVARIANT ARCHITECTURE ROADMAP</p>
+            </div>
+        </div>
+
+        <div class="info-panel">
+            <div class="info-card" id="dynamic-card">
+                <h2 id="card-title">MICRO-SCALE: IN-VIVO</h2>
+                <h3 id="card-sub">DEPLOYMENT: 2030 // TARGET: CARDIOVASCULAR</h3>
+                <p id="card-desc">The physical architecture begins here. Bio-compatible, acoustically resonant nanobots harness the chaotic fluid dynamics of the human bloodstream to generate power. They form a localized mesh network to detect the early signatures of turbulent blood flow and use synchronized acoustic pulses to shatter calcified arterial plaque before myocardial infarction occurs.</p>
+                
+                <div class="scale-controls">
+                    <button class="btn-scale active" onclick="shiftScale('micro')">MICRO (VIVO)</button>
+                    <button class="btn-scale" onclick="shiftScale('macro')">MACRO (STELLAR)</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="ai-panel">
+            <h2>THE A.I. BRAIN: FEDERATED LEARNING</h2>
+            <p>Trillions of nodes cannot transmit raw data to a central server—the bandwidth requirements defy the laws of physics. The solution is <strong>Federated Edge Learning</strong>.</p>
+            <p>The neural network model is deployed directly into the Smart Rocks (or Nanobots). Each node trains the AI locally using its own chaotic environmental data. It only transmits the <em>mathematical weight updates</em> back to the Central Sphere.</p>
+            <div class="equation">
+                w_{t+1} = Σ (n_k / n) w^k_{t+1}
+            </div>
+            <p style="font-size: 0.9rem; color: rgba(255,255,255,0.6);">The Sphere aggregates the decentralized weights, optimizing the global swarm intelligence without ever moving raw telemetry.</p>
+        </div>
+
+        <a href="index.html" class="btn-back">< RETURN TO DOSSIER</a>
+        <div class="hint">[ DRAG TO ROTATE 3D SPACE ]</div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <script>
+        // =========================================================================
+        // 1. SCENE SETUP
+        // =========================================================================
+        const container = document.getElementById('webgl-canvas');
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x020308, 0.003);
+
+        const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 2000);
+        camera.position.set(0, 50, 180);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        container.appendChild(renderer.domElement);
+
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true; controls.dampingFactor = 0.05;
+
+        // =========================================================================
+        // 2. THE MORPHING PARTICLE SYSTEM (Scale-Invariant Geometry)
+        // =========================================================================
+        const particleCount = 15000;
+        const geometry = new THREE.BufferGeometry();
+        
+        // We store two sets of positions: The Artery (Micro) and The Dyson Swarm (Macro)
+        const posMicro = new Float32Array(particleCount * 3);
+        const posMacro = new Float32Array(particleCount * 3);
+        const currentPos = new Float32Array(particleCount * 3); // The active array
+
+        for (let i = 0; i < particleCount; i++) {
+            // MICRO: A cylindrical "Blood Vessel" flowing horizontally
+            const angleMicro = Math.random() * Math.PI * 2;
+            const radiusMicro = 15 + Math.random() * 20; // Artery wall thickness
+            const xMicro = (Math.random() - 0.5) * 300; // Length of the vein
+            posMicro[i*3] = xMicro;
+            posMicro[i*3+1] = Math.cos(angleMicro) * radiusMicro;
+            posMicro[i*3+2] = Math.sin(angleMicro) * radiusMicro;
+
+            // MACRO: A massive spherical Dyson Swarm around a central point
+            const radiusMacro = 60 + Math.random() * 40;
+            const thetaMacro = Math.random() * Math.PI * 2;
+            const phiMacro = Math.acos(2 * Math.random() - 1);
+            posMacro[i*3] = radiusMacro * Math.sin(phiMacro) * Math.cos(thetaMacro);
+            posMacro[i*3+1] = radiusMacro * Math.sin(phiMacro) * Math.sin(thetaMacro);
+            posMacro[i*3+2] = radiusMacro * Math.cos(phiMacro);
+
+            // Initialize at Micro scale
+            currentPos[i*3] = posMicro[i*3];
+            currentPos[i*3+1] = posMicro[i*3+1];
+            currentPos[i*3+2] = posMicro[i*3+2];
+        }
+
+        geometry.setAttribute('position', new THREE.BufferAttribute(currentPos, 3));
+        // Save target arrays to geometry for GSAP to access
+        geometry.userData = { posMicro, posMacro };
+
+        const material = new THREE.PointsMaterial({ color: 0x00f3ff, size: 0.8, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending });
+        const particleSystem = new THREE.Points(geometry, material);
+        scene.add(particleSystem);
+
+        // Add a central core that represents the Anomaly/Star
+        const coreGeo = new THREE.IcosahedronGeometry(10, 2);
+        const coreMat = new THREE.MeshBasicMaterial({ color: 0xff0055, wireframe: true, transparent: true, opacity: 0.8 });
+        const core = new THREE.Mesh(coreGeo, coreMat);
+        scene.add(core);
+
+        // =========================================================================
+        // 3. UI & MORPHING LOGIC
+        // =========================================================================
+        const cardTitle = document.getElementById('card-title');
+        const cardSub = document.getElementById('card-sub');
+        const cardDesc = document.getElementById('card-desc');
+        const cardContainer = document.getElementById('dynamic-card');
+        const buttons = document.querySelectorAll('.btn-scale');
+
+        const content = {
+            micro: {
+                title: "MICRO-SCALE: IN-VIVO", sub: "DEPLOYMENT: 2030 // TARGET: CARDIOVASCULAR",
+                desc: "The physical architecture begins here. Bio-compatible, acoustically resonant nanobots harness the chaotic fluid dynamics of the human bloodstream to generate power. They form a localized mesh network to detect the early signatures of turbulent blood flow and use synchronized acoustic pulses to shatter calcified arterial plaque before myocardial infarction occurs.",
+                color: 0x00f3ff, coreColor: 0xff0055
+            },
+            macro: {
+                title: "MACRO-SCALE: STELLAR", sub: "DEPLOYMENT: 2500+ // TARGET: HELIOSPHERE",
+                desc: "The exact same software and physics, scaled exponentially. Humanity deploys the Genesis Seed to the Sun. Trillions of Piezo-phononic nodes harvest Terawatts of solar chaos, communicating via the same mathematical FFT protocols developed for the bloodstream, eventually engulfing the host star in a decentralized computational Dyson Swarm.",
+                color: 0xffaa00, coreColor: 0xffaa00
+            }
+        };
+
+        window.shiftScale = function(scale) {
+            // Update UI Buttons
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            const data = content[scale];
+            
+            // Fade text out and in
+            gsap.to(cardContainer, { opacity: 0, duration: 0.2, onComplete: () => {
+                cardTitle.innerText = data.title; cardSub.innerText = data.sub; cardDesc.innerText = data.desc;
+                cardContainer.style.borderLeftColor = '#' + data.color.toString(16).padStart(6, '0');
+                gsap.to(cardContainer, { opacity: 1, duration: 0.3 });
+            }});
+
+            // Morph the 3D Geometry
+            const positions = particleSystem.geometry.attributes.position.array;
+            const targetPositions = scale === 'micro' ? geometry.userData.posMicro : geometry.userData.posMacro;
+
+            gsap.to(positions, {
+                endArray: targetPositions,
+                duration: 2,
+                ease: "power3.inOut",
+                onUpdate: () => { particleSystem.geometry.attributes.position.needsUpdate = true; }
+            });
+
+            // Transition Colors
+            gsap.to(material.color, { r: (data.color >> 16 & 255)/255, g: (data.color >> 8 & 255)/255, b: (data.color & 255)/255, duration: 2 });
+            gsap.to(coreMat.color, { r: (data.coreColor >> 16 & 255)/255, g: (data.coreColor >> 8 & 255)/255, b: (data.coreColor & 255)/255, duration: 2 });
+        }
+
+        // =========================================================================
+        // 4. ANIMATION LOOP
+        // =========================================================================
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Continuous rotation
+            particleSystem.rotation.y += 0.002;
+            particleSystem.rotation.x += 0.001;
+            core.rotation.y -= 0.01;
+            core.rotation.z += 0.01;
+
+            // Micro-scale blood flow effect
+            if (buttons[0].classList.contains('active')) {
+                const positions = particleSystem.geometry.attributes.position.array;
+                for(let i=0; i<particleCount; i++) {
+                    positions[i*3] += 1; // Move particles along X axis
+                    if(positions[i*3] > 150) positions[i*3] = -150; // Wrap around
+                }
+                particleSystem.geometry.attributes.position.needsUpdate = true;
+            }
+
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        // Handle Resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        animate();
+    </script>
+</body>
+</html>
