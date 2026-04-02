@@ -6,30 +6,65 @@
     <title>PROJECT SWARM | Type II Architecture Dossier</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Space+Mono&display=swap" rel="stylesheet">
     <style>
-        :root { --bg-deep: #010205; --cyan: #00f3ff; --pink: #ff0055; --gold: #ffaa00; --text-main: #a0aec0; --panel-bg: rgba(5, 8, 14, 0.7); }
+        :root {
+            --bg-deep: #010205;
+            --cyan: #00f3ff;
+            --pink: #ff0055;
+            --gold: #ffaa00;
+            --text-main: #a0aec0;
+            --panel-bg: rgba(5, 8, 14, 0.75);
+        }
+
         body { margin: 0; padding: 0; background-color: var(--bg-deep); color: #fff; font-family: 'Rajdhani', sans-serif; overflow-x: hidden; }
-        #swarm-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; opacity: 0.5; }
+        
+        #swarm-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; opacity: 0.6; }
+
         .terminal-container { position: relative; z-index: 10; max-width: 1400px; margin: 0 auto; padding: 60px 40px; }
+
         header { border-bottom: 1px solid rgba(0, 243, 255, 0.2); padding-bottom: 30px; margin-bottom: 50px; display: flex; justify-content: space-between; align-items: flex-end; }
         .brand-title { font-family: 'Orbitron', sans-serif; font-size: 3.5rem; font-weight: 900; margin: 0; letter-spacing: 12px; text-shadow: 0 0 30px var(--cyan); }
         .architect-badge { text-align: right; }
-        .architect-badge .name { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; color: var(--gold); }
-        
+        .architect-badge .name { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; color: var(--gold); letter-spacing: 3px; }
+        .architect-badge .title { font-family: 'Space Mono', monospace; color: var(--text-main); font-size: 0.9rem; }
+
         .grid-layout { display: grid; grid-template-columns: repeat(12, 1fr); gap: 30px; }
-        .glass-panel { background: var(--panel-bg); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 4px; padding: 40px; }
+        .glass-panel { background: var(--panel-bg); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 4px; padding: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
         .col-8 { grid-column: span 8; }
         .col-4 { grid-column: span 4; }
         .col-12 { grid-column: span 12; }
-        
-        .panel-title { font-family: 'Orbitron', sans-serif; color: var(--gold); font-size: 1.5rem; margin-bottom: 20px; letter-spacing: 2px; }
-        p { color: var(--text-main); font-size: 1.1rem; line-height: 1.8; }
-        
-        .btn-launch { display: block; width: 100%; text-align: center; padding: 20px; background: rgba(0, 243, 255, 0.1); border: 1px solid var(--cyan); color: var(--cyan); font-family: 'Orbitron', sans-serif; text-decoration: none; text-transform: uppercase; letter-spacing: 3px; font-weight: 700; transition: 0.3s; margin-top: 20px; }
-        .btn-launch:hover { background: var(--cyan); color: #000; box-shadow: 0 0 30px var(--cyan); }
-        
-        .stage-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 30px; }
-        .stage-card { border: 1px solid rgba(255,255,255,0.1); padding: 25px; border-radius: 4px; background: rgba(0,0,0,0.3); }
-        .stage-card h3 { color: var(--cyan); font-family: 'Orbitron', sans-serif; margin-top: 0; }
+        .col-6 { grid-column: span 6; }
+
+        .panel-title { font-family: 'Orbitron', sans-serif; color: var(--gold); font-size: 1.5rem; margin-bottom: 25px; letter-spacing: 2px; display: flex; align-items: center; gap: 15px; }
+        .panel-title::before { content: ''; display: block; width: 10px; height: 10px; background: var(--gold); border-radius: 50%; box-shadow: 0 0 10px var(--gold); }
+        .panel-title.cyan::before { background: var(--cyan); box-shadow: 0 0 10px var(--cyan); }
+
+        p { color: var(--text-main); font-size: 1.1rem; line-height: 1.8; margin-bottom: 20px; }
+        .highlight { color: var(--cyan); font-weight: 600; }
+
+        /* Dashboard Buttons */
+        .dashboard-links { display: flex; gap: 15px; flex-direction: column; }
+        .btn-dash { text-align: center; padding: 15px; background: rgba(0, 243, 255, 0.05); border: 1px solid rgba(0, 243, 255, 0.2); color: var(--cyan); font-family: 'Orbitron', sans-serif; text-decoration: none; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; }
+        .btn-dash:hover { background: var(--cyan); color: #000; box-shadow: 0 0 25px var(--cyan); }
+        .btn-dash.special { border-color: var(--gold); color: var(--gold); background: rgba(255,170,0,0.05); }
+        .btn-dash.special:hover { background: var(--gold); color: #000; box-shadow: 0 0 25px var(--gold); }
+
+        /* Timeline */
+        .timeline { position: relative; padding-left: 30px; margin-top: 20px; }
+        .timeline::before { content: ''; position: absolute; left: 0; top: 0; width: 2px; height: 100%; background: linear-gradient(to bottom, var(--cyan), var(--pink), transparent); }
+        .time-node { margin-bottom: 40px; }
+        .time-node h3 { font-family: 'Space Mono', monospace; color: var(--gold); margin: 0; font-size: 1rem; }
+        .time-node h4 { font-family: 'Orbitron', sans-serif; color: #fff; margin: 5px 0 10px 0; font-size: 1.3rem; }
+
+        /* Stage Cards */
+        .stage-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin-top: 20px; }
+        .stage-card { border: 1px solid rgba(255,255,255,0.1); padding: 30px; background: rgba(0,0,0,0.4); position: relative; transition: 0.3s; }
+        .stage-card:hover { border-color: var(--cyan); transform: translateY(-5px); }
+        .stage-num { position: absolute; top: 10px; right: 20px; font-family: 'Space Mono'; font-size: 3rem; color: rgba(255,255,255,0.05); }
+        .stage-card h3 { font-family: 'Orbitron', sans-serif; color: var(--cyan); margin-top: 0; letter-spacing: 2px; }
+        .btn-execute { display: inline-block; margin-top: 15px; padding: 10px 20px; border: 1px solid var(--cyan); color: var(--cyan); text-decoration: none; font-family: 'Space Mono'; font-size: 0.8rem; transition: 0.3s; }
+        .btn-execute:hover { background: var(--cyan); color: #000; }
+
+        @media (max-width: 1000px) { .col-8, .col-4 { grid-column: span 12; } .stage-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -40,48 +75,104 @@
         <header>
             <div>
                 <h1 class="brand-title">PROJECT SWARM</h1>
-                <p style="font-family: 'Space Mono', monospace; color: var(--cyan); letter-spacing: 5px;">KARDASHEV TYPE II ARCHITECTURAL DOSSIER</p>
+                <p style="font-family: 'Space Mono', monospace; color: var(--cyan); letter-spacing: 5px; margin: 5px 0 0 0;">STELLAR ARCHITECTURE & DATA TOPOLOGY</p>
             </div>
             <div class="architect-badge">
                 <div class="name">ATUL ARYAN</div>
-                <div class="title" style="color: var(--text-main); font-family: 'Space Mono';">STELLAR ARCHITECT</div>
+                <div class="title">LEAD SYSTEM ARCHITECT</div>
             </div>
         </header>
 
         <div class="grid-layout">
+            
             <div class="glass-panel col-8">
-                <h2 class="panel-title">MISSION: STELLAR HARVESTING</h2>
-                <p>Project Swarm is a fundamental shift in interplanetary engineering. Instead of fragile, centralized space stations, we are deploying a decentralized web of <strong>Piezo-phononic Smart Rocks</strong>. These nodes do not fight the solar environment—they utilize its entropy to power a planet-sized computational engine.</p>
-                <p>The roadmap moves from Earth orbital injection to the total enclosure of the Heliosphere, effectively converting our host star into a Type II processing core.</p>
+                <h2 class="panel-title cyan">THE PHILOSOPHY: ENTROPY AS AN ENGINE</h2>
+                <p>Traditional engineering builds fortresses against the universe. It relies on fragile silicon and massive radiation shields. When the shield fails, the system dies.</p>
+                <p><strong>Project Swarm is the inversion of this logic.</strong></p>
+                <p>We propose a massive web of raw, programmable <span class="highlight">Piezo-phononic Smart Rocks</span>. These nodes do not fight the solar environment—they utilize its entropy to power a planet-sized computational engine. We convert destructive solar flares into raw energy and acoustic telemetry.</p>
             </div>
 
             <div class="glass-panel col-4">
-                <h2 class="panel-title" style="color: var(--pink);">MASTER PROTOTYPE</h2>
-                <p>Launch the 3D Stellar Deployment Simulator to visualize the 4-phase trajectory from Earth to Sol.</p>
-                <a href="stellar_deployment.html" class="btn-launch">INITIATE SIMULATION &rarr;</a>
+                <h2 class="panel-title">SYSTEM TELEMETRY</h2>
+                <div class="dashboard-links">
+                    <a href="stellar_deployment.html" class="btn-dash special">LAUNCH MASTER PROTOTYPE &rarr;</a>
+                    <a href="celestial_mapping.html" class="btn-dash">SYSTEM MAP</a>
+                    <a href="economics_mapping.html" class="btn-dash">VON NEUMANN FORGE</a>
+                    <a href="neural_forge.html" class="btn-dash" style="border-color: var(--pink); color: var(--pink);">THE NEURAL FORGE</a>
+                </div>
             </div>
 
             <div class="glass-panel col-12">
-                <h2 class="panel-title">ENGINEERING ROADMAP</h2>
-                <div class="stage-grid">
-                    <div class="stage-card">
-                        <h3>01 // INJECTION</h3>
-                        <p>Trans-orbital launch of Genesis Seeds into Lagrange Point L1. Establishing the primary communication mesh.</p>
+                <h2 class="panel-title">THE TEMPORAL BRIDGE: 1,000-YEAR ROADMAP</h2>
+                <div class="timeline">
+                    <div class="time-node">
+                        <h3>ERA I: THE SOFTWARE GENESIS (CURRENT)</h3>
+                        <h4>Algorithmic Foundation & High-Throughput Pipelines</h4>
+                        <p>Perfecting the mathematics required to untangle chaotic solar telemetry. The core logic involves <span class="highlight">Fast Fourier Transforms (FFT)</span> for signal isolation and <span class="highlight">Radon Transforms</span> for 3D geometric reconstruction.</p>
                     </div>
-                    <div class="stage-card">
-                        <h3>02 // CONVERSION</h3>
-                        <p>Asteroid belt convergence. Nodes utilize phononic shattering to convert mass into self-replicating swarm logic.</p>
+                    <div class="time-node">
+                        <h3>ERA II: PLANETARY EDGE NETWORKS (2050 - 2100)</h3>
+                        <h4>Terrestrial Entropy Harvesting & Mesh Topology</h4>
+                        <p>Deploying micro-scale, acoustically resonant IoT nodes terrestrially. These sensors harness kinetic entropy from seismic and atmospheric vibrations to power decentralized neural engines, proving the hardware logic on a planetary scale.</p>
                     </div>
-                    <div class="stage-card">
-                        <h3>03 // ASSEMBLY</h3>
-                        <p>Geometric shell formation. Trillions of nodes align into a gravitational Dyson lattice to harvest raw solar flux.</p>
-                    </div>
-                    <div class="stage-card">
-                        <h3>04 // CONVERGENCE</h3>
-                        <p>Total Type II integration. The star becomes a decentralized engine, executing tensor calculus across a system-wide array.</p>
+                    <div class="time-node">
+                        <h3>ERA III: THE KARDASHEV ASCENSION (2500+)</h3>
+                        <h4>Stellar Enclosure & Dyson Swarm Convergence</h4>
+                        <p>Mastering zero-gravity atomic assembly. The swarm begins harvesting Terawatts of solar chaos, self-replicating until it engulfs the host star as a decentralized Type II engine.</p>
                     </div>
                 </div>
             </div>
+
+            <div class="glass-panel col-12" style="border-top: 2px solid var(--pink);">
+                <h2 class="panel-title" style="color: #fff;">DECONSTRUCTING THE METAPHOR: HARDWARE LOGIC</h2>
+                <div class="grid-layout" style="margin-top: 20px;">
+                    <div class="col-6" style="background: rgba(0,0,0,0.3); padding: 25px; border-left: 3px solid var(--cyan);">
+                        <h3 style="color: var(--cyan); font-family: 'Orbitron'; font-size: 1.1rem;">01. SMART ROCK = EDGE NODE</h3>
+                        <p style="font-size: 0.95rem;"><strong>The Hardware:</strong> A micro-scale IoT sensor built with <em>Piezoelectric</em> materials. It relies on the Piezoelectric Direct Effect to convert mechanical stress (impacts/turbulence) into raw voltage to power its own data transmission.</p>
+                    </div>
+                    <div class="col-6" style="background: rgba(0,0,0,0.3); padding: 25px; border-left: 3px solid var(--gold);">
+                        <h3 style="color: var(--gold); font-family: 'Orbitron'; font-size: 1.1rem;">02. THE SPHERE = DATA BROKER</h3>
+                        <p style="font-size: 0.95rem;"><strong>The Pipeline:</strong> A central cloud server infrastructure designed for high-throughput streaming. It applies real-time FFT processing to strip away environmental static and isolate the data signals.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-panel col-12">
+                <h2 class="panel-title cyan">THE ARCHITECTURE: 5 STAGES OF THE SWARM</h2>
+                <div class="stage-grid">
+                    <div class="stage-card">
+                        <div class="stage-num">01</div>
+                        <h3>SENSOR SWARM</h3>
+                        <p>Stochastic Resonance: Utilizing chaotic background noise to amplify incredibly faint cosmic signals.</p>
+                        <a href="stochastic_resonance.html" class="btn-execute">EXECUTE MODULE</a>
+                    </div>
+                    <div class="stage-card">
+                        <div class="stage-num">02</div>
+                        <h3>INGESTION ROUTER</h3>
+                        <p>FFT Processing: Separating massive power yields from complex acoustic vibrations in real-time.</p>
+                        <a href="06_fft_router.html" class="btn-execute">EXECUTE MODULE</a>
+                    </div>
+                    <div class="stage-card">
+                        <div class="stage-num">03</div>
+                        <h3>MEMORY ENGINE</h3>
+                        <p>Inverse Scattering: Using Radon Transforms to reconstruct 3D matrices from data fragments.</p>
+                        <a href="inverse_scattering.html" class="btn-execute">EXECUTE MODULE</a>
+                    </div>
+                    <div class="stage-card">
+                        <div class="stage-num">04</div>
+                        <h3>PHONONIC FORGE</h3>
+                        <p>Von Neumann Assembly: Forcing plasma to crystallize into evolved Smart Rock metamaterials.</p>
+                        <a href="phononic_forge.html" class="btn-execute">EXECUTE MODULE</a>
+                    </div>
+                    <div class="stage-card" style="grid-column: span 2; border-color: var(--pink);">
+                        <div class="stage-num">05</div>
+                        <h3 style="color: var(--pink);">THE NEURAL FORGE</h3>
+                        <p>Tensor Calculus & Machine Learning: Live in-browser AI training via TensorFlow.js to map chaos into structured intelligence.</p>
+                        <a href="neural_forge.html" class="btn-execute" style="border-color: var(--pink); color: var(--pink);">INITIALIZE TRAINING</a>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -93,20 +184,19 @@
             w = canvas.width = window.innerWidth;
             h = canvas.height = window.innerHeight;
             p = [];
-            for(let i=0; i<100; i++) p.push({x:Math.random()*w, y:Math.random()*h, vx:(Math.random()-0.5), vy:(Math.random()-0.5)});
+            for(let i=0; i<120; i++) p.push({x:Math.random()*w, y:Math.random()*h, vx:(Math.random()-0.5)*0.8, vy:(Math.random()-0.5)*0.8, c:Math.random()>0.5?'#00f3ff':'#ff0055'});
         }
         function draw() {
             ctx.clearRect(0,0,w,h);
-            ctx.fillStyle = "#00f3ff";
             p.forEach(i => {
                 i.x += i.vx; i.y += i.vy;
-                if(i.x<0 || i.x>w) i.vx*=-1;
-                if(i.y<0 || i.y>h) i.vy*=-1;
-                ctx.beginPath(); ctx.arc(i.x, i.y, 1, 0, Math.PI*2); ctx.fill();
+                if(i.x<0 || i.x>w) i.vx*=-1; if(i.y<0 || i.y>h) i.vy*=-1;
+                ctx.beginPath(); ctx.arc(i.x, i.y, 1.5, 0, Math.PI*2); ctx.fillStyle = i.c; ctx.globalAlpha = 0.4; ctx.fill();
             });
             requestAnimationFrame(draw);
         }
         init(); draw();
+        window.onresize = init;
     </script>
 </body>
 </html>
