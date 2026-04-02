@@ -68,11 +68,13 @@
         .time-node h4 { font-family: 'Orbitron', sans-serif; color: #fff; margin: 0 0 10px 0; font-size: 1.3rem; }
 
         /* Master Dashboards */
-        .dashboard-links { display: flex; gap: 20px; margin-top: 10px; }
-        .btn-dash { flex: 1; text-align: center; padding: 15px; background: rgba(0, 243, 255, 0.05); border: 1px solid rgba(0, 243, 255, 0.3); color: var(--cyan); font-family: 'Orbitron', sans-serif; text-decoration: none; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; border-radius: 6px; }
+        .dashboard-links { display: flex; gap: 15px; margin-top: 10px; flex-wrap: wrap; }
+        .btn-dash { flex: 1; min-width: 200px; text-align: center; padding: 15px; background: rgba(0, 243, 255, 0.05); border: 1px solid rgba(0, 243, 255, 0.3); color: var(--cyan); font-family: 'Orbitron', sans-serif; text-decoration: none; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; border-radius: 6px; }
         .btn-dash:hover { background: var(--cyan); color: #000; box-shadow: 0 0 20px rgba(0, 243, 255, 0.4); }
         .btn-dash.forge { border-color: rgba(255, 0, 85, 0.3); color: var(--pink); background: rgba(255, 0, 85, 0.05); }
         .btn-dash.forge:hover { background: var(--pink); color: #000; box-shadow: 0 0 20px rgba(255, 0, 85, 0.4); }
+        .btn-dash.neural { border-color: rgba(255, 170, 0, 0.3); color: var(--gold); background: rgba(255, 170, 0, 0.05); }
+        .btn-dash.neural:hover { background: var(--gold); color: #000; box-shadow: 0 0 20px rgba(255, 170, 0, 0.4); }
 
         /* The 4 Stages Grid */
         .stage-card { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); padding: 25px; border-radius: 8px; display: flex; flex-direction: column; justify-content: space-between; transition: 0.3s; position: relative; overflow: hidden; }
@@ -103,7 +105,7 @@
             </div>
             <div class="architect-badge">
                 <div class="name">ATUL ARYAN</div>
-                <div class="title">SYSTEM ARCHITECT // LEAD LOGIC</div>
+                <div class="title">SYSTEM ARCHITECT // DATA & AI</div>
             </div>
         </header>
 
@@ -111,53 +113,52 @@
             
             <div class="glass-panel col-8">
                 <h2 class="panel-title">THE PHILOSOPHY: ENTROPY AS AN ENGINE</h2>
-                <p>Traditional human engineering attempts to build a fortress against the universe. Projects like Elon Musk's <strong>Terafab</strong> aim to brute-force orbital manufacturing, launching incredibly fragile silicon chips into space and hiding them behind massive radiation shields. When the shield fails, the system dies.</p>
+                <p>Traditional engineering attempts to build a fortress against the universe. Human-made orbital logic aims to brute-force manufacturing, launching incredibly fragile silicon chips into space and hiding them behind massive radiation shields. When the shield fails, the system dies.</p>
                 <p><strong>Project Swarm is the exact opposite.</strong></p>
-                <p>We do not fight the chaos of the cosmos; we align with it. Project Swarm proposes launching a massive web of raw, programmable <span class="highlight">Piezo-phononic Smart Rocks</span> into a highly radioactive solar orbit. Rather than avoiding destruction, these nodes <em>require</em> destruction to function. When a solar anomaly crushes a node, it generates raw energy (The Seebeck Effect) and acoustic data (Phononic Scattering). The universe's entropy becomes our computational engine.</p>
+                <p>We do not fight the chaos of the cosmos; we align with it. Project Swarm proposes a massive web of raw, programmable <span class="highlight">Piezo-phononic Smart Rocks</span> deployed into a highly radioactive solar orbit. Rather than avoiding destruction, these nodes <em>require</em> destruction to function. When an anomaly crushes a node, it generates raw energy (The Seebeck Effect) and acoustic data (Phononic Scattering). The universe's entropy becomes our computational engine.</p>
             </div>
 
             <div class="glass-panel col-4">
-                <h2 class="panel-title pink">MASTER TELEMETRY</h2>
-                <p style="font-size: 1rem;">Access the planetary-scale visualizations. Monitor the Swarm's exponential growth curves and observe the logic of decentralized orbital mechanics in real-time.</p>
+                <h2 class="panel-title pink">SYSTEM TELEMETRY</h2>
+                <p style="font-size: 1rem;">Access the planetary-scale visualizations and machine learning environments. Monitor the Swarm's logic directly via browser-compiled neural networks and spatial maps.</p>
                 <div class="dashboard-links" style="flex-direction: column;">
                     <a href="celestial_mapping.html" class="btn-dash">SYSTEM MAP</a>
                     <a href="economics_mapping.html" class="btn-dash forge">VON NEUMANN FORGE</a>
+                    <a href="neural_forge.html" class="btn-dash neural">THE NEURAL FORGE</a>
                 </div>
             </div>
 
             <div class="glass-panel col-12">
-                <h2 class="panel-title gold">THE TEMPORAL BRIDGE: FROM CONCEPT TO REALITY</h2>
-                <p>A 1,000-year vision requires a practical, mathematical starting point. We cannot jump straight to manufacturing stellar metamaterials. The physics of Project Swarm—using chaotic fluid dynamics to power decentralized nodes and transmit data without wires—is <strong>scale-invariant</strong>. Here is the practical roadmap of how this architecture is achieved.</p>
+                <h2 class="panel-title gold">THE TEMPORAL BRIDGE: FROM CONCEPT TO DEPLOYMENT</h2>
+                <p>A 1,000-year vision requires a rigorous mathematical starting point. We cannot jump straight to manufacturing stellar metamaterials. The physics of Project Swarm—using chaotic dynamics to power decentralized nodes and transmit data—is <strong>scale-invariant</strong>. Here is the practical architectural roadmap.</p>
                 
                 <div class="timeline">
                     <div class="time-node">
                         <h3>ERA I: THE SOFTWARE GENESIS (CURRENT)</h3>
-                        <h4>Algorithmic Foundation & Micro-Swarm Application</h4>
-                        <p>Before the hardware exists, the logic must be perfected. The exact mathematics required to untangle a chaotic solar flare (Fast Fourier Transforms) and reconstruct a shattered rock (Radon Transforms) are the identical algorithms used today in <strong>Medical AI, Edge Computing, and Fluid Data Pipelines</strong>. By simulating the Swarm in Python and JavaScript today, we are writing the foundational AI routing logic that will eventually control millions of physical nodes.</p>
+                        <h4>Algorithmic Foundation & High-Throughput Pipelines</h4>
+                        <p>Before the hardware exists, the logic must be perfected. The exact mathematics required to untangle a chaotic solar flare (Fast Fourier Transforms) and reconstruct a shattered rock (Radon Transforms) are the identical algorithms used today in <strong>Distributed AI, High-Frequency Data Pipelines, and Edge Computing</strong>. By simulating the Swarm in Python and JavaScript today, we are writing the foundational AI routing logic capable of sorting Terabytes of noisy telemetry in real-time.</p>
                     </div>
                     <div class="time-node">
-                        <h3>ERA II: THE MATERIAL BREAKTHROUGH (2050 - 2100)</h3>
-                        <h4>Acoustic Metamaterials & In-Vivo Nanomedicine</h4>
-                        <p>The Swarm architecture scales down perfectly. Instead of orbiting the Sun, the first physical iteration of Project Swarm occurs within the human bloodstream. Bio-compatible, acoustically resonant nanobots harness the kinetic entropy of the heart to power themselves, shattering blood clots via resonance and transmitting data to an external AI Sphere without the need for toxic batteries.</p>
+                        <h3>ERA II: THE HARDWARE AWAKENING (2050 - 2100)</h3>
+                        <h4>Decentralized Edge Networks & Ambient Energy Harvesting</h4>
+                        <p>The Swarm architecture scales down perfectly. Before orbiting a star, the first physical iterations occur terrestrially. Micro-scale, acoustically resonant IoT nodes harness the kinetic entropy of planetary environments (seismic, atmospheric, industrial vibrations) to power themselves. They process massive environmental telemetry locally via onboard neural engines, transmitting pure, filtered intelligence to external AI Spheres without requiring grid power.</p>
                     </div>
                     <div class="time-node">
                         <h3>ERA III: THE KARDASHEV ASCENSION (2500+)</h3>
                         <h4>Stellar Deployment & Von Neumann Replication</h4>
-                        <p>Humanity masters zero-gravity atomic assembly. The first Genesis Seed is launched toward the Sun. Utilizing the perfected software from Era I and the material science of Era II, the Swarm begins harvesting Terawatts of solar chaos, self-replicating until it engulfs the host star.</p>
+                        <p>Humanity masters zero-gravity atomic assembly. The first Genesis Seed is launched toward the Sun. Utilizing the perfected software from Era I and the material science of Era II, the Swarm begins harvesting Terawatts of solar chaos, executing tensor calculus at a stellar scale, and self-replicating until it engulfs the host star.</p>
                     </div>
                 </div>
             </div>
 
             <div class="glass-panel col-12" style="border-top: 2px solid var(--pink); margin-top: 10px;">
-                <h2 class="panel-title pink">DECONSTRUCTING THE METAPHOR: THE PHYSICS & HARDWARE</h2>
-                <p>When presenting architectures at a massive scale, skepticism is the required default. Below is the direct translation from the "Cosmic Megastructure" metaphor to the practical, real-world data engineering and hardware mechanics.</p>
+                <h2 style="color: #fff; font-family: 'Orbitron', sans-serif; font-size: 1.5rem; margin-top: 0;">DECONSTRUCTING THE METAPHOR: HARDWARE & PIPELINE LOGIC</h2>
+                <p>When presenting architectures at a massive scale, skepticism is the required default. Below is the direct translation from the "Cosmic Megastructure" metaphor to practical, real-world data engineering mechanics.</p>
 
-                <div class="grid-layout" style="margin-top: 30px; gap: 20px; margin-bottom: 0;">
-                    
+                <div class="grid-layout" style="margin-top: 30px; margin-bottom: 0;">
                     <div class="col-6" style="background: rgba(0,0,0,0.3); padding: 25px; border-radius: 8px; border-left: 3px solid var(--cyan);">
                         <h3 style="color: var(--cyan); font-family: 'Space Mono', monospace; font-size: 1.1rem; margin-top: 0;">01. "SMART ROCK" = IoT EDGE NODE</h3>
-                        <p style="font-size: 0.95rem;"><strong>The Metaphor:</strong> An asteroid that generates power and data when crushed by gravity.</p>
-                        <p style="font-size: 0.95rem;"><strong>The Reality:</strong> A micro-scale IoT sensor built with <em>Piezoelectric</em> materials. It does not use traditional batteries. It relies on the Piezoelectric Direct Effect: when mechanical stress (like an impact or fluid turbulence) hits the crystal lattice, it displaces electrons, generating raw voltage to power its own data transmission.</p>
+                        <p style="font-size: 0.95rem;"><strong>The Reality:</strong> A micro-scale IoT sensor built with <em>Piezoelectric</em> materials. It relies on the Piezoelectric Direct Effect: when mechanical stress (impact or kinetic turbulence) hits the crystal lattice, it displaces electrons, generating raw voltage to power its own data transmission and onboard Tensor calculus without standard batteries.</p>
                         <div style="font-family: 'Space Mono', monospace; color: var(--gold); font-size: 0.9rem; margin-top: 15px; padding: 12px; background: rgba(255,170,0,0.05); border: 1px dashed rgba(255,170,0,0.3);">
                             <strong>Physics Eq:</strong> D = d &middot; T + &epsilon; &middot; E<br>
                             <span style="font-size: 0.8rem; color: var(--text-main);">(D = Electric Displacement, T = Mechanical Stress)</span>
@@ -165,23 +166,16 @@
                     </div>
 
                     <div class="col-6" style="background: rgba(0,0,0,0.3); padding: 25px; border-radius: 8px; border-left: 3px solid var(--gold);">
-                        <h3 style="color: var(--gold); font-family: 'Space Mono', monospace; font-size: 1.1rem; margin-top: 0;">02. "THE SPHERE" = CENTRAL DATA BROKER</h3>
-                        <p style="font-size: 0.95rem;"><strong>The Metaphor:</strong> A massive starbase routing the telemetry of dying rocks.</p>
-                        <p style="font-size: 0.95rem;"><strong>The Reality:</strong> A central cloud server infrastructure (e.g., Apache Kafka) designed for high-throughput streaming. It receives a chaotic firehose of noisy telemetry from the Edge Nodes. To make sense of it, the server applies continuous Fast Fourier Transforms (FFT) to strip away environmental static and isolate the true data signal.</p>
+                        <h3 style="color: var(--gold); font-family: 'Space Mono', monospace; font-size: 1.1rem; margin-top: 0;">02. "THE SPHERE" = CENTRAL MESSAGE BROKER</h3>
+                        <p style="font-size: 0.95rem;"><strong>The Reality:</strong> A central cloud server infrastructure designed for high-throughput streaming. It receives a chaotic firehose of noisy telemetry. To make sense of it, the server applies continuous Fast Fourier Transforms (FFT) to strip away environmental static and isolate the true data signal before passing it to the ML Core.</p>
                         <div style="font-family: 'Space Mono', monospace; color: var(--cyan); font-size: 0.9rem; margin-top: 15px; padding: 12px; background: rgba(0,243,255,0.05); border: 1px dashed rgba(0,243,255,0.3);">
                             <strong>Math Eq:</strong> X(k) = &sum; x(n) e<sup>-j(2&pi;kn/N)</sup><br>
                             <span style="font-size: 0.8rem; color: var(--text-main);">(Discrete Fourier Transform for Signal Isolation)</span>
                         </div>
                     </div>
-                    
-                    <div class="col-12" style="background: rgba(0,0,0,0.3); padding: 25px; border-radius: 8px; border-left: 3px solid #ff0055;">
-                        <h3 style="color: #ff0055; font-family: 'Space Mono', monospace; font-size: 1.1rem; margin-top: 0;">03. "SWARM DEPLOYMENT" = MESH NETWORKING</h3>
-                        <p style="font-size: 0.95rem;"><strong>The Skeptic's Question:</strong> <em>"How do you deploy trillions of nodes at once?"</em></p>
-                        <p style="font-size: 0.95rem; margin-bottom: 0;"><strong>The Engineering Answer:</strong> You don't. The system uses <strong>Mesh Network Topology</strong>. You deploy a small cluster of "seed" nodes. They use acoustic or RF resonance to establish a localized communication web. As more nodes are introduced, they automatically handshake with the nearest neighbor, expanding the network's surface area organically and passing data "bucket-brigade" style back to the central broker without needing direct connections.</p>
-                    </div>
-
                 </div>
             </div>
+
             <div class="glass-panel col-12">
                 <h2 class="panel-title">THE ARCHITECTURE: 4 STAGES OF THE SWARM</h2>
                 <p style="margin-bottom: 30px;">The functional simulation of the pipeline. These modules execute the core mathematical logic directly in your browser.</p>
@@ -204,7 +198,7 @@
                     <div class="stage-card col-6">
                         <div class="stage-num">03</div>
                         <h3>THE MEMORY ENGINE</h3>
-                        <p><strong>Inverse Scattering:</strong> When a rock shatters, the data is not lost. The Machine Learning Core utilizes advanced mathematics (the Radon Transform) to reconstruct a perfect 3D geometric memory of the unseen anomaly.</p>
+                        <p><strong>Inverse Scattering:</strong> When a rock shatters, the data is not lost. The Machine Learning Core utilizes advanced mathematics (the Radon Transform) to reconstruct a perfect 3D geometric matrix of the unseen anomaly.</p>
                         <a href="inverse_scattering.html" class="btn-execute">EXECUTE MODULE</a>
                     </div>
 
@@ -213,13 +207,6 @@
                         <h3>THE PHONONIC FORGE</h3>
                         <p><strong>Von Neumann Assembly:</strong> The system uses harvested solar energy to superheat raw asteroid dust. It blasts the plasma with acoustic resonance waves, physically forcing the atoms to crystallize into highly evolved Smart Rocks.</p>
                         <a href="phononic_forge.html" class="btn-execute">EXECUTE MODULE</a>
-                    </div>
-                    
-                    <div class="stage-card col-12" style="border-color: rgba(255, 0, 85, 0.3); background: rgba(255, 0, 85, 0.02);">
-                        <div class="stage-num" style="color: rgba(255,0,85,0.15);">05</div>
-                        <h3 style="color: var(--pink);">THE NEURAL FORGE</h3>
-                        <p><strong>Tensor Calculus & Machine Learning:</strong> Live in-browser AI training. Utilize TensorFlow.js to compile a Deep Neural Network that uses Gradient Descent to map chaos into structured logic.</p>
-                        <a href="neural_forge.html" class="btn-execute" style="border-color: var(--pink); color: var(--pink);">INITIALIZE TENSOR TRAINING</a>
                     </div>
                 </div>
             </div>
@@ -237,7 +224,7 @@
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
             particles = [];
-            const numParticles = Math.floor((width * height) / 10000); // Responsive density
+            const numParticles = Math.floor((width * height) / 10000);
 
             for(let i = 0; i < numParticles; i++) {
                 particles.push({
@@ -246,7 +233,7 @@
                     vx: (Math.random() - 0.5) * 0.8,
                     vy: (Math.random() - 0.5) * 0.8,
                     size: Math.random() * 2 + 1,
-                    color: Math.random() > 0.5 ? '#00f3ff' : '#ff0055' // Cyan or Pink
+                    color: Math.random() > 0.5 ? '#00f3ff' : '#ff0055'
                 });
             }
         }
@@ -263,14 +250,11 @@
             for(let i = 0; i < particles.length; i++) {
                 let p = particles[i];
                 
-                // Movement
                 p.x += p.vx; p.y += p.vy;
 
-                // Edge wrap
                 if(p.x < 0) p.x = width; if(p.x > width) p.x = 0;
                 if(p.y < 0) p.y = height; if(p.y > height) p.y = 0;
 
-                // Mouse interaction (Entropy displacement)
                 if (mouse.x != null && mouse.y != null) {
                     let dx = mouse.x - p.x;
                     let dy = mouse.y - p.y;
@@ -281,14 +265,12 @@
                     }
                 }
 
-                // Draw Particle
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
                 ctx.fillStyle = p.color;
                 ctx.globalAlpha = 0.5;
                 ctx.fill();
 
-                // Draw Neural Connections (The Swarm Logic)
                 for(let j = i + 1; j < particles.length; j++) {
                     let p2 = particles[j];
                     let dx = p.x - p2.x;
@@ -298,7 +280,7 @@
                     if(distance < 120) {
                         ctx.beginPath();
                         ctx.strokeStyle = p.color;
-                        ctx.globalAlpha = 1 - (distance / 120); // Fade out lines based on distance
+                        ctx.globalAlpha = 1 - (distance / 120);
                         ctx.lineWidth = 0.5;
                         ctx.moveTo(p.x, p.y);
                         ctx.lineTo(p2.x, p2.y);
