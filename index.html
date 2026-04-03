@@ -63,8 +63,13 @@
         .stage-card h3 { font-family: 'Orbitron', sans-serif; color: var(--cyan); margin-top: 0; letter-spacing: 2px; }
         .btn-execute { display: inline-block; margin-top: 15px; padding: 10px 20px; border: 1px solid var(--cyan); color: var(--cyan); text-decoration: none; font-family: 'Space Mono'; font-size: 0.8rem; transition: 0.3s; }
         .btn-execute:hover { background: var(--cyan); color: #000; }
+        
+        /* Research Vault Button */
+        .btn-vault { display: block; width: 100%; text-align: center; padding: 20px; background: rgba(255, 255, 255, 0.05); border: 1px solid #fff; color: #fff; text-decoration: none; font-family: 'Orbitron'; letter-spacing: 3px; font-weight: bold; margin-top: 25px; transition: 0.3s; text-transform: uppercase; }
+        .btn-vault:hover { background: #fff; color: #000; box-shadow: 0 0 20px rgba(255,255,255,0.5); }
 
-        @media (max-width: 1000px) { .col-8, .col-4 { grid-column: span 12; } .stage-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 1000px) { .col-8, .col-4 { grid-column: span 12; } .stage-grid { grid-template-columns: 1fr; } .research-grid { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 600px) { .research-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -137,6 +142,19 @@
                 </div>
             </div>
 
+            <div class="glass-panel col-12" style="background: rgba(10, 15, 30, 0.9); border: 1px solid rgba(255,255,255,0.2);">
+                <h2 class="panel-title" style="color: #fff;">ADVANCED RESEARCH NEXUS (SARN)</h2>
+                <p style="color: #ccc;">The Skunkworks Laboratory. This isolated environment documents the extreme boundary conditions of Project Swarm. Here, we simulate Transcendent Mechanics—from biological entropy harvesting to quantum telemetry—before integrating them into the primary architecture.</p>
+                
+                <div class="grid-layout research-grid" style="grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 25px;">
+                    <a href="research/sim_chloroplast.html" class="btn-dash" style="padding: 10px; font-size: 0.8rem; border-color: var(--cyan); color: var(--cyan);">01. SYNTHETIC CHLOROPLASTS</a>
+                    <a href="research/sim_tensor_lattice.html" class="btn-dash" style="padding: 10px; font-size: 0.8rem; border-color: var(--pink); color: var(--pink);">02. TENSOR LATTICE</a>
+                    <a href="research/sim_vibrational_ai.html" class="btn-dash" style="padding: 10px; font-size: 0.8rem; border-color: var(--gold); color: var(--gold);">03. VIBRATIONAL Q.I.</a>
+                    <a href="research/sim_entanglement.html" class="btn-dash" style="padding: 10px; font-size: 0.8rem; border-color: #fff; color: #fff;">04. ENTANGLED TELEMETRY</a>
+                </div>
+
+                <a href="research/research_nexus.html" class="btn-vault">ENTER THE RESEARCH VAULT &rarr;</a>
+            </div>
             <div class="glass-panel col-12">
                 <h2 class="panel-title cyan">THE ARCHITECTURE: 5 STAGES OF THE SWARM</h2>
                 <div class="stage-grid">
