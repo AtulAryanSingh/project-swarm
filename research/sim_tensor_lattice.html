@@ -11,186 +11,180 @@
         
         #webgl-canvas { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; }
         
-        .ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; padding: 40px; box-sizing: border-box; display: flex; justify-content: space-between; }
+        .top-nav { position: absolute; top: 20px; left: 20px; z-index: 30; }
+        .btn-back { padding: 10px 20px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); color: var(--text); text-decoration: none; font-family: 'Space Mono', monospace; font-size: 0.8rem; transition: 0.3s; backdrop-filter: blur(5px); }
+        .btn-back:hover { border-color: #fff; color: #fff; }
+
+        .doc-panel { position: absolute; top: 0; left: 0; width: 100%; height: calc(100vh - 120px); background: rgba(5,8,14,0.95); backdrop-filter: blur(15px); z-index: 20; padding: 60px 10%; box-sizing: border-box; transform: translateY(-100%); transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); overflow-y: auto; border-bottom: 2px solid var(--pink); }
+        .doc-panel.open { transform: translateY(0); }
         
-        .paper-content { width: 450px; pointer-events: auto; background: rgba(5,8,14,0.8); border: 1px solid rgba(255,255,255,0.05); padding: 30px; border-radius: 4px; backdrop-filter: blur(10px); height: fit-content; border-left: 3px solid var(--pink); }
-        .paper-content h1 { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; margin: 0 0 5px 0; color: #fff; }
-        .paper-content h2 { font-family: 'Space Mono', monospace; font-size: 0.9rem; color: var(--pink); margin: 0 0 20px 0; letter-spacing: 2px; }
-        .paper-content p { color: var(--text); font-size: 1.05rem; line-height: 1.6; }
+        .paper-content { max-width: 800px; margin: 0 auto; border-left: 4px solid var(--pink); padding-left: 30px; }
+        .paper-content h1 { font-family: 'Orbitron', sans-serif; font-size: 2.5rem; margin: 0 0 5px 0; color: #fff; letter-spacing: 2px; }
+        .paper-content h2 { font-family: 'Space Mono', monospace; font-size: 1rem; color: var(--pink); margin: 0 0 30px 0; letter-spacing: 3px; }
+        .paper-content p { color: var(--text); font-size: 1.15rem; line-height: 1.8; margin-bottom: 20px; }
+
+        .bottom-hud { position: absolute; bottom: 0; left: 0; width: 100%; display: flex; justify-content: space-between; align-items: flex-end; padding: 20px; box-sizing: border-box; z-index: 30; pointer-events: none; }
         
-        .control-panel { width: 380px; pointer-events: auto; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1); padding: 25px; border-radius: 4px; backdrop-filter: blur(5px); height: fit-content; align-self: flex-end; }
-        
-        button { width: 100%; padding: 15px; background: rgba(0,243,255,0.05); border: 1px solid var(--cyan); color: var(--cyan); font-family: 'Orbitron', sans-serif; font-size: 0.9rem; cursor: pointer; transition: 0.3s; letter-spacing: 1px; margin-bottom: 15px; text-transform: uppercase; }
-        button:hover { background: var(--cyan); color: #000; box-shadow: 0 0 15px var(--cyan); }
-        button.btn-execute { border-color: var(--pink); color: var(--pink); background: rgba(255,0,85,0.05); }
+        .hud-box { pointer-events: auto; background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.1); padding: 20px; border-radius: 4px; backdrop-filter: blur(10px); }
+        .hud-title { font-family: 'Orbitron', sans-serif; color: var(--gold); font-size: 1rem; margin: 0 0 15px 0; border-bottom: 1px solid rgba(255,170,0,0.3); padding-bottom: 5px; letter-spacing: 1px; }
+
+        .params-box { width: 350px; }
+        button.action-btn { width: 100%; padding: 15px; background: rgba(255,255,255,0.05); border: 1px solid #fff; color: #fff; font-family: 'Orbitron', sans-serif; font-size: 0.9rem; cursor: pointer; transition: 0.3s; letter-spacing: 1px; margin-bottom: 10px; }
+        button.action-btn:hover { background: #fff; color: #000; box-shadow: 0 0 15px rgba(255,255,255,0.5); }
+        button.btn-execute { border-color: var(--pink); color: var(--pink); background: rgba(255,0,85,0.05); margin-bottom: 0; }
         button.btn-execute:hover { background: var(--pink); color: #000; box-shadow: 0 0 15px var(--pink); }
-        
-        .telemetry-box { background: rgba(0,0,0,0.5); padding: 15px; border: 1px dashed rgba(255,255,255,0.2); font-family: 'Space Mono', monospace; font-size: 0.85rem; }
-        .telemetry-row { display: flex; justify-content: space-between; margin-bottom: 8px; color: var(--text); }
+
+        .data-box { width: 380px; }
+        .telemetry-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-family: 'Space Mono', monospace; font-size: 0.85rem; color: var(--text); }
         .val-highlight { color: #fff; }
-        .status-alert { margin-top: 15px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); color: var(--pink); font-weight: bold; text-align: center; }
+        .status-alert { margin-top: 15px; padding-top: 10px; border-top: 1px dashed rgba(255,255,255,0.2); font-weight: bold; text-align: center; font-family: 'Orbitron', sans-serif; font-size: 0.85rem; color: var(--pink); }
         .status-alert.safe { color: #00ff88; }
         
-        .btn-back { position: absolute; bottom: 40px; left: 40px; pointer-events: auto; padding: 10px 20px; border: 1px solid var(--text); color: var(--text); text-decoration: none; font-family: 'Space Mono', monospace; font-size: 0.8rem; transition: 0.3s; }
-        .btn-back:hover { border-color: #fff; color: #fff; }
+        .doc-trigger-container { position: absolute; left: 50%; bottom: 20px; transform: translateX(-50%); pointer-events: auto; }
+        .btn-doc { padding: 12px 30px; background: rgba(255,0,85,0.1); border: 1px solid var(--pink); color: var(--pink); font-family: 'Space Mono', monospace; font-size: 0.9rem; cursor: pointer; transition: 0.3s; letter-spacing: 2px; text-transform: uppercase; }
+        .btn-doc:hover { background: var(--pink); color: #000; box-shadow: 0 0 20px var(--pink); }
     </style>
 </head>
 <body>
 
     <div id="webgl-canvas"></div>
 
-    <div class="ui-layer">
+    <div class="top-nav">
+        <a href="research_nexus.html" class="btn-back">< RETURN TO NEXUS</a>
+    </div>
+
+    <div id="doc-panel" class="doc-panel">
         <div class="paper-content">
             <h1>TENSOR LATTICE DYNAMICS</h1>
             <h2>SARN LIVING PAPER 02</h2>
             <p><strong>Magnetohydrodynamic Survival:</strong> Solid objects are obliterated by solar flares. To survive, the Smart Rock utilizes a porous, phononic lattice structure.</p>
             <p>When a plasma wave approaches, the node extracts the principal eigenvector (the primary trajectory of destruction) from the incoming Cauchy Stress Tensor. It instantly executes a rotation matrix, physically aligning its empty internal channels with the incoming wave. The plasma passes through harmlessly.</p>
-            <p style="font-size: 0.9rem; color: rgba(255,255,255,0.4); margin-top: 20px;">// INSTRUCTIONS: Generate a chaotic flare trajectory, then execute the Tensor Alignment to witness Ghost Mode.</p>
+        </div>
+    </div>
+
+    <div class="bottom-hud">
+        <div class="hud-box params-box">
+            <h3 class="hud-title">PARAMETERS (CONTROLS)</h3>
+            <button class="action-btn" onclick="generateFlare()">1. GENERATE FLARE TRAJECTORY</button>
+            <button class="action-btn btn-execute" onclick="executeAlignment()">2. EXECUTE TENSOR ALIGNMENT</button>
         </div>
 
-        <div class="control-panel">
-            <button onclick="generateFlare()">1. GENERATE FLARE TRAJECTORY</button>
-            <button class="btn-execute" onclick="executeAlignment()">2. EXECUTE TENSOR ALIGNMENT</button>
-
-            <div class="telemetry-box">
-                <div class="telemetry-row">INCOMING VECTOR: <span id="vec-out" class="val-highlight">[ 0.00, 0.00, 1.00 ]</span></div>
-                <div class="telemetry-row">LATTICE DEVIATION: <span id="dev-out" class="val-highlight">0.0°</span></div>
-                <div class="telemetry-row">CALCULATED STRESS: <span id="stress-out" class="val-highlight">0.00 TJ</span></div>
-                <div id="status-out" class="status-alert safe">STATUS: ALIGNED. GHOST MODE ACTIVE.</div>
-            </div>
+        <div class="doc-trigger-container">
+            <button id="btn-doc" class="btn-doc" onclick="toggleDoc()">READ DOCUMENTATION &darr;</button>
         </div>
-        
-        <a href="research_nexus.html" class="btn-back">< RETURN TO RESEARCH NEXUS</a>
+
+        <div class="hud-box data-box">
+            <h3 class="hud-title">TELEMETRY DATA</h3>
+            <div class="telemetry-row">INCOMING VECTOR: <span id="vec-out" class="val-highlight">[ 0.00, 0.00, 1.00 ]</span></div>
+            <div class="telemetry-row">LATTICE DEVIATION: <span id="dev-out" class="val-highlight">0.0°</span></div>
+            <div class="telemetry-row">CALCULATED STRESS: <span id="stress-out" class="val-highlight">0.00 TJ</span></div>
+            <div id="status-out" class="status-alert safe">STATUS: ALIGNED. GHOST MODE ACTIVE.</div>
+        </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script>
-        // 1. SCENE SETUP
+        let docOpen = false;
+        function toggleDoc() {
+            docOpen = !docOpen;
+            const panel = document.getElementById('doc-panel');
+            const btn = document.getElementById('btn-doc');
+            if (docOpen) {
+                panel.classList.add('open');
+                btn.innerHTML = "CLOSE DOCUMENTATION &uarr;";
+            } else {
+                panel.classList.remove('open');
+                btn.innerHTML = "READ DOCUMENTATION &darr;";
+            }
+        }
+
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(20, 20, 40);
+        camera.position.set(20, 20, 50);
         camera.lookAt(0, 0, 0);
-        
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.getElementById('webgl-canvas').appendChild(renderer.domElement);
 
-        // Grid Helper
-        const gridHelper = new THREE.GridHelper(50, 25, 0x00f3ff, 0x111111);
-        gridHelper.position.y = -10;
+        const gridHelper = new THREE.GridHelper(60, 30, 0x00f3ff, 0x111111);
+        gridHelper.position.y = -15;
         gridHelper.material.opacity = 0.2;
         gridHelper.material.transparent = true;
         scene.add(gridHelper);
 
-        // 2. THE PHONONIC LATTICE (SMART ROCK)
-        // Creating a porous 3x3 grid structure with a clear central tunnel along the Z axis
         const latticeGroup = new THREE.Group();
         const material = new THREE.MeshBasicMaterial({ color: 0x00f3ff, wireframe: true });
-        const geometry = new THREE.BoxGeometry(2, 2, 2);
+        const geometry = new THREE.BoxGeometry(2.5, 2.5, 2.5);
 
         for(let x = -1; x <= 1; x++) {
             for(let y = -1; y <= 1; y++) {
-                // Leave the center empty for the "pass-through" channel
                 if(x === 0 && y === 0) continue; 
-                
-                // Create struts along the Z axis
                 for(let z = -2; z <= 2; z++) {
                     const cell = new THREE.Mesh(geometry, material);
-                    cell.position.set(x * 4, y * 4, z * 4);
+                    cell.position.set(x * 5, y * 5, z * 5);
                     latticeGroup.add(cell);
                 }
             }
         }
         scene.add(latticeGroup);
 
-        // 3. THE INCOMING FLARE VECTOR
-        const dir = new THREE.Vector3(0, 0, 1); // Default aligned with Z tunnel
+        const dir = new THREE.Vector3(0, 0, 1);
         const origin = new THREE.Vector3(0, 0, 0);
-        const length = 25;
-        const hex = 0xff0055;
-        const arrowHelper = new THREE.ArrowHelper(dir, origin, length, hex, 3, 2);
+        const arrowHelper = new THREE.ArrowHelper(dir, origin, 30, 0xff0055, 4, 3);
         scene.add(arrowHelper);
 
-        // 4. LOGIC & UI UPDATES
         let targetVector = new THREE.Vector3(0, 0, 1);
-        const zAxis = new THREE.Vector3(0, 0, 1); // The natural empty channel of the lattice
+        const zAxis = new THREE.Vector3(0, 0, 1);
 
         function generateFlare() {
-            // Generate random spherical coordinates
             const theta = Math.random() * Math.PI * 2;
             const phi = Math.acos((Math.random() * 2) - 1);
-            
-            // Convert to Cartesian
             targetVector.x = Math.sin(phi) * Math.cos(theta);
             targetVector.y = Math.sin(phi) * Math.sin(theta);
-            targetVector.z = Math.abs(Math.cos(phi)); // Keep it coming from "front" hemisphere
+            targetVector.z = Math.abs(Math.cos(phi));
             targetVector.normalize();
 
-            // Update Arrow
             arrowHelper.setDirection(targetVector);
 
-            // Calculate Deviation
-            const deviationRad = zAxis.angleTo(targetVector);
-            const deviationDeg = THREE.MathUtils.radToDeg(deviationRad);
-
-            // Update UI
+            const deviationDeg = THREE.MathUtils.radToDeg(zAxis.angleTo(targetVector));
             document.getElementById('vec-out').innerText = `[ ${targetVector.x.toFixed(2)}, ${targetVector.y.toFixed(2)}, ${targetVector.z.toFixed(2)} ]`;
             document.getElementById('dev-out').innerText = `${deviationDeg.toFixed(1)}°`;
-            
-            const stress = deviationDeg * 1.5; // Fictional stress calculation
-            document.getElementById('stress-out').innerText = `${stress.toFixed(2)} TJ`;
+            document.getElementById('stress-out').innerText = `${(deviationDeg * 1.5).toFixed(2)} TJ`;
             
             const status = document.getElementById('status-out');
-            status.innerText = "WARNING: LATTICE MISALIGNED. CRITICAL IMPACT IMMINENT.";
+            status.innerText = "WARNING: MISALIGNED. IMPACT IMMINENT.";
             status.className = "status-alert";
-            
-            // Turn Lattice Warning Color
             latticeGroup.children.forEach(child => child.material.color.setHex(0xffaa00));
         }
 
         function executeAlignment() {
-            // Find the quaternion rotation required to align the Z axis to the target vector
             const quaternion = new THREE.Quaternion().setFromUnitVectors(zAxis, targetVector);
-            
-            // Animate the rotation using GSAP
             gsap.to(latticeGroup.quaternion, {
-                x: quaternion.x,
-                y: quaternion.y,
-                z: quaternion.z,
-                w: quaternion.w,
-                duration: 1.5,
-                ease: "power2.inOut",
+                x: quaternion.x, y: quaternion.y, z: quaternion.z, w: quaternion.w,
+                duration: 1.5, ease: "power2.inOut",
                 onComplete: () => {
-                    // Update UI on completion
                     document.getElementById('dev-out').innerText = "0.0°";
                     document.getElementById('stress-out').innerText = "0.00 TJ";
-                    
                     const status = document.getElementById('status-out');
                     status.innerText = "STATUS: ALIGNED. GHOST MODE ACTIVE.";
                     status.className = "status-alert safe";
-                    
-                    // Return to safe color
                     latticeGroup.children.forEach(child => child.material.color.setHex(0x00f3ff));
                 }
             });
         }
 
-        // 5. RENDER LOOP
         function animate() {
             requestAnimationFrame(animate);
-            // Slight ambient rotation for visuals
-            scene.rotation.y += 0.001;
-            scene.rotation.x += 0.0005;
+            scene.rotation.y += 0.002;
+            scene.rotation.x += 0.001;
             renderer.render(scene, camera);
         }
-
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
-
         animate();
     </script>
 </body>
