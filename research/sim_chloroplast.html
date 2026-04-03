@@ -11,98 +11,129 @@
         
         #webgl-canvas { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; }
         
-        .ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; padding: 40px; box-sizing: border-box; display: flex; justify-content: space-between; }
+        .top-nav { position: absolute; top: 20px; left: 20px; z-index: 30; }
+        .btn-back { padding: 10px 20px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); color: var(--text); text-decoration: none; font-family: 'Space Mono', monospace; font-size: 0.8rem; transition: 0.3s; backdrop-filter: blur(5px); }
+        .btn-back:hover { border-color: #fff; color: #fff; }
+
+        /* DOCUMENTATION PANEL */
+        .doc-panel { position: absolute; top: 0; left: 0; width: 100%; height: calc(100vh - 120px); background: rgba(5,8,14,0.95); backdrop-filter: blur(15px); z-index: 20; padding: 60px 10%; box-sizing: border-box; transform: translateY(-100%); transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); overflow-y: auto; border-bottom: 2px solid var(--cyan); }
+        .doc-panel.open { transform: translateY(0); }
         
-        .paper-content { width: 450px; pointer-events: auto; background: rgba(5,8,14,0.8); border: 1px solid rgba(255,255,255,0.05); padding: 30px; border-radius: 4px; backdrop-filter: blur(10px); height: fit-content; border-left: 3px solid var(--cyan); }
-        .paper-content h1 { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; margin: 0 0 5px 0; color: #fff; }
-        .paper-content h2 { font-family: 'Space Mono', monospace; font-size: 0.9rem; color: var(--cyan); margin: 0 0 20px 0; letter-spacing: 2px; }
-        .paper-content p { color: var(--text); font-size: 1.05rem; line-height: 1.6; }
+        .paper-content { max-width: 800px; margin: 0 auto; border-left: 4px solid var(--cyan); padding-left: 30px; }
+        .paper-content h1 { font-family: 'Orbitron', sans-serif; font-size: 2.5rem; margin: 0 0 5px 0; color: #fff; letter-spacing: 2px; }
+        .paper-content h2 { font-family: 'Space Mono', monospace; font-size: 1rem; color: var(--cyan); margin: 0 0 30px 0; letter-spacing: 3px; }
+        .paper-content p { color: var(--text); font-size: 1.15rem; line-height: 1.8; margin-bottom: 20px; }
+
+        /* BOTTOM HUD */
+        .bottom-hud { position: absolute; bottom: 0; left: 0; width: 100%; display: flex; justify-content: space-between; align-items: flex-end; padding: 20px; box-sizing: border-box; z-index: 30; pointer-events: none; }
         
-        .control-panel { width: 350px; pointer-events: auto; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1); padding: 25px; border-radius: 4px; backdrop-filter: blur(5px); height: fit-content; align-self: flex-end; }
-        .control-panel h3 { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; color: var(--gold); margin-top: 0; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
-        
+        .hud-box { pointer-events: auto; background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.1); padding: 20px; border-radius: 4px; backdrop-filter: blur(10px); }
+        .hud-title { font-family: 'Orbitron', sans-serif; color: var(--gold); font-size: 1rem; margin: 0 0 15px 0; border-bottom: 1px solid rgba(255,170,0,0.3); padding-bottom: 5px; letter-spacing: 1px; }
+
+        .params-box { width: 350px; }
         .slider-group { margin-bottom: 20px; }
         .slider-group label { font-family: 'Space Mono', monospace; font-size: 0.85rem; color: #fff; display: flex; justify-content: space-between; margin-bottom: 8px; }
         input[type=range] { width: 100%; appearance: none; background: rgba(255,255,255,0.1); height: 4px; border-radius: 2px; outline: none; }
         input[type=range]::-webkit-slider-thumb { appearance: none; width: 15px; height: 15px; background: var(--cyan); border-radius: 50%; cursor: pointer; }
+
+        .data-box { width: 350px; }
+        .telemetry-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-family: 'Space Mono', monospace; font-size: 0.85rem; color: var(--text); }
+        .val-highlight { color: #fff; }
+        .val-red { color: var(--pink); text-shadow: 0 0 5px var(--pink); }
+        .val-green { color: #00ff88; text-shadow: 0 0 5px #00ff88; }
         
-        .telemetry-box { background: rgba(0,0,0,0.5); padding: 15px; border: 1px dashed rgba(255,255,255,0.2); margin-top: 20px; font-family: 'Space Mono', monospace; font-size: 0.9rem; }
-        .telemetry-row { display: flex; justify-content: space-between; margin-bottom: 8px; }
-        .val-red { color: var(--pink); }
-        .val-green { color: #00ff88; }
-        
-        .btn-back { position: absolute; bottom: 40px; left: 40px; pointer-events: auto; padding: 10px 20px; border: 1px solid var(--text); color: var(--text); text-decoration: none; font-family: 'Space Mono', monospace; font-size: 0.8rem; transition: 0.3s; }
-        .btn-back:hover { border-color: #fff; color: #fff; }
+        .doc-trigger-container { position: absolute; left: 50%; bottom: 20px; transform: translateX(-50%); pointer-events: auto; }
+        .btn-doc { padding: 12px 30px; background: rgba(0,243,255,0.1); border: 1px solid var(--cyan); color: var(--cyan); font-family: 'Space Mono', monospace; font-size: 0.9rem; cursor: pointer; transition: 0.3s; letter-spacing: 2px; text-transform: uppercase; }
+        .btn-doc:hover { background: var(--cyan); color: #000; box-shadow: 0 0 20px var(--cyan); }
     </style>
 </head>
 <body>
 
     <div id="webgl-canvas"></div>
 
-    <div class="ui-layer">
+    <div class="top-nav">
+        <a href="research_nexus.html" class="btn-back">< RETURN TO NEXUS</a>
+    </div>
+
+    <div id="doc-panel" class="doc-panel">
         <div class="paper-content">
             <h1>SYNTHETIC CHLOROPLASTS</h1>
             <h2>SARN LIVING PAPER 01</h2>
-            <p><strong>The Biological Imperative:</strong> Plants do not construct rigid shields against stellar radiation; they evolved to synthesize it. </p>
-            <p>This simulation maps the interaction between an incoming solar plasma wave and a Piezo-phononic Smart Rock. By dynamically altering its internal Vibrational Resonance to match the frequency of the incoming chaos, the node ceases to act as a physical barrier. It achieves <strong>Quantum Resonance</strong>, absorbing the destructive amplitude and converting it directly into harvested Terajoules.</p>
-            <p style="font-size: 0.9rem; color: rgba(255,255,255,0.4); margin-top: 30px;">// INSTRUCTIONS: Adjust the Node Resonance to match the Solar Wave Frequency.</p>
+            <p><strong>The Biological Imperative:</strong> Plants do not construct rigid shields against stellar radiation; they evolved to synthesize it.</p>
+            <p>This simulation maps the interaction between an incoming solar plasma wave and a Piezo-phononic Smart Rock. By dynamically altering its internal Vibrational Resonance to match the frequency of the incoming chaos, the node ceases to act as a physical barrier.</p>
+            <p>It achieves <strong>Quantum Resonance</strong>, absorbing the destructive amplitude and converting it directly into harvested Terajoules of energy without structural degradation.</p>
         </div>
+    </div>
 
-        <div class="control-panel">
-            <h3>RESONANCE TUNING</h3>
-            
+    <div class="bottom-hud">
+        <div class="hud-box params-box">
+            <h3 class="hud-title">PARAMETERS (CONTROLS)</h3>
             <div class="slider-group">
                 <label>SOLAR WAVE FREQUENCY <span id="val-solar">5.0 Hz</span></label>
                 <input type="range" id="slider-solar" min="1" max="10" step="0.1" value="5.0">
             </div>
-            
-            <div class="slider-group">
+            <div class="slider-group" style="margin-bottom: 0;">
                 <label>NODE INTERNAL RESONANCE <span id="val-node" style="color: var(--cyan);">2.0 Hz</span></label>
                 <input type="range" id="slider-node" min="1" max="10" step="0.1" value="2.0">
             </div>
-
-            <div class="telemetry-box">
-                <div class="telemetry-row">RESONANCE DELTA: <span id="delta-out">3.00 Hz</span></div>
-                <div class="telemetry-row">STRUCTURAL INTEGRITY: <span id="health-out" class="val-red">100%</span></div>
-                <div class="telemetry-row">HARVESTED ENERGY: <span id="energy-out" class="val-green">0.00 TJ</span></div>
-            </div>
         </div>
-        
-        <a href="research_nexus.html" class="btn-back">< RETURN TO RESEARCH NEXUS</a>
+
+        <div class="doc-trigger-container">
+            <button id="btn-doc" class="btn-doc" onclick="toggleDoc()">READ DOCUMENTATION &darr;</button>
+        </div>
+
+        <div class="hud-box data-box">
+            <h3 class="hud-title">TELEMETRY DATA</h3>
+            <div class="telemetry-row">RESONANCE DELTA: <span id="delta-out" class="val-highlight">3.00 Hz</span></div>
+            <div class="telemetry-row">STRUCTURAL INTEGRITY: <span id="health-out" class="val-red">100%</span></div>
+            <div class="telemetry-row" style="margin-bottom: 0;">HARVESTED ENERGY: <span id="energy-out" class="val-green">0.00 TJ</span></div>
+        </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        // 1. SCENE SETUP
+        let docOpen = false;
+        function toggleDoc() {
+            docOpen = !docOpen;
+            const panel = document.getElementById('doc-panel');
+            const btn = document.getElementById('btn-doc');
+            if (docOpen) {
+                panel.classList.add('open');
+                btn.innerHTML = "CLOSE DOCUMENTATION &uarr;";
+            } else {
+                panel.classList.remove('open');
+                btn.innerHTML = "READ DOCUMENTATION &darr;";
+            }
+        }
+
+        // 3D Engine Setup
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
         camera.position.set(0, 0, 100);
-        
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.getElementById('webgl-canvas').appendChild(renderer.domElement);
 
-        // 2. THE SMART ROCK (NODE)
-        const nodeGeo = new THREE.IcosahedronGeometry(8, 2);
+        // Physics Objects
+        const nodeGeo = new THREE.IcosahedronGeometry(12, 2);
         const nodeMat = new THREE.MeshBasicMaterial({ color: 0x00f3ff, wireframe: true, transparent: true, opacity: 0.8 });
         const node = new THREE.Mesh(nodeGeo, nodeMat);
         scene.add(node);
 
-        const coreGeo = new THREE.IcosahedronGeometry(4, 1);
+        const coreGeo = new THREE.IcosahedronGeometry(5, 1);
         const coreMat = new THREE.MeshBasicMaterial({ color: 0xff0055, wireframe: true });
         const core = new THREE.Mesh(coreGeo, coreMat);
         node.add(core);
 
-        // 3. THE SOLAR RADIATION (WAVES)
         const waveParticles = [];
         const waveCount = 500;
         const waveGeo = new THREE.BufferGeometry();
         const wavePos = new Float32Array(waveCount * 3);
         
         for(let i=0; i<waveCount; i++) {
-            wavePos[i*3] = -80 + (Math.random() * 20); // Start far left
+            wavePos[i*3] = -80 + (Math.random() * 20);
             wavePos[i*3+1] = 0;
-            wavePos[i*3+2] = (Math.random() - 0.5) * 40;
+            wavePos[i*3+2] = (Math.random() - 0.5) * 50;
             waveParticles.push({ offset: Math.random() * Math.PI * 2 });
         }
         waveGeo.setAttribute('position', new THREE.BufferAttribute(wavePos, 3));
@@ -110,20 +141,13 @@
         const waves = new THREE.Points(waveGeo, waveMat);
         scene.add(waves);
 
-        // 4. UI LOGIC & PHYSICS STATE
+        // State & Loop
         const sliderSolar = document.getElementById('slider-solar');
         const sliderNode = document.getElementById('slider-node');
-        const valSolar = document.getElementById('val-solar');
-        const valNode = document.getElementById('val-node');
-        const deltaOut = document.getElementById('delta-out');
-        const healthOut = document.getElementById('health-out');
-        const energyOut = document.getElementById('energy-out');
-
         let structuralIntegrity = 100.0;
         let harvestedEnergy = 0.0;
         let time = 0;
 
-        // 5. ANIMATION & PHYSICS LOOP
         function animate() {
             requestAnimationFrame(animate);
             time += 0.05;
@@ -132,52 +156,39 @@
             let nodeFreq = parseFloat(sliderNode.value);
             let delta = Math.abs(solarFreq - nodeFreq);
 
-            // Update UI
-            valSolar.innerText = solarFreq.toFixed(1) + " Hz";
-            valNode.innerText = nodeFreq.toFixed(1) + " Hz";
-            deltaOut.innerText = delta.toFixed(2) + " Hz";
+            document.getElementById('val-solar').innerText = solarFreq.toFixed(1) + " Hz";
+            document.getElementById('val-node').innerText = nodeFreq.toFixed(1) + " Hz";
+            document.getElementById('delta-out').innerText = delta.toFixed(2) + " Hz";
 
-            // Animate Node Spin based on its frequency
             node.rotation.x += nodeFreq * 0.005;
             node.rotation.y += nodeFreq * 0.005;
 
-            // Animate Waves
             const positions = waves.geometry.attributes.position.array;
             for(let i=0; i<waveCount; i++) {
-                positions[i*3] += 1.5; // Move right
-                // Sine wave motion based on solar frequency
+                positions[i*3] += 1.5;
                 positions[i*3+1] = Math.sin(time * solarFreq + waveParticles[i].offset) * 15; 
-                
-                // Reset particles when they pass the node
-                if(positions[i*3] > 40) {
-                    positions[i*3] = -80;
-                }
+                if(positions[i*3] > 60) positions[i*3] = -80;
             }
             waves.geometry.attributes.position.needsUpdate = true;
 
-            // PHYSICS LOGIC: Evaluate Resonance
+            const hOut = document.getElementById('health-out');
             if(delta > 0.5) {
-                // Misaligned: Structural Damage
-                nodeMat.color.setHex(0xff0055); // Turn Red
+                nodeMat.color.setHex(0xff0055);
                 coreMat.color.setHex(0xffaa00);
                 structuralIntegrity -= (delta * 0.01);
                 if(structuralIntegrity < 0) structuralIntegrity = 0;
-                healthOut.innerText = structuralIntegrity.toFixed(1) + "%";
-                healthOut.className = "val-red";
-                // Jitter node to simulate impact
+                hOut.innerText = structuralIntegrity.toFixed(1) + "%";
+                hOut.className = "val-red";
                 node.position.x = (Math.random() - 0.5) * 1.5;
             } else {
-                // Aligned: Quantum Resonance (Harvesting)
-                nodeMat.color.setHex(0x00ff88); // Turn Green
+                nodeMat.color.setHex(0x00ff88);
                 coreMat.color.setHex(0x00f3ff);
                 harvestedEnergy += 0.05;
-                energyOut.innerText = harvestedEnergy.toFixed(2) + " TJ";
-                healthOut.innerText = "RESONANCE STABLE";
-                healthOut.className = "val-green";
-                // Smooth position
+                document.getElementById('energy-out').innerText = harvestedEnergy.toFixed(2) + " TJ";
+                hOut.innerText = "RESONANCE STABLE";
+                hOut.className = "val-green";
                 node.position.x = 0;
             }
-
             renderer.render(scene, camera);
         }
 
@@ -186,7 +197,6 @@
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
-
         animate();
     </script>
 </body>
