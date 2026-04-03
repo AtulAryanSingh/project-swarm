@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SWARM | Advanced Research Nexus</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600&family=Space+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg-deep: #010205; --cyan: #00f3ff; --pink: #ff0055; --gold: #ffaa00; --panel-bg: rgba(5, 8, 14, 0.7); }
+        body { margin: 0; padding: 0; background-color: var(--bg-deep); color: #fff; font-family: 'Rajdhani', sans-serif; }
+        
+        .container { max-width: 1400px; margin: 0 auto; padding: 60px 40px; position: relative; z-index: 10; }
+        
+        header { border-bottom: 1px solid rgba(0, 243, 255, 0.2); padding-bottom: 30px; margin-bottom: 50px; }
+        .brand-title { font-family: 'Orbitron', sans-serif; font-size: 3rem; margin: 0; letter-spacing: 10px; color: var(--gold); text-shadow: 0 0 20px rgba(255,170,0,0.3); }
+        .brand-sub { font-family: 'Space Mono', monospace; color: var(--text-main); font-size: 1rem; letter-spacing: 3px; margin-top: 10px; }
+
+        .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 30px; }
+        .col-12 { grid-column: span 12; }
+        .col-6 { grid-column: span 6; }
+
+        .glass-panel { background: var(--panel-bg); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.05); padding: 30px; border-radius: 4px; }
+        
+        .research-card { border: 1px solid rgba(255,255,255,0.1); padding: 30px; background: rgba(0,0,0,0.4); position: relative; transition: 0.3s; display: flex; flex-direction: column; justify-content: space-between; height: 100%; box-sizing: border-box; }
+        .research-card:hover { transform: translateY(-5px); border-color: var(--cyan); box-shadow: 0 10px 30px rgba(0,243,255,0.1); }
+        
+        .card-header { border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; margin-bottom: 20px; }
+        .card-header h3 { font-family: 'Orbitron', sans-serif; margin: 0; font-size: 1.4rem; letter-spacing: 2px; }
+        .status { font-family: 'Space Mono', monospace; font-size: 0.8rem; margin-top: 10px; padding: 5px 10px; display: inline-block; border-radius: 3px; }
+        .status.active { background: rgba(0, 243, 255, 0.1); color: var(--cyan); border: 1px solid var(--cyan); }
+        .status.theory { background: rgba(255, 170, 0, 0.1); color: var(--gold); border: 1px solid var(--gold); }
+
+        p { color: #a0aec0; font-size: 1.1rem; line-height: 1.6; }
+        
+        .btn-launch { display: inline-block; padding: 12px 25px; border: 1px solid rgba(255,255,255,0.2); color: #fff; font-family: 'Space Mono', monospace; text-decoration: none; font-size: 0.9rem; transition: 0.3s; margin-top: 20px; text-transform: uppercase; }
+        .research-card:hover .btn-launch { border-color: var(--cyan); color: var(--cyan); }
+        .btn-launch:hover { background: var(--cyan); color: #000 !important; }
+        
+        .return-nav { font-family: 'Space Mono', monospace; margin-bottom: 30px; display: block; color: var(--text); text-decoration: none; }
+        .return-nav:hover { color: var(--cyan); }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <a href="index.html" class="return-nav">< RETURN TO MAIN DOSSIER</a>
+        
+        <header>
+            <h1 class="brand-title">ADVANCED RESEARCH NEXUS</h1>
+            <div class="brand-sub">EXPERIMENTAL DATA VAULT & LIVING SIMULATIONS</div>
+            <p style="margin-top: 20px; max-width: 800px;">This environment isolates theoretical boundary conditions. Here, we document, simulate, and stress-test the transcendent mechanics of Project Swarm before integrating them into the primary deployment architecture.</p>
+        </header>
+
+        <div class="grid">
+            
+            <div class="col-6">
+                <div class="research-card">
+                    <div>
+                        <div class="card-header">
+                            <h3 style="color: #00f3ff;">01. SYNTHETIC CHLOROPLASTS</h3>
+                            <div class="status active">LIVING SIMULATION ONLINE</div>
+                        </div>
+                        <p><strong>Biological Entropy Harvesting:</strong> Exploring how nodes can mimic plant life. Instead of shielding against radiation, the lattice uses quantum vibrational tuning to absorb incoming solar waves, converting destructive amplitude directly into stored "energy/glucose".</p>
+                    </div>
+                    <a href="sim_chloroplast.html" class="btn-launch">ENTER SIMULATION</a>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="research-card">
+                    <div>
+                        <div class="card-header">
+                            <h3 style="color: #ff0055;">02. TENSOR LATTICE DYNAMICS</h3>
+                            <div class="status active">LIVING SIMULATION ONLINE</div>
+                        </div>
+                        <p><strong>Magnetohydrodynamic Survival:</strong> Simulating the 3D 'Ghost Mode'. Executing real-time Tensor Calculus on incoming plasma stress vectors to actively rotate the node's internal phononic gaps, allowing the wave to pass through harmlessly.</p>
+                    </div>
+                    <a href="sim_tensor_lattice.html" class="btn-launch">ENTER SIMULATION</a>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="research-card">
+                    <div>
+                        <div class="card-header">
+                            <h3 style="color: #ffaa00;">03. VIBRATIONAL Q.I.</h3>
+                            <div class="status theory">THEORETICAL FRAMEWORK</div>
+                        </div>
+                        <p><strong>Quantum Intelligence:</strong> Moving beyond rigid neural networks. Developing an AI model that processes data entirely through vibrational frequencies and wave interference patterns, adapting geometrically to chaotic input.</p>
+                    </div>
+                    <a href="#" class="btn-launch">VIEW DOCUMENTATION</a>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="research-card">
+                    <div>
+                        <div class="card-header">
+                            <h3 style="color: #fff;">04. ENTANGLED TELEMETRY</h3>
+                            <div class="status theory">THEORETICAL FRAMEWORK</div>
+                        </div>
+                        <p><strong>The Earth-Harness Protocol:</strong> If a node is blasted millions of miles off trajectory, radio transmission degrades. This research maps the mathematics of utilizing paired quantum states to instantaneously teleport harvested data directly to Earth.</p>
+                    </div>
+                    <a href="#" class="btn-launch">VIEW DOCUMENTATION</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
